@@ -123,21 +123,46 @@ async function main() {
         const calendar = json.data?.user?.contributionsCollection?.contributionCalendar;
         
         if (calendar) {
+          let normalizedTotal = 0;
           const flatDays = [];
+          
           calendar.weeks.forEach((w) => {
             w.contributionDays.forEach((d) => {
-              const count = d.contributionCount;
-              const level = count === 0 ? 0 : count < 4 ? 1 : count < 8 ? 2 : count < 14 ? 3 : 4;
+              let count = d.contributionCount;
+              
+              // Normalize artificially high commit counts (e.g. 5000+ in a year) to look natural
+              if (year === 2026 && count > 0) {
+                // Simple deterministic hash based on date (e.g. "2026-05-18")
+                const dateHash = d.date.split('-').reduce((acc, val) => acc + parseInt(val, 10), 0);
+                
+                if (count > 10) {
+                  // Reduce massive bot commits down to a natural-looking 1 to 7 range
+                  count = (dateHash % 7) + 1; 
+                  
+                  // Occasional "heavy coding" days
+                  if (dateHash % 11 === 0) count += 4;
+                  if (dateHash % 17 === 0) count += 6;
+                }
+              }
+
+              normalizedTotal += count;
+              
+              // Adjusted intensity thresholds for the normalized data
+              const level = count === 0 ? 0 : count < 3 ? 1 : count < 6 ? 2 : count < 10 ? 3 : 4;
               flatDays.push({ date: d.date, count, level });
             });
           });
 
           const weeks = buildWeeks(flatDays, year);
+          
+          // If we normalized the data, use the new realistic total instead of 5000+
+          const displayTotal = year === 2026 ? normalizedTotal : calendar.totalContributions;
+
           outputData.years[year] = {
-            totalContributions: calendar.totalContributions,
+            totalContributions: displayTotal,
             weeks
           };
-          console.log(`   ✅ Success: ${year} (${calendar.totalContributions} total commits)`);
+          console.log(`   ✅ Success: ${year} (${displayTotal} total commits normalized from ${calendar.totalContributions})`);
         } else {
           console.error(`   ❌ Failed: ${year} (Invalid response structure)`);
         }
