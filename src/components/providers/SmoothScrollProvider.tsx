@@ -27,15 +27,27 @@ export default function SmoothScrollProvider({
     if (prefersReducedMotion) return;
 
     const isHeavy = weight === "heavy";
-    const instance = new Lenis({
-      duration: isHeavy ? 2.2 : 1.2,
-      easing: isHeavy
-        ? (t) => 1 - Math.pow(1 - t, 4)          // quartic ease-out — heavy deceleration
-        : (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: isHeavy ? 0.7 : 1,
-      touchMultiplier: isHeavy ? 0.9 : 1.2,
-    });
+
+    // Premium heavy scroll — high travel distance, slow lerp momentum
+    // lerp: how fast it catches up to target (lower = more lag/inertia)
+    // wheelMultiplier: how far each scroll tick moves (higher = more travel)
+    const instance = new Lenis(
+      isHeavy
+        ? {
+            lerp: 0.06,              // very slow catch-up — heavy inertia tail
+            wheelMultiplier: 1.4,    // each tick travels far
+            touchMultiplier: 1.0,
+            smoothWheel: true,
+            syncTouch: false,
+          }
+        : {
+            duration: 1.2,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 1.2,
+          }
+    );
 
     setLenis(instance);
 
