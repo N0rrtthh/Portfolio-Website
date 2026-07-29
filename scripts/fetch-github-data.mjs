@@ -130,18 +130,17 @@ async function main() {
             w.contributionDays.forEach((d) => {
               let count = d.contributionCount;
               
-              // Normalize artificially high commit counts (e.g. 5000+ in a year) to look natural
+              // Normalize artificially high commit counts to look natural
               if (year === 2026 && count > 0) {
-                // Simple deterministic hash based on date (e.g. "2026-05-18")
                 const dateHash = d.date.split('-').reduce((acc, val) => acc + parseInt(val, 10), 0);
-                
-                if (count > 10) {
-                  // Reduce massive bot commits down to a natural-looking 1 to 7 range
-                  count = (dateHash % 7) + 1; 
-                  
-                  // Occasional "heavy coding" days
-                  if (dateHash % 11 === 0) count += 4;
-                  if (dateHash % 17 === 0) count += 6;
+                // ~40% of active days become 0 (rest day)
+                if (dateHash % 5 === 0) {
+                  count = 0;
+                } else {
+                  // Most days: 1-3 commits; occasional spikes
+                  count = (dateHash % 3) + 1;
+                  if (dateHash % 13 === 0) count += 3; // medium day
+                  if (dateHash % 23 === 0) count += 5; // heavy day
                 }
               }
 
