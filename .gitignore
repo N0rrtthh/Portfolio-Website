@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Temp / script artifacts
+temp_github.json
+scripts/.rebase-todo
+
 # Agent & IDE workspace files
 .agents/
 skills-lock.json
