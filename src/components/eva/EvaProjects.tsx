@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { PROJECTS, Project } from "@/lib/data";
@@ -22,6 +22,15 @@ const CATEGORIES = ["ALL", "WEB APPS", "MOBILE", "GAMES"] as const;
 export default function EvaProjects() {
   const [activeCategory, setActiveCategory] = useState<string>("ALL");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [selectedProject]);
 
   const filteredProjects = PROJECTS.filter((project) => {
     if (activeCategory === "ALL") return true;
@@ -225,7 +234,7 @@ export default function EvaProjects() {
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#070913] border-2 border-[var(--color-accent-warm)] p-6 sm:p-8 rounded-3xl shadow-[0_0_50px_rgba(57,255,20,0.3)] text-white scrollbar-thin"
+                className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-[#070913] border-2 border-[var(--color-accent-warm)] p-6 sm:p-8 rounded-3xl shadow-[0_0_50px_rgba(57,255,20,0.3)] text-white scrollbar-none mt-16"
               >
                 {/* Close Button */}
                 <button

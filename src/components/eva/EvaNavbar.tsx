@@ -9,9 +9,9 @@ import { useLenis } from "@/components/providers/SmoothScrollProvider";
 const SECTIONS = [
   { label: "SYSTEM", href: "#hero", code: "01" },
   { label: "IDENTITY", href: "#about", code: "02" },
-  { label: "HISTORY", href: "#experience", code: "03" },
+  { label: "ARCHIVE", href: "#projects", code: "03" },
   { label: "DATABASE", href: "#techstack", code: "04" },
-  { label: "ARCHIVE", href: "#projects", code: "05" },
+  { label: "HISTORY", href: "#experience", code: "05" },
   { label: "VAULT", href: "#certifications", code: "06" },
   { label: "COMMS", href: "#contact", code: "07" },
 ];
