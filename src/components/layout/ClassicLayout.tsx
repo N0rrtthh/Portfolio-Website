@@ -7,6 +7,7 @@ import PhilosophyView from "@/components/sections/PhilosophyView";
 import Experience from "@/components/sections/Experience";
 import TechStack from "@/components/sections/TechStack";
 import Projects from "@/components/sections/Projects";
+import GithubContributions from "@/components/sections/GithubContributions";
 import Certifications from "@/components/sections/Certifications";
 import Achievements from "@/components/sections/Achievements";
 import Roadmap from "@/components/sections/Roadmap";
@@ -31,13 +32,15 @@ export default function ClassicLayout() {
         <TechStack />
         {/* Chapter 7 — Featured Work (Case Study Scenes) */}
         <Projects />
-        {/* Chapter 8 — Certifications & Honors */}
+        {/* Chapter 8 — Live GitHub Commit Stream & Activity Archive */}
+        <GithubContributions />
+        {/* Chapter 9 — Certifications & Honors */}
         <Certifications />
-        {/* Chapter 9 — Achievements & Impact Metrics */}
+        {/* Chapter 10 — Achievements & Impact Metrics */}
         <Achievements />
-        {/* Chapter 10 — Looking Ahead (Future R&D Roadmap) */}
+        {/* Chapter 11 — Looking Ahead (Future R&D Roadmap) */}
         <Roadmap />
-        {/* Chapter 11 — Contact & Conclusion */}
+        {/* Chapter 12 — Contact & Conclusion */}
         <Contact />
       </main>
     </SmoothScrollProvider>

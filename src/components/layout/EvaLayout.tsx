@@ -7,6 +7,7 @@ import EvaAbout from "@/components/eva/EvaAbout";
 import EvaProjects from "@/components/eva/EvaProjects";
 import EvaTechStack from "@/components/eva/EvaTechStack";
 import EvaExperience from "@/components/eva/EvaExperience";
+import GithubContributions from "@/components/sections/GithubContributions";
 import Certifications from "@/components/sections/Certifications";
 import EvaContact from "@/components/eva/EvaContact";
 
@@ -42,9 +43,11 @@ export default function EvaLayout() {
           <EvaTechStack />
           {/* Phase 5: Deployment History */}
           <EvaExperience />
-          {/* Phase 6: Credential Vault & Certifications */}
+          {/* Phase 6: GitHub GraphQL Activity Stream */}
+          <GithubContributions />
+          {/* Phase 7: Credential Vault & Certifications */}
           <Certifications />
-          {/* Phase 7: Comms Uplink */}
+          {/* Phase 8: Comms Uplink */}
           <EvaContact />
         </main>
       </div>
