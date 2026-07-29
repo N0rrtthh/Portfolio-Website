@@ -12,7 +12,7 @@ const GITHUB_USERNAME = "N0rrtthh";
 interface DayData {
   date: string;
   count: number;
-  level: number; // -1 = padding cell (not a real day, used to align the grid), 0-4 = real intensity
+  level: number; // -1 = padding cell, 0-4 = intensity
 }
 
 interface WeekData {
@@ -24,80 +24,26 @@ interface CalendarResponse {
   year: number;
   totalContributions: number;
   weeks: WeekData[];
-  source: "live" | "placeholder";
+  source: "live_graphql" | "live_api";
 }
 
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+import staticDataRaw from "@/data/github-data.json";
 
-// Real contribution data, scraped from the public GitHub profile calendar.
-// No auth required, no CORS issues from the browser. See:
-// https://github.com/grubersjoe/github-contributions-api
-const CONTRIBUTIONS_API = "https://github-contributions-api.jogruber.de/v4";
-
-interface ApiContribution {
-  date: string;
-  count: number;
-  level: number;
-}
-
-interface ApiResponse {
-  total: Record<string, number>;
-  contributions: ApiContribution[];
-}
+// Type casting for imported static JSON
+const staticData = staticDataRaw as unknown as {
+  source: string;
+  error: string | null;
+  years: Record<string, { totalContributions: number; weeks: WeekData[] }>;
+};
 
 export default function GithubContributions() {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
-  const [data, setData] = useState<CalendarResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isLive, setIsLive] = useState<boolean>(false);
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchRealGithubContributions() {
-      setLoading(true);
-
-      try {
-        const res = await fetch(`${CONTRIBUTIONS_API}/${GITHUB_USERNAME}?y=${selectedYear}`);
-        if (!res.ok) throw new Error(`API responded with ${res.status}`);
-
-        const json: ApiResponse = await res.json();
-        if (!json.contributions || json.contributions.length === 0) {
-          throw new Error("No contribution data returned");
-        }
-
-        const total = json.total[String(selectedYear)] ?? 0;
-        const weeks = buildWeeks(json.contributions, selectedYear);
-
-        if (isMounted) {
-          setData({
-            username: GITHUB_USERNAME,
-            year: selectedYear,
-            totalContributions: total,
-            weeks,
-            source: "live",
-          });
-          setIsLive(true);
-          setLoading(false);
-        }
-        return;
-      } catch (err) {
-        console.warn("Real GitHub contribution fetch failed, showing placeholder instead:", err);
-      }
-
-      if (isMounted) {
-        setData(generatePlaceholderCalendar(selectedYear));
-        setIsLive(false);
-        setLoading(false);
-      }
-    }
-
-    fetchRealGithubContributions();
-    return () => {
-      isMounted = false;
-    };
-  }, [selectedYear]);
+  const error = staticData.error;
+  const isLive = staticData.source === "build_graphql";
+  const data = staticData.years[String(selectedYear)];
+  const loading = false;
 
   // Compute Statistics
   const realDays = (data?.weeks.flatMap((w) => w.contributionDays) || []).filter((d) => d.level !== -1);
@@ -164,12 +110,12 @@ export default function GithubContributions() {
                 </span>
                 Live from GitHub
               </div>
-            ) : (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-mono">
+            ) : error ? (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 text-xs font-mono">
                 <WifiOff className="w-3.5 h-3.5" />
-                Placeholder data (fetch failed)
+                Connection Error
               </div>
-            )}
+            ) : null}
 
             {/* Year Cycle Buttons */}
             <div className="flex items-center gap-1 p-1 rounded-xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)]">
@@ -177,10 +123,11 @@ export default function GithubContributions() {
                 <button
                   key={year}
                   onClick={() => setSelectedYear(year)}
-                  className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all duration-200 ${selectedYear === year
+                  className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all duration-200 ${
+                    selectedYear === year
                       ? "bg-emerald-500 text-black font-bold shadow-[0_0_10px_rgba(16,185,129,0.4)]"
                       : "text-[var(--color-pearl)]/60 hover:text-white hover:bg-white/5"
-                    }`}
+                  }`}
                 >
                   {year}
                 </button>
@@ -233,8 +180,23 @@ export default function GithubContributions() {
         </div>
 
         {/* Heatmap Grid Container */}
-        <div className="relative p-6 rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] backdrop-blur-xl">
+        <div className="relative p-6 rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] backdrop-blur-xl min-h-[220px] flex flex-col justify-center">
           <AnimatePresence mode="wait">
+            {error ? (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex flex-col items-center justify-center text-center p-8"
+              >
+                <WifiOff className="w-10 h-10 text-red-500/50 mb-3" />
+                <p className="text-red-400 font-mono text-sm">{error}</p>
+                <p className="text-[var(--color-pearl)]/50 text-xs mt-2 max-w-sm">
+                  The GitHub API is currently unreachable or rate-limited. Please try again later or provide a personal access token.
+                </p>
+              </motion.div>
+            ) : (
             <motion.div
               key={selectedYear}
               initial={{ opacity: 0, y: 10 }}
@@ -267,8 +229,9 @@ export default function GithubContributions() {
                           key={`${wIdx}-${dIdx}`}
                           onMouseEnter={() => day.level !== -1 && setHoveredDay(day)}
                           onMouseLeave={() => setHoveredDay(null)}
-                          className={`w-3 h-3 rounded-[3px] border transition-all duration-150 ${day.level === -1 ? "" : "cursor-pointer hover:scale-125 hover:z-20"
-                            } ${getCellColor(day.level, day.count)}`}
+                          className={`w-3 h-3 rounded-[3px] border transition-all duration-150 ${
+                            day.level === -1 ? "" : "cursor-pointer hover:scale-125 hover:z-20"
+                          } ${getCellColor(day.level, day.count)}`}
                         />
                       ))}
                     </div>
@@ -309,75 +272,11 @@ export default function GithubContributions() {
                 </div>
               </div>
             </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </div>
     </section>
   );
 }
-
-/**
- * Groups a flat list of days into GitHub-style weeks (Sunday first).
- * The first and last weeks are padded with invisible placeholder cells
- * (level: -1) so the grid lines up with real calendar weekdays.
- */
-function buildWeeks(days: ApiContribution[], year: number): WeekData[] {
-  const sorted = [...days].sort((a, b) => a.date.localeCompare(b.date));
-  const weeks: WeekData[] = [];
-  let currentWeek: DayData[] = [];
-
-  const firstDate = new Date(`${year}-01-01T00:00:00`);
-  const leadingPadding = firstDate.getDay(); // 0 (Sun) - 6 (Sat)
-  for (let i = 0; i < leadingPadding; i++) {
-    currentWeek.push({ date: "", count: -1, level: -1 });
-  }
-
-  sorted.forEach((day) => {
-    currentWeek.push({ date: day.date, count: day.count, level: day.level });
-    if (currentWeek.length === 7) {
-      weeks.push({ contributionDays: currentWeek });
-      currentWeek = [];
-    }
-  });
-
-  if (currentWeek.length > 0) {
-    while (currentWeek.length < 7) {
-      currentWeek.push({ date: "", count: -1, level: -1 });
-    }
-    weeks.push({ contributionDays: currentWeek });
-  }
-
-  return weeks;
-}
-
-/**
- * Used ONLY when the live GitHub fetch fails (network down, rate limit, etc).
- * This is randomly generated and intentionally never mixed with real numbers —
- * the "Placeholder data" badge in the UI makes that explicit to visitors.
- */
-function generatePlaceholderCalendar(year: number): CalendarResponse {
-  const startDate = new Date(year, 0, 1);
-  const endDate = new Date(year, 11, 31);
-  const days: ApiContribution[] = [];
-
-  let curr = new Date(startDate);
-  while (curr <= endDate) {
-    const dateStr = curr.toISOString().split("T")[0];
-    const isWeekend = curr.getDay() === 0 || curr.getDay() === 6;
-    const count = isWeekend ? (Math.random() < 0.3 ? Math.floor(Math.random() * 5) : 0) : Math.floor(Math.random() * 8);
-    const level = count === 0 ? 0 : count < 4 ? 1 : count < 8 ? 2 : count < 14 ? 3 : 4;
-    days.push({ date: dateStr, count, level });
-    curr.setDate(curr.getDate() + 1);
-  }
-
-  const totalContributions = days.reduce((sum, d) => sum + d.count, 0);
-  const weeks = buildWeeks(days, year);
-
-  return {
-    username: GITHUB_USERNAME,
-    year,
-    totalContributions,
-    weeks,
-    source: "placeholder",
-  };
 }
