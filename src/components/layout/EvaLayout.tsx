@@ -13,7 +13,7 @@ import EvaContact from "@/components/eva/EvaContact";
 
 export default function EvaLayout() {
   return (
-    <SmoothScrollProvider>
+    <SmoothScrollProvider weight="heavy">
       <div className="min-h-screen bg-[var(--color-void)] text-[var(--color-pearl)] font-mono relative overflow-hidden">
         {/* MAGI Hexagon Grid Background */}
         <div

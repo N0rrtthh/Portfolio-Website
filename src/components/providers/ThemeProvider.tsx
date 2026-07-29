@@ -37,7 +37,7 @@ function getInitialFromDOM(): { mode: ColorMode; design: DesignTheme; evaLoaderS
   }
   const root = document.documentElement;
   const mode = (root.getAttribute("data-mode") as ColorMode) || "dark";
-  const design = (root.getAttribute("data-design") as DesignTheme) || "classic";
+  const design = (root.getAttribute("data-design") as DesignTheme) || "eva";
   const evaLoaderStyle = (localStorage.getItem(EVA_LOADER_KEY) as EvaLoaderStyle) || "side";
   return { mode, design, evaLoaderStyle };
 }
@@ -124,7 +124,7 @@ export const NO_FLASH_THEME_SCRIPT = `
 (function () {
   try {
     var mode = localStorage.getItem("${MODE_KEY}") || "dark";
-    var design = localStorage.getItem("${DESIGN_KEY}") || "classic";
+    var design = localStorage.getItem("${DESIGN_KEY}") || "eva";
     document.documentElement.setAttribute("data-mode", mode);
     document.documentElement.setAttribute("data-design", design);
   } catch (e) {}

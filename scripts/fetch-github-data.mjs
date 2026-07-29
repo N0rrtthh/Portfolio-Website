@@ -128,17 +128,8 @@ async function main() {
           
           calendar.weeks.forEach((w) => {
             w.contributionDays.forEach((d) => {
-              let count = d.contributionCount;
-              
-              // Cap days with inflated counts (>15) to realistic range
-              if (count > 15) {
-                const dateHash = d.date.split('-').reduce((acc, val) => acc + parseInt(val, 10), 0);
-                count = (dateHash % 4) + 3; // 3-6
-              }
-
+              const count = d.contributionCount;
               normalizedTotal += count;
-              
-              // Adjusted intensity thresholds for the normalized data
               const level = count === 0 ? 0 : count < 3 ? 1 : count < 6 ? 2 : count < 10 ? 3 : 4;
               flatDays.push({ date: d.date, count, level });
             });
@@ -152,7 +143,7 @@ async function main() {
             totalContributions: displayTotal,
             weeks
           };
-          console.log(`   ✅ Success: ${year} (${displayTotal} total commits normalized from ${calendar.totalContributions})`);
+          console.log(`   ✅ Success: ${year} (${displayTotal} total contributions)`);
         } else {
           console.error(`   ❌ Failed: ${year} (Invalid response structure)`);
         }

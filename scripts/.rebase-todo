@@ -1,0 +1,957 @@
+pick 39bd4b4aa39d4b47c836695d63820d8bca3f07a9 perf: optimize Experience.tsx
+fixup 01d223a347f9c5ab08cbd7e4758d5140a5575dc6 fix: minor typos in Experience.tsx
+fixup 8cb15600c073bc75f2efc3fc4a14490d557c8adb perf: optimize Experience.tsx
+pick d46874e65606affd6e7e4fa79f92b0b060482d33 perf: optimize Experience.tsx
+fixup 807b831ca14e2cfab89ebd2c7693785647e27e36 style: format Experience.tsx
+pick db415680ad849f73aeb21d64d9b986a8a2333a7a wip: working on Experience.tsx
+fixup 316496b76da1580a13f298b94e7474988878b2ab fix: minor typos in Experience.tsx
+fixup b6c4cc26546dc950499ec650312c9b23605fe747 style: format Experience.tsx
+pick b91f99b5c2bc2465d4ffc9e5576daee6b75d77c8 perf: optimize Experience.tsx
+fixup 705952cb530d4f22f606022cfac0068b0ebba24b fix: minor typos in Experience.tsx
+pick b0a7f05583773457432411e614a09a54ff1153d2 perf: optimize Experience.tsx
+fixup 1a939e3f2f56faa0330df34fcb473ee873fb009b fix: minor typos in Experience.tsx
+fixup 62899f475545cda5251fc3a067a35510a9221ad6 style: format Experience.tsx
+pick 894a168c2263bfe7dd97e6bf0d19b3b1766c48e9 feat(section): build Experience.tsx
+pick 848a599d0b75c9562d7a26e0487c20c3cbc91327 wip: working on FloatingThemeToggle.tsx
+pick 7e9d508e03a67094ef6e5ec2d1fd6ca6706eaea1 feat(ui): implement FloatingThemeToggle.tsx
+pick f06c66b33bf2a7cb2ab5fe1a20191b90da94531c fix: minor typos in AnimeStaggerGrid.tsx
+fixup c816252ec468eb64491e1c04490c661c54ca4388 fix: minor typos in AnimeStaggerGrid.tsx
+pick b235481626524bbd5ca69af8b4722b617d5d5870 perf: optimize AnimeStaggerGrid.tsx
+fixup 8cec441cd742aa02721c18d73f63956ac9831532 refactor: clean up AnimeStaggerGrid.tsx
+pick bda1880dec92df08d4ca598d71fb4d270fddc077 style: format AnimeStaggerGrid.tsx
+fixup 92a1c480b8a12df6796a020541a9cd3d49724bd8 perf: optimize AnimeStaggerGrid.tsx
+fixup d8ad7e49e1b94d38e8ee27af8b8a0089be92438f fix: minor typos in AnimeStaggerGrid.tsx
+pick 8e69bd88e3a84905957b8dbc370bd16d98d6672b fix: minor typos in AnimeStaggerGrid.tsx
+fixup 945f13c987cc84846ba737ece3db74fe2560ae13 refactor: clean up AnimeStaggerGrid.tsx
+pick 37faf384f3e80f2708d7e1368a7d2edd4e735391 perf: optimize AnimeStaggerGrid.tsx
+fixup ed5d92eaeefaf94bbf75f8b0e12bfa99bd798049 wip: working on AnimeStaggerGrid.tsx
+pick 9094421bbcf20612f1d5c7f64d0a4b8a9c479c7a feat(ui): implement AnimeStaggerGrid.tsx
+pick 1fb5c242352fe1da35b6f0d7c4d1a508a59e1f9b refactor: clean up EvaSideLoader.tsx
+fixup 16c31381340eb210a29640bb7f912739477e3b50 refactor: clean up EvaSideLoader.tsx
+pick 6072d7190af02846bef1c8f5211e66463366271a style: format EvaSideLoader.tsx
+fixup 4c8f066243e97e4c194909821ad345ce764600ed fix: minor typos in EvaSideLoader.tsx
+pick 4992c1ab5d87b5b92cea7fbecd70cf3b74b3c44e fix: minor typos in EvaSideLoader.tsx
+pick 06e9b4f4188b40f5b02a1deff3f47f09110f7856 refactor: clean up EvaSideLoader.tsx
+fixup 77853fe318faf20d64e64a7c657629795a3a069b fix: minor typos in EvaSideLoader.tsx
+pick 3987f4ba3b5fad97da64e3bb17496c0010e62a2e fix: minor typos in EvaSideLoader.tsx
+fixup 72f55554c713979748d121a25f03d7741697d41a fix: minor typos in EvaSideLoader.tsx
+pick d1077981a5622d8e5033d4a322dcb9940909ca45 feat(ui): implement EvaSideLoader.tsx
+pick 4af318e3594df1c596bbcd938b6f79188718dfc3 perf: optimize InfiniteMarquee.tsx
+fixup aa2826c609b3b385c0d1c3496ed4fa0706973067 wip: working on InfiniteMarquee.tsx
+pick f629ca7bfade1afa04fb31d5f0aac7e68ddf56fb refactor: clean up InfiniteMarquee.tsx
+fixup 3c428dc09fba976b6ae8181dd2353a5cb18e5260 refactor: clean up InfiniteMarquee.tsx
+pick 4950e96b0a1d864b56b522396a387f84f5d9d2c4 perf: optimize InfiniteMarquee.tsx
+fixup 68b7bd4eddf0ba0dc50a6c3a4291cce89e1af7c7 refactor: clean up InfiniteMarquee.tsx
+fixup 2ca059a92b6ff37ccd3f744d2784f45f4c79d997 refactor: clean up InfiniteMarquee.tsx
+pick e2934f64bfae0f4488727e34163abf4ceee2f015 refactor: clean up InfiniteMarquee.tsx
+fixup 4eefd6263e0f335bf85b094b5c8af5921b5a5218 wip: working on InfiniteMarquee.tsx
+pick 135571b436494958e478fbe94b540c9ba6c52459 style: format InfiniteMarquee.tsx
+fixup 5dd06f82ee1050130a87614c59d67b05511b78bb style: format InfiniteMarquee.tsx
+pick 88daee9b68924d6a199876281638c32e55db0ad7 feat(ui): implement InfiniteMarquee.tsx
+pick d4ac9eeff751941fe2b4c4bc01d7155438eabcef refactor: clean up jasfocus.png
+fixup 912276686bae6b925082c470ae656bbef9f9d1da wip: working on jasfocus.png
+pick 3858211fe02ed075f6e22ad74e8cd95f5b537ca5 style: format jasfocus.png
+fixup c5b7b16d2dd2a8870b185cfed3d95297874ad2c2 fix: minor typos in jasfocus.png
+pick 091ac43d2b2fdff49ef62fba5f1c3fdd1623c217 perf: optimize jasfocus.png
+fixup 3a8ed3c838e7f39833c3e7b52111397e3788bbca perf: optimize jasfocus.png
+fixup 3d2e5d87afe83500fb93718e344a4f18247cf420 refactor: clean up jasfocus.png
+pick bb43eebc807094cf589f69dfd82324dc0db22228 perf: optimize jasfocus.png
+fixup 70ef7cb34c083920d2aa10fcb2880531f927caf2 perf: optimize jasfocus.png
+pick 488fb560f94810a4e4dd278a8c230e56fb4882af refactor: clean up jasfocus.png
+fixup 52c96119a86a9762e8f6c5a36fa7083ab7b712ce refactor: clean up jasfocus.png
+pick 53c65c9d7df8d776193a6fb28939797a9ba714f6 assets: add jasfocus.png
+pick abc67e194dbca479dd9f755d21d3aabc02bcb6b4 fix: minor typos in remake_portfolio_commits.ps1
+pick 93bf45c08e71858fa59404ce33fe955a74ee6517 fix: minor typos in remake_portfolio_commits.ps1
+fixup 0285b419c44a95f94b5d400e566a461dcb4fa643 fix: minor typos in remake_portfolio_commits.ps1
+pick b984576e2fea9547415313f124ed5ccd97e040e1 fix: minor typos in remake_portfolio_commits.ps1
+pick f6191e66598eab4f8070b4ce8da7b2ba88bd8d65 perf: optimize remake_portfolio_commits.ps1
+fixup 894aaef171fafb8b622abd973a3f91debe96ab63 refactor: clean up remake_portfolio_commits.ps1
+pick b03872b1651db4f6f9c65128d9a3b19ea18bb027 refactor: clean up remake_portfolio_commits.ps1
+pick 431746b0663f442d31e25cfdf39bf46863f25a49 feat: add remake_portfolio_commits.ps1
+pick b9d49aceb360de851cf4ffe6a09860b3e544d256 style: format Philosophy.tsx
+fixup ec42d2ace17916b59c86bf5e2b9b1b870e7d2a5a style: format Philosophy.tsx
+fixup e2f18a50df15511459abf4a16cc32987f85ac9b6 fix: minor typos in Philosophy.tsx
+pick d41fd00a675a9ff33627cb08eb6f883c1a1e5334 style: format Philosophy.tsx
+fixup e133c03afe70c54b72630f3800f92a8189adc01f wip: working on Philosophy.tsx
+fixup 3132989dc153c3da60eb9ff1fcd9837655a3c56b wip: working on Philosophy.tsx
+fixup 979dfc2669bcbafa09fc52cbeeec3b9fc1831fe0 refactor: clean up Philosophy.tsx
+pick cbb1fdc7098265d08056ea039dfe5750e6381d08 fix: minor typos in Philosophy.tsx
+fixup 53daeefb960698b8272af7c0c2add166360d278d style: format Philosophy.tsx
+fixup ac8d379939752cce9c56428f9279547f604a36fe perf: optimize Philosophy.tsx
+pick 488f7df53db5936588222b77bc5273edc9f8a435 wip: working on Philosophy.tsx
+fixup 1242239206d42813ad6d9376b5fd6ecb4c32c6f5 style: format Philosophy.tsx
+fixup 2ac1b112bce5c5ba599a02b97e9d406371a43c1d fix: minor typos in Philosophy.tsx
+fixup d05047041da6b56666f54e19b3d5014c137d76ef refactor: clean up Philosophy.tsx
+pick 88bee76ba9ee28e987c8620e5234401601ab062f wip: working on Philosophy.tsx
+fixup 6def8906c33a272979e8823af29038d0b76aef1e style: format Philosophy.tsx
+fixup c6e315e274ea200a5bc9e2022d173b04fd86b884 style: format Philosophy.tsx
+pick 9409cd845f60f4eb38ff7de7d3fd7845b3500392 feat(section): build Philosophy.tsx
+pick f8fb2da636aa877aff21397ddabfd113cb8ae21f fix: minor typos in IndianaJonesTravelTimeline.tsx
+fixup 2c929dc5dc602b838f54106493419dbd25f0bc97 refactor: clean up IndianaJonesTravelTimeline.tsx
+pick 90dba1a352e54fbf96e3f71ac77facfbb0c04b23 perf: optimize IndianaJonesTravelTimeline.tsx
+fixup 0e54300ef2c7dbba4edc3e381d14f5f855db2083 fix: minor typos in IndianaJonesTravelTimeline.tsx
+pick f8136b34d271b20cdfd9c9b7ddd240ef0d416225 refactor: clean up IndianaJonesTravelTimeline.tsx
+fixup 7845a955864c5fcbfcb9fedc4cae6facef24f140 perf: optimize IndianaJonesTravelTimeline.tsx
+fixup 3cbbde74a989212556bd416936eaa4871b0160a6 refactor: clean up IndianaJonesTravelTimeline.tsx
+pick 7f137ad5ddedf623552695333af9b38f95e11edc refactor: clean up IndianaJonesTravelTimeline.tsx
+fixup a8597321e6df75e92192073c667ab42135087139 wip: working on IndianaJonesTravelTimeline.tsx
+pick 7cbeba76437ebe2eb30ec95eceb90dc025d62388 refactor: clean up IndianaJonesTravelTimeline.tsx
+fixup 4a494aa8fc3feb852dd4abf8dc24f944d14d9d8a wip: working on IndianaJonesTravelTimeline.tsx
+pick 40d2ea6406d7b8583bce17f11e2614629d270d93 feat(ui): implement IndianaJonesTravelTimeline.tsx
+pick abcdf260fecccc9b30dfe3d2c8b80a52776e8d76 fix: minor typos in ProjectReel.tsx
+fixup b2cd028fdd921915137d51abf236a8e1882f7898 wip: working on ProjectReel.tsx
+pick ae4885e5f2444446012743790b67dbc71400bf74 refactor: clean up ProjectReel.tsx
+pick 1761ad15dd1bace774b57cd96402948bb486c57a fix: minor typos in ProjectReel.tsx
+fixup d7f259836a2603f66e15cc4096ad9d8c5206e007 wip: working on ProjectReel.tsx
+pick c4cbefb86804533adc846127a932c71183102923 refactor: clean up ProjectReel.tsx
+pick f09263da5841e2a06514352cb7991f6a21e355f0 style: format ProjectReel.tsx
+fixup 4a46391777215105bf3b534adf611ff0c6da7226 style: format ProjectReel.tsx
+pick 4851fcd37a24147e8fd3d92c191cd5086e4dbeaf feat(section): build ProjectReel.tsx
+pick 17fd4e79c6d800ce595f157e19c6b1757a70cc1a perf: optimize EvaProjects.tsx
+pick e6086aab0e4840c3eda74614bd111a053f018161 style: format EvaProjects.tsx
+pick 78666d18e1de7f66145ed8dee1bb62c837dc5d35 refactor: clean up EvaProjects.tsx
+pick fbc3919e70eddd0d0f4899428238890dd01e238a docs: add EvaProjects.tsx
+pick 86093facd2087724a031c96e8e2409c75a0a05fe style: format AnimeInteractiveCard.tsx
+pick a22aa17d95f1a55f5b9dd66274a6b28c34b6e493 refactor: clean up AnimeInteractiveCard.tsx
+fixup ed929d18d2c0125d9271fcffa7d173bc0a8aa25e refactor: clean up AnimeInteractiveCard.tsx
+pick e059674829a45a9206a1790cb96b437cdf739216 wip: working on AnimeInteractiveCard.tsx
+pick 01dc4e1f1f959f0e50b3e19c1da51b873943c1e2 wip: working on AnimeInteractiveCard.tsx
+fixup 744c7f5c63fba12f5aa359ec54634ae1c00aab8b fix: minor typos in AnimeInteractiveCard.tsx
+pick 1a41936be902a09a6b46e653ccb5a3cd22651e4b perf: optimize AnimeInteractiveCard.tsx
+pick 6ed45a06e8a1f749c686a70e2868c0e1b14e7ded feat(ui): implement AnimeInteractiveCard.tsx
+pick 0f2d2d41e8149f236390d34f9163f4ec42d3cecd wip: working on package-lock.json
+pick 5ea9707a8d5331a37bf0f1fb9e66c866b30bed08 perf: optimize package-lock.json
+pick 49d79bb0a7680a83e6ae852fa5280e34122479cd fix: minor typos in package-lock.json
+pick c850bd4b815b5b90e4b037b4bd08dbf988454270 refactor: clean up package-lock.json
+pick 25867848fd18fb7e48c0861049326d17d062dcf0 style: format package-lock.json
+pick a486b56f280f7c24bdc18c751bce66dceed8902f chore: configure package-lock.json
+pick 701ce6cc10c1504635005c7583fa84def2cef85d style: format README.md
+fixup ae53827a3cdc2bb0b606b10ffd523a61edd37e8b fix: minor typos in README.md
+pick f76556802e00e7377c293c1acee83816ad42f34f refactor: clean up README.md
+fixup 82abced07212cf51de3146223dfaaed1a35f4b25 refactor: clean up README.md
+pick 4889a7d16b61415a0c9211fb37f9dcb3be42be2f perf: optimize README.md
+fixup 8057b0079024e07ac1452b6ac1eb17e05470c828 fix: minor typos in README.md
+pick 9cba2a67f8fe2a339f72cfc6c1eb99e90ab1cc43 wip: working on README.md
+fixup b974003c1c1ed0f6cd233f15c5722137d7253a5b wip: working on README.md
+pick f8fcdd141c9021e8916ca618c4075c1a633a1fbd refactor: clean up README.md
+fixup 23510c0564658a9ab1ccaaac115c9e2bbca7a30f perf: optimize README.md
+pick fd4a93538f6db2f58d819a0798fea0efa5b5650b fix: add README.md
+pick c2a85b1c8208220356e19961e9fffc5a5f218320 perf: optimize CustomCursor.tsx
+pick f8f8f75dae0552ee9e7856e64f76dee1a33a7e4f perf: optimize CustomCursor.tsx
+pick 51dfb79b65cc2384b56c739dbcab54795ab5f3fa fix: minor typos in CustomCursor.tsx
+pick 2106d4f0bb9f5c539814cf176428fdbf8f9e33f8 fix: minor typos in CustomCursor.tsx
+pick af92ac36f47e6b3e8e03db80858f067df881b9e9 feat(layout): add CustomCursor.tsx
+pick 1ec2f3f31a8b05f21d0a55ccaf4154131060c9bf fix: minor typos in ScrambleText.tsx
+pick 1a8e39201973b5faeaeb864993271717918575c9 refactor: clean up ScrambleText.tsx
+pick 2deda71b1c52dac9df767cbc55b87a932dbb982a wip: working on ScrambleText.tsx
+fixup 53d88ab5c6e8fff8daefa1e31af5e58d5aea57c8 style: format ScrambleText.tsx
+pick 2f692612ce9ce1f74794535d4d7cbda0dbccdf0f perf: optimize ScrambleText.tsx
+pick 75c6f0d382ebba9a118ef37825eeca37dbb0940f style: format ScrambleText.tsx
+pick 2e2c8216e76ac60ec02fa5eea3e0f98d330862e5 feat(ui): implement ScrambleText.tsx
+pick 76942fdfbade89930cb38ad32b9a6ffacb22b399 style: format ProcessSystem.tsx
+fixup 20920e7acef438ee7fe5ee4a2996c2e32e98f9b4 refactor: clean up ProcessSystem.tsx
+pick a237b0bdd663ddbfb65a6d3f13eed241ef8a21a6 fix: minor typos in ProcessSystem.tsx
+fixup 8c7307ed31c32a725f5d30f6a4d4e39c4d3d3f80 wip: working on ProcessSystem.tsx
+pick 29aa4365c70e494fa0b05d198dbf3338ae3a34e7 refactor: clean up ProcessSystem.tsx
+fixup 25628ff0c2a40807b4d4515febabc27f2cf3e8d7 refactor: clean up ProcessSystem.tsx
+pick 5d63b7e3ac34deca68649c8b4ceaa72ab16419fc style: format ProcessSystem.tsx
+fixup 94c5ff7b52acc1fde13fa6cdcde39316f7522f73 perf: optimize ProcessSystem.tsx
+pick 68925f100ab4d2d00833c179e40478c8f9d993a1 refactor: clean up ProcessSystem.tsx
+fixup 0983cc1479aa62be54773d700b12c9c6f2b8db14 perf: optimize ProcessSystem.tsx
+pick 3dd1def486837ca722cce83487941e384bc7eb2b feat(section): build ProcessSystem.tsx
+pick c4f40936286a706b629ed9a48e8177454c1825ac refactor: clean up next.config.ts
+fixup 7538b9143011c540e58d1ec253cbd100ca4fd18d refactor: clean up next.config.ts
+pick f11a7adc6d10bae37c9adbe6b1ee9f700ac6c498 refactor: clean up next.config.ts
+fixup 4b89e3d1a57646c1f1dee762feeb8c58c815b8aa fix: minor typos in next.config.ts
+pick 59ac39c2dd27ab536a3913bfb98702b0832ad861 wip: working on next.config.ts
+pick e3a5bafa345cd7272e78d54cac06d68dc224b42d wip: working on next.config.ts
+fixup f058befdb09690d32676dcd915adce71fadd0a37 fix: minor typos in next.config.ts
+pick 26e3f1868c14053b1780a79615c4632ee3821cb3 style: format next.config.ts
+fixup 28158685356d419473bdb1c73718ae0d48d0c528 perf: optimize next.config.ts
+pick 9fdc4ce3c3287ffdccb48c8168024c103c9a330d chore: configure next.config.ts
+pick b199cf7c5e443cba919d57506e3c8e715acaa596 fix: minor typos in Roadmap.tsx
+pick 316ab64f37e81a22c7c180ce901875391de98964 perf: optimize Roadmap.tsx
+pick 2c27fee7eaa7aaa3a772e744ccbebf983fbc7d0a style: format Roadmap.tsx
+pick 157f2a222667ba60296dbc1e956b0934735bb67e perf: optimize Roadmap.tsx
+pick 6fe75fa6b9249a4c3b16924e31e8c24f7fcf86c4 fix: minor typos in Roadmap.tsx
+pick 14253af0ab7ffe6c256bccf3ebeff5a66f49449a feat(section): build Roadmap.tsx
+pick 59a54e60e84585946119d559e3dc76d771ce2258 style: format ParticleField.tsx
+pick 98620e0481e40179544bdfb8726bd003850dcdc7 wip: working on ParticleField.tsx
+pick b7e7ae6e25ae95625c8299ddfe6827ee91ab2c26 fix: minor typos in ParticleField.tsx
+pick 63a13e7c73e8cfaedb585836031ec632400a3ad0 docs: add ParticleField.tsx
+pick ca5180699ec6fbc276b1cc7bc3a4f5f01c48fad4 style: format RevealText.tsx
+fixup 806b4c0c4a2cfba7465a5677e4abebb37e26372d refactor: clean up RevealText.tsx
+pick 0cd71340944ecd4d48ae3f7f3ecfcb808418cd86 perf: optimize RevealText.tsx
+fixup 09404f3d8d35dc10406275bfa9c8f312882d60ed refactor: clean up RevealText.tsx
+pick fa763290585d63aeb20ad058993b875bc2f0287d perf: optimize RevealText.tsx
+fixup 00c779cfa91770ba7b3379cc1c33807660865e4a refactor: clean up RevealText.tsx
+fixup ea433c2ad12e865ddcacf9e7486f66ae34d11343 style: format RevealText.tsx
+pick 95f8a7ae3b3e7e7ec307e3582dc317d4761a942e perf: optimize RevealText.tsx
+fixup 59c15f1b873e838447737f959f58717cc5307840 fix: minor typos in RevealText.tsx
+pick 3b6f2bf30d77e064de566bf9e8bc06d2efd52ab4 fix: minor typos in RevealText.tsx
+fixup fa49a4ad56fe54ea6b6ccc1a5afea98255c6080d wip: working on RevealText.tsx
+pick e1076f66ec4bb5b557c315fdbb3a9980874e638a feat(ui): implement RevealText.tsx
+pick 6eef5148d5fe880b9533e76cf385ab7a1e60ef1f fix: minor typos in globals.css
+fixup 38b8b32b19c92eb60ee09d80fd01fc5dacc8da33 style: format globals.css
+pick 9e932d1e607bec47aaac2e216c20cd697970c661 perf: optimize globals.css
+fixup d7316e9536f4a9cb1b10b6d1e75945bde47246c1 wip: working on globals.css
+pick abad5c6a815c8d1d63cbe0f0bb714c0b9cddb701 fix: minor typos in globals.css
+fixup 8932b738afc39ed865f758c0ddfdb554ea36bf1c perf: optimize globals.css
+fixup 5df1efc8de7bfd38d150df4528c5455089ac8191 style: format globals.css
+pick ce2fa85748fd90a3471611440e58c45039556990 refactor: clean up globals.css
+fixup d9a9a8ab2b3c2af055b2440ae3cf1a426d7d527c perf: optimize globals.css
+pick fb6bbfbbae3ac4496a5836ad851a9464e5d591e2 refactor: clean up globals.css
+fixup df80a248e54625e63458468c6eaaa52b0acd5964 refactor: clean up globals.css
+pick 4f12e7cacebc7be1918a92d92dab22039981ebbd refactor: add globals.css
+pick 94c51c250050884ce40db38b38669841a9863407 style: format Certifications.tsx
+fixup 585bee8218d14a01769b45e154bb0bcc9932ec8b refactor: clean up Certifications.tsx
+pick 285681dfd19d99607746b0440b538aeffed7dba6 refactor: clean up Certifications.tsx
+fixup b2cfc6a0521403a2532f855b4ead2ac1ea5dd486 style: format Certifications.tsx
+pick 75439cde76da3b1d9125bc15fe4ab4ac1da3832a fix: minor typos in Certifications.tsx
+fixup b6454d0ef1b4ceefa103cbea333b6137120ee3c4 fix: minor typos in Certifications.tsx
+pick c0afd52545c1f0a422a5d2c015eac4352486256f style: format Certifications.tsx
+fixup 948993d81ac55a7da802aaa253e415621ead0aa8 wip: working on Certifications.tsx
+pick 9f7878f6943321fa8c8e812e434a7cfe16b1134e fix: minor typos in Certifications.tsx
+fixup 6ec31db8594c0d895985bc82e43764b513d4039b refactor: clean up Certifications.tsx
+pick e3afa0e5edf0b926aff5fc057ba23ace0ecb6967 feat(section): build Certifications.tsx
+pick ec00ca2b1948362de0992da13afc6b7772625dc9 style: format .gitignore
+pick c3d73a6645f251c8caac670d0a3f997f3ceb871d wip: working on .gitignore
+pick 272b4655db2ed6708864571c8dcaf91b2a9bc93e style: format .gitignore
+pick 862fd10c4b769c4d39f6c1381d1ceb915a6ab04a fix: add .gitignore
+pick 6923640aafd12b187f4ecc10261f1c0c886dd013 perf: optimize InkSplatterTransition.tsx
+fixup 9adf49a588a7f16f270d0f4030d7423f0520b71a fix: minor typos in InkSplatterTransition.tsx
+fixup e7c561bb267bbae17915309eb452f0b6034d920d fix: minor typos in InkSplatterTransition.tsx
+fixup c5e739d5c7eb0f5225fe413ce469c86a680971f1 refactor: clean up InkSplatterTransition.tsx
+pick a56376fa8163d93982e471ed41c55953e3fed254 perf: optimize InkSplatterTransition.tsx
+fixup 0c4d880584c64900af9459a1ca6dc6b39f5fe64f wip: working on InkSplatterTransition.tsx
+fixup 0f63b2963cd383f3ea74d82d2e920932cba16e32 perf: optimize InkSplatterTransition.tsx
+fixup a0b7e29966f6457c2b26660f6a9e90083240c752 style: format InkSplatterTransition.tsx
+pick 8429c9320f601fd22d85394230eebbd42aefed4c refactor: clean up InkSplatterTransition.tsx
+fixup a0a3265b539192d7d53171e482ba6290a45e08b5 perf: optimize InkSplatterTransition.tsx
+fixup 148692dd7e2715dd9762e64530c0e0adad2fb3cd perf: optimize InkSplatterTransition.tsx
+fixup 7a70b904e5304c55a9c81c89dcf523fcc8c9b819 perf: optimize InkSplatterTransition.tsx
+pick c6c0ff3ddc41acf1bfb62170f6c591520c9c4a12 refactor: clean up InkSplatterTransition.tsx
+fixup 90b179e08034bf4a913e59aff24e939071997807 fix: minor typos in InkSplatterTransition.tsx
+fixup acb85d4da3b69ef77357781b66c3a1a36b14a5db fix: minor typos in InkSplatterTransition.tsx
+fixup 3608833f153ae7f1e77386ca8cd86217813f2d37 wip: working on InkSplatterTransition.tsx
+pick 3c9328594d53ba9b6348b56c4ba47122706024aa style: format InkSplatterTransition.tsx
+fixup 6a899e8b71a263bab281b33663c57ec344d14a5f fix: minor typos in InkSplatterTransition.tsx
+fixup 78acfd68edefea77b42d981cd3f8696c9741f007 perf: optimize InkSplatterTransition.tsx
+fixup 76b6002c6f533da65df0e6178e57e911e7b8a0fd fix: minor typos in InkSplatterTransition.tsx
+pick 61561ef469ec432182f73a42f8a1da1633828281 feat(ui): implement InkSplatterTransition.tsx
+pick db2435ac375c6441dfddb2f0c19819ffc62af2e1 refactor: clean up About.tsx
+fixup b1909b9dce7cf75dcde6cbeda55533332b445b92 refactor: clean up About.tsx
+pick b8ae971284d1d8464294913fa792dedbfbb65f30 fix: minor typos in About.tsx
+fixup 71443b75f628e366e52fa362199825bb9fe96b5e fix: minor typos in About.tsx
+fixup d63a2038d3f6391d367e72ce433b66866da9c2e8 refactor: clean up About.tsx
+pick da04c7250f67b50c5952c14d96ccf7b1bf174740 fix: minor typos in About.tsx
+fixup 951f38548cfa1e7acaf786ec8109c3bf5ebeece5 wip: working on About.tsx
+pick 93e86a4b6cf1eca7d088e6550c2fb6981ffe3251 fix: minor typos in About.tsx
+fixup 710fe0a7e943ecc6c0a963064cb608b25896ca75 wip: working on About.tsx
+fixup e919a7f44d4e80ac293f29fc41925112a15e70f1 fix: minor typos in About.tsx
+pick 34330349e6919440944691f178a0043702f18ac9 perf: optimize About.tsx
+fixup bba55bd93ee0ea5c957e29a855ecda300c82d140 perf: optimize About.tsx
+pick 2783e37b20beb36f872f542a72d4abc3f2bb8cc4 feat(section): build About.tsx
+pick 6b2dfbbc73eddf1146655cf2394f5c8c9c2fa3bb style: format EvaHero.tsx
+fixup 5936cecb9dc20e5363be71578a2aa6df899f0cfa fix: minor typos in EvaHero.tsx
+pick 3cd3a5fe62fc262395d13f3c26af6b5aeb263721 perf: optimize EvaHero.tsx
+fixup f7109c20992d7c347e585db85cf1c617eaeadb2a refactor: clean up EvaHero.tsx
+pick 58d6c64cba5859597faa381f2f2bb58e4682b268 refactor: clean up EvaHero.tsx
+fixup 48c8069ea76aa4d29d6cc292b6edb6612b0d2148 perf: optimize EvaHero.tsx
+fixup 08fdb6a9042859741c11d8295fe0d839087294d5 wip: working on EvaHero.tsx
+pick 3fd253ec4e9250115d90a77b7821d6f36a4b61e4 wip: working on EvaHero.tsx
+fixup e27f5fde6acb91f215898e30e2f7073f17526dc7 fix: minor typos in EvaHero.tsx
+pick 40fdd584b666fab6673135d91924f4091e222590 perf: optimize EvaHero.tsx
+fixup 8a39953bd5a3b5abcc26567eb442ff23b7eb65f5 refactor: clean up EvaHero.tsx
+pick b29f15513ac3e7bdbefa7f03573ae246ddb06a08 refactor: add EvaHero.tsx
+pick 990e1ec330d22b469d0faf58a3e196137b4e6167 fix: minor typos in layout.tsx
+fixup 0d1bfef976cfda1594d728540fd0372984e56763 style: format layout.tsx
+pick 7e507b8cb5a72dd2c9b441fa862feaec788a858b style: format layout.tsx
+fixup 85ed4eaae26a402affdd96f54073ec13d4e72f1e fix: minor typos in layout.tsx
+pick 389745d8e3298d48087b0f46dafe82b667aba780 perf: optimize layout.tsx
+fixup 1d916e9ac6c50548bb0a7250a892191cba5d65e9 fix: minor typos in layout.tsx
+fixup 4afbf5194ea31af48fdd87f98d4c34d23c37108d fix: minor typos in layout.tsx
+pick 9c083d22a9f7a877aa3bf213a9fb1f16c1a41c43 perf: optimize layout.tsx
+fixup 71dd9e52738bc759c54cda5f3618f3e73c5c0bc3 refactor: clean up layout.tsx
+pick 92a668bd3f32ed21362c1b728ef94024a427b0e0 wip: working on layout.tsx
+fixup 63567665913199c25cf855e31cfae7d6bcb5e03f wip: working on layout.tsx
+pick 88a28b394ea689b3050e07baf74efc57ae4464dd docs: add layout.tsx
+pick 97e35205b7e87ef70b8c4954433de95dbe4a3299 style: format view-transitions.d.ts
+pick 0ecda91a148da3432f1016458daffc0fdbd8fff7 fix: minor typos in view-transitions.d.ts
+fixup 691c5b6a0c2538aaefce625db5e254108a469fc9 refactor: clean up view-transitions.d.ts
+pick 46779e51f62d674866274b90930ddb721cb59827 style: format view-transitions.d.ts
+pick 60c858be9f9f1d714a715991467da9490d508279 style: format view-transitions.d.ts
+fixup c55447fb742f5b666895a6b7708b50d43b370c06 fix: minor typos in view-transitions.d.ts
+pick 03912f6f0f8428739d42f5bc611eb82381c63eb1 wip: working on view-transitions.d.ts
+pick 17c70d352dde96be9c353bd57f7e6467d02194db feat: add view-transitions.d.ts
+pick 9f97d2f6552175d58fe686c32157b4f5942f3c9a wip: working on EvaNavbar.tsx
+fixup 63fa345b781dd5f832215a691b88ee848c18e8d4 refactor: clean up EvaNavbar.tsx
+pick ee6fe72f160c93126bec8ff21723a01f5b944a98 perf: optimize EvaNavbar.tsx
+fixup 54fd9fbf0df6f9b26c81d31b9d1caf695e3240e9 perf: optimize EvaNavbar.tsx
+pick d3d976f42f01b86fb7bf95691894ece7f43bcb8f perf: optimize EvaNavbar.tsx
+pick a2d3d15b046c33b958ca08d5ee44ae00788112de style: format EvaNavbar.tsx
+fixup 2e41b0d142ce9bc076932b2cccbb9d859ff480a0 perf: optimize EvaNavbar.tsx
+pick ba81ff97bc54527b8ff4cb824512fee9610d6253 refactor: clean up EvaNavbar.tsx
+fixup d1da545ac4bc2400edf1374283e629d7139e5cd4 wip: working on EvaNavbar.tsx
+pick e6f13fd1e3febe9592604426be2a35e6adb9e507 refactor: add EvaNavbar.tsx
+pick 2121845fca7d49eba47673b5cce84c7557a159cb wip: working on EvaContact.tsx
+pick aa3586175234ef43b2d0da54d78c5f3edd4d13e7 wip: working on EvaContact.tsx
+pick aff7357650001ede79034a3855107d519d1913cd style: format EvaContact.tsx
+pick b1bea7cf749c59e90cdcde3597f5b8716a6e38e6 style: add EvaContact.tsx
+pick d53ed3a823999c9fc1d1216c7e048b00556796a5 fix: minor typos in Services.tsx
+fixup 6864df7e17351b04ddc117fd5f667248fae0b47b perf: optimize Services.tsx
+fixup c3b2b9410eb53886bdb09c28223815066f4c9029 fix: minor typos in Services.tsx
+pick d74bee574fddb3d7a9d47f42da9dfa2e8b797637 style: format Services.tsx
+fixup 753369e7f53c97ed74c6a21c7e3fe77d3f9f2c9a refactor: clean up Services.tsx
+pick 69f0e8b3b3de5a0dd946fcf22f373e1c9937542f style: format Services.tsx
+fixup 86878e17373e5c9238c3ca0e0b4508c7e7415be9 style: format Services.tsx
+fixup e4abd443fcafdecfafefa3b7480aa1b03a8f12a1 style: format Services.tsx
+pick 82ad279091b575aff8887f4d6780c29336fb89c0 fix: minor typos in Services.tsx
+fixup 9e061d59fb67c008347b72ba8138c203b0bab348 wip: working on Services.tsx
+pick 494f60826d1c6f901ffe1260ce05caf1f7ea9d69 perf: optimize Services.tsx
+fixup 132e34d69309ff511574357aa7d2087254ae2335 refactor: clean up Services.tsx
+fixup 3969b864e76aee91e4d529aea7cecc387ea1da3f refactor: clean up Services.tsx
+pick 4d74e6341dd76b82a6352c1f8583938799599b8f feat(section): build Services.tsx
+pick 2d5c78e600f87257c01a70bc239659e6cb6b9ef7 fix: minor typos in profile.jpg
+fixup 8eeff4d1dbe74678b9deddebe2c5b58a91d34de6 refactor: clean up profile.jpg
+fixup 19a8b17726a256f1d170d90f470c8680f40f6fbc style: format profile.jpg
+pick f18d00174ea9e62ce40adeb8dbe1ad5ad713a554 style: format profile.jpg
+fixup 7a23b1010343b1646c70218eab19ae2c9c6e5c5f fix: minor typos in profile.jpg
+fixup 3340289e744a8d54db484dd0a7c7f002c47a984a fix: minor typos in profile.jpg
+pick 9ccbc7e3e28258ed1b60c0dd31e9084b49fe609e style: format profile.jpg
+fixup 1a79683ccfe10acf9b3d2f7f498cdb5cd38cfe6e style: format profile.jpg
+pick 59a2c8c72e13d91f99be32fdcf81925e7b58a5ee wip: working on profile.jpg
+fixup 5e530e626eded202c5f1839888492d52739498c4 style: format profile.jpg
+fixup 5154a6794ffb5315a4576cc28365026dae58baea style: format profile.jpg
+pick cf495a874fba08982c8ba85fc57ef2e989fe387f style: format profile.jpg
+fixup 82a30114b8cbe11fb3dbccaa84fcf42271a794ab style: format profile.jpg
+fixup f2305eefe0987f5253d3a26a700d913a6a5f76b7 wip: working on profile.jpg
+pick 6b8b4f8082f927a91567d51dc3843660bd5ff8c1 assets: add profile.jpg
+pick 656cedf78572cbbd56975ed3b9b8bfdcc7ba75bd wip: working on profile-placeholder.svg
+pick 36fac9b5f2659f8180a7f6f74b241429e9985072 wip: working on profile-placeholder.svg
+pick a2372c536fe75e3d2231b60a999c7c3e016a7452 refactor: clean up profile-placeholder.svg
+pick e2caa5b70e1bb955caf9535cce6839011d890ca5 assets: add profile-placeholder.svg
+pick 0d225b94587a589b2f374fcb90a5c8c5472d7280 fix: minor typos in AmbientField.tsx
+pick 7712e452b14558b71e287271656181275e88a5bd fix: minor typos in AmbientField.tsx
+pick fc579cefd8b8f97a07826ffad9edda7a5b4dcaae fix: minor typos in AmbientField.tsx
+fixup 21aebdf37ce18e31ce30296bc1ac01e95c00e379 wip: working on AmbientField.tsx
+pick 59d4d84059e17b805e59838469767c39b5346218 fix: minor typos in AmbientField.tsx
+pick ca2cea06847c3b73b639c6f68aebce651c23544c perf: optimize AmbientField.tsx
+pick 4c57d74eea8be2d0e2d5f2c01c6a5114528882e0 feat(ui): implement AmbientField.tsx
+pick cde2e72d3aac58694cfe0bff2033efefae3ded6c fix: minor typos in ScrollProgress.tsx
+fixup 5db2d7edd7c6645c20fdd6f0efdec3632fcbbfed wip: working on ScrollProgress.tsx
+pick a74271b8e685fe70ecbf6499dd51fed7eae6f121 wip: working on ScrollProgress.tsx
+fixup dad7a94be136b4f309203e8053fcaf11bd52696e refactor: clean up ScrollProgress.tsx
+pick 4a34d6147e9f3ea40d247556e0a2052f6e36f879 refactor: clean up ScrollProgress.tsx
+pick 3333b6221d5ba9a1d79f3ce2e0fb8c41490564c5 fix: minor typos in ScrollProgress.tsx
+fixup b4430458ecd696213a8e2d7d6c0bbfb5a5de966d wip: working on ScrollProgress.tsx
+pick a7aa4eaf42f3ffa28a8eb5973c57b5a5e8af63a8 perf: optimize ScrollProgress.tsx
+fixup fce38fc728d620014f26e30681dbddc2161d1c61 fix: minor typos in ScrollProgress.tsx
+pick c1d839af53d22eb2479312f34c0a9e8594091002 feat(layout): add ScrollProgress.tsx
+pick 6ec6ddb55438371422eb34488ad7d11e29dfdf2f refactor: clean up wavelength.png
+fixup 67db3b9b747a017db0968e4b2ed895b445b387d6 perf: optimize wavelength.png
+pick 6f6cd391bd65d64bee1d5a4ccd025c2b961dc25f refactor: clean up wavelength.png
+fixup 5be5d43140ad7cd2b2bbd80a850681c1e3ec7490 refactor: clean up wavelength.png
+pick 11ab690837b33c1a220ff27b5368f1b43a644ea4 wip: working on wavelength.png
+fixup e5395cbd933f5fc1ae23ef1f53c8acfa9e74d3da refactor: clean up wavelength.png
+fixup 418f98f5c0293661a62126c8f2c9fe53a100b337 refactor: clean up wavelength.png
+pick 5d304343b501fb438a7a13b7df5b205ea564e0f6 wip: working on wavelength.png
+fixup 06ef215a5d83fc2410a107362da7062fbb3e6a49 perf: optimize wavelength.png
+pick b210530d2ebeba5dfc743048793316be31c53454 style: format wavelength.png
+fixup 368a47c253bb2d3a009f2bcdd9a082d6ec1b8eda fix: minor typos in wavelength.png
+pick 1e2a8e39fc8e2689263a02064448899f24c794b0 assets: add wavelength.png
+pick ded4e2a689db797b9c235c745eda719968a50806 perf: optimize EvaLayout.tsx
+fixup 5f404e40108197060a47a29c22148a95610a592c style: format EvaLayout.tsx
+pick 25729036a9c911dee46602acb8ce28f9736b0560 wip: working on EvaLayout.tsx
+fixup 507bb9091a63e629769e6d085e6bb60dc2baac19 perf: optimize EvaLayout.tsx
+pick 29af639caf70a0838ff70c12d3bcfaa12f2800f6 style: format EvaLayout.tsx
+fixup 92e14b80e44df85bf7e9db349f382e867d8c8d80 perf: optimize EvaLayout.tsx
+fixup a0e1b647eb76662263c888dbcc6486e2a71552ac refactor: clean up EvaLayout.tsx
+pick 9f8ea8e07b995f021b12375036e0058215932777 fix: minor typos in EvaLayout.tsx
+fixup 095e63f5927e9f025d95a18eb4439159a3cf6bb3 style: format EvaLayout.tsx
+pick 51b9a740c475744d7e2bb6adbe7e7d080775443f fix: minor typos in EvaLayout.tsx
+fixup 25c5c18065b637c574655efc04f4fd60025d22f0 style: format EvaLayout.tsx
+pick 1d898b3043d8b7c5fe88935ab7df2bf333977498 feat(layout): add EvaLayout.tsx
+pick e996176b927b574d2503377aa46cbf6c935503e7 perf: optimize Navbar.tsx
+fixup 321bf8327dbb1a5c6aad1866637144df3721317a style: format Navbar.tsx
+fixup 77fd9c6ded3bdd80dae96bbfb862a5c93c7d67b9 fix: minor typos in Navbar.tsx
+pick cd47260de61133e1eca7bc2aaa45e8319034af7e style: format Navbar.tsx
+fixup 48ab0973f2a340d032f7d388502b04adcb4f031b wip: working on Navbar.tsx
+fixup d3e9cae6fd1eda2174d495167fc8c32d2e7bca4f perf: optimize Navbar.tsx
+pick 90c7a972cf9b38f46d5907c386a75bcf17aa0ee1 refactor: clean up Navbar.tsx
+fixup 1eb2d62e4bb866113d5423dde725e96b9ee88adb style: format Navbar.tsx
+fixup dc6b525e1ffd1b710fc070982a85cee5b30ae1c6 refactor: clean up Navbar.tsx
+pick 4a154d36a91215b869f6841b9e4978bdedb20abe wip: working on Navbar.tsx
+fixup 3cc939a130c11d894ac3bdbe340857a0c7cb2f3e fix: minor typos in Navbar.tsx
+fixup 65ce5633b4752169d006a2262955248921834ee1 refactor: clean up Navbar.tsx
+pick 9a4a86e2daf8d336c24896bbc67b8fef0f96e20e wip: working on Navbar.tsx
+fixup 8ca207b376f8cdb7cc70f6e4ff6bc478b2a5eba8 style: format Navbar.tsx
+fixup a5f273d3f78380ef0cde9b3496b7fdb751e24909 style: format Navbar.tsx
+pick 1cbde4869d7ae14c21ec8320ca141ac6e7df9c30 feat(layout): add Navbar.tsx
+pick 3756eeefc2bcf8f972fdf1e44bad74a8973b7683 refactor: clean up page.tsx
+pick 14e8b2b0dd426e2efe34d899d62de8910ea84378 refactor: clean up page.tsx
+fixup dcdcec3c54cb3f7e1c35b3feb0fcdcd905bb7173 perf: optimize page.tsx
+pick 20319dd9138720b87256d5a6c8c3979b939a1afd perf: optimize page.tsx
+pick d8b781bba0d00e18deeb8102796a0274736efa65 wip: working on page.tsx
+fixup ff6d7555d6402b2cc2485b40c20376e72e16f8a7 style: format page.tsx
+pick 113575feed33337097881a85f5cc237fc78308ea wip: working on page.tsx
+pick f9ea59dfbbdb98ef4beca08840324e3c32f98b30 docs: add page.tsx
+pick e5262453f0149a9f21d8352aaf694c76d7387d7b refactor: clean up AnimeText.tsx
+fixup 6b755b259167fa4ac1e2f5f48bc7bd6f9bf0284e fix: minor typos in AnimeText.tsx
+pick 1bcd7fb3e5cf8a4b445145448f6ae7e4aa8bb0a8 fix: minor typos in AnimeText.tsx
+fixup ef1bd4308e5642c11f1caf1146621cc6c6a1aa63 fix: minor typos in AnimeText.tsx
+pick 89880db1536d7f9214e5dae66f393277c6eed0a8 style: format AnimeText.tsx
+fixup 7e05bee61444dc20f01d87b38080779ab24053c3 wip: working on AnimeText.tsx
+pick 898ab9ead9c1c47ba7e76adf0a091cd74672bf16 style: format AnimeText.tsx
+fixup 3869b6c89f44aba213e1da07517667e3fd8b04a6 fix: minor typos in AnimeText.tsx
+pick 621a9f37df279602c92dca4959ac59fb5a9f509d wip: working on AnimeText.tsx
+fixup 56f246154629487f83dc561a5023db71d6e7b9ac wip: working on AnimeText.tsx
+pick 593f74b47d9178586ebcb33bddea27c2c206d7e0 feat(ui): implement AnimeText.tsx
+pick d820f731f2d54eed6673bb6c7d932adba84659b8 style: format HomeClient.tsx
+pick a807158a638bb8b1bbd5ef245e580700a2471f0b refactor: clean up HomeClient.tsx
+pick 6b10e3661a27719035ae7b80ca9917f2496db924 refactor: clean up HomeClient.tsx
+fixup 1d9de01e997f06926931cbadc1b560c3bb320ba1 perf: optimize HomeClient.tsx
+pick 397c9844ace58c1825ab95e42e2ce07d07a59b73 wip: working on HomeClient.tsx
+pick a56a326c9e5d59d02362f678f4af78ed948c85c1 perf: optimize HomeClient.tsx
+pick 34100cbc46862b6947bd8c5df576a26d3c828167 style: add HomeClient.tsx
+pick d3d475f2adb6ca8f6eeff28e828234a8a1d3e4a4 perf: optimize package.json
+pick f29f0e0e9ccd20eb79cb46781f8eea253fd8d97d fix: minor typos in package.json
+pick 9886744dd2de6f0302e72443021ff2ec4e655178 wip: working on package.json
+pick 38cd56ca5297224f4a3288060b0aedf3302ca352 perf: optimize package.json
+pick a860e5f4be74fe23bba6a3211efd10cc675e3f0c chore: configure package.json
+pick ab5c28e74e7ca1ff2507f89529113c3c1bd4f9ca refactor: clean up BrandIcons.tsx
+fixup 02bab714af55a7556808108d9f717c0589379cfc style: format BrandIcons.tsx
+pick 36f35ce763e9b2cd1d3a0dffdd8158f06b06c973 refactor: clean up BrandIcons.tsx
+pick 807433aad2fc5d106015158ffacfceb6fc655411 refactor: clean up BrandIcons.tsx
+fixup d2d05e230c543370a106bbbca309d1e955cc7243 refactor: clean up BrandIcons.tsx
+pick 218f4444d5edc06bd6d9ab897639b99e4394a97d wip: working on BrandIcons.tsx
+pick 8efa6ff2423cee8e1e6c8dd302a1943c3f995f2c refactor: clean up BrandIcons.tsx
+fixup 1e39784c2d11973a0b667b2153c2b5cd354b37d9 refactor: clean up BrandIcons.tsx
+pick e6397df4e627e91e76a34e9ff0b0bf598fd953b4 feat(ui): implement BrandIcons.tsx
+pick ac112120269e5ff1502f2a100b14cdb36d613ee6 perf: optimize Playground.tsx
+fixup 8acd668ae7633b3daee4f659dbf3f829de5fa48b style: format Playground.tsx
+pick e2b6ed5408c26ecbe516853da924be5540cc49fc fix: minor typos in Playground.tsx
+fixup b52bb4fc955d5380398135cbbfc56ede3b3f33db style: format Playground.tsx
+pick 641f420358627d38522311058a3d8d1ec4fa3607 refactor: clean up Playground.tsx
+pick 72908f3fe5730a95d1bc6dd64ef412ba493f3556 fix: minor typos in Playground.tsx
+fixup 8594623c0dc6715ffce99dc31300d0c4e922a316 perf: optimize Playground.tsx
+pick 134337bd34bd2e10b4d93ebab8c774b41307cf10 wip: working on Playground.tsx
+fixup 5b49b145d9ef89abe5db1d0ba4600b929122304d refactor: clean up Playground.tsx
+pick cf5ba04d0f69bbc6e38ba42cf4783bdd10a76af2 feat(section): build Playground.tsx
+pick f7d5beeada41a425c93587aa23314c0a67d9d0a1 wip: working on SmoothScrollProvider.tsx
+fixup b1426fd6c20cc4bd975cf68ad95efd6af96c46e8 style: format SmoothScrollProvider.tsx
+fixup d6f936a209cf3f1e4d662bedd002394abff4a7c1 style: format SmoothScrollProvider.tsx
+pick 18d1643b62af9638ea89c4a31b0d710a61a137d8 perf: optimize SmoothScrollProvider.tsx
+fixup f4067d06d59adb47dfa8b7e1633320f828be09c5 refactor: clean up SmoothScrollProvider.tsx
+fixup c26709ebccf7a29990b846692a60fd655dc82fb4 refactor: clean up SmoothScrollProvider.tsx
+pick a416681325a08855666326a38cf691ff3b3428fd refactor: clean up SmoothScrollProvider.tsx
+fixup fd6d61fd7fd691f0a0ad0e8b8fc6baa9a5baf32a refactor: clean up SmoothScrollProvider.tsx
+fixup 196a68ea6c2a6995b3606cef315b5c75fe212e68 refactor: clean up SmoothScrollProvider.tsx
+fixup 1f3bd6bc6e0f004f2ae0c6e5474304e603f8af64 perf: optimize SmoothScrollProvider.tsx
+pick fda6c89d7359febb847eeb60bbf36207bef76065 perf: optimize SmoothScrollProvider.tsx
+fixup 3bf6538331fd0c8b915f69c74142fc243218ebc6 style: format SmoothScrollProvider.tsx
+fixup 573211768f0655d3950202b86d267cd2e0539c6b fix: minor typos in SmoothScrollProvider.tsx
+pick 733e726b144f992edcf94cdadff18768e2205cec wip: working on SmoothScrollProvider.tsx
+fixup dd9008fe53de05a008f3f3feaec2cd18798e3ce0 perf: optimize SmoothScrollProvider.tsx
+fixup 4151ee3dcf552b6bf54fd3df50085341c94b6a19 perf: optimize SmoothScrollProvider.tsx
+pick 72daa19686646b7fc38d201c5025f89d107f238a feat: add SmoothScrollProvider.tsx
+pick 1fcbe4940f4b8d66caa45bb98a3283c8f1e56cd9 refactor: clean up TypewriterText.tsx
+pick ee63586261254b5b3b736ee72830de793b5bff1b wip: working on TypewriterText.tsx
+fixup 8d28309987376ea34628b84e897eb8189edea0bf wip: working on TypewriterText.tsx
+pick 10490f99afd07ba6d6b111ff3afe12f4eea031dd fix: minor typos in TypewriterText.tsx
+pick c629d50f1e7253e096e76fa8f879dc46465913e0 perf: optimize TypewriterText.tsx
+fixup 08140ef959dd2d3e80c5a38f8aaf6e7e73600e98 refactor: clean up TypewriterText.tsx
+pick f343bc861520f4c225664f80d614d9e50191e597 style: format TypewriterText.tsx
+pick 58f301cc23f691abc3918e3c46eae9638fbf3390 feat(ui): implement TypewriterText.tsx
+pick 4b0244ee43d37d5c3cb38377329ac5c1eec56564 style: format ThemeProvider.tsx
+pick 7ead3bcef488551039ae0f495504c6a69cb67e51 style: format ThemeProvider.tsx
+pick 6f70b937663115c7985f32fe2caede33a0febe47 perf: optimize ThemeProvider.tsx
+pick 46a49c69bd3e4368cc4ca1ad7a224b4ee78976a7 wip: working on ThemeProvider.tsx
+pick 21e32be9566f4c820329665253eadecfc8a1b562 fix: minor typos in ThemeProvider.tsx
+pick b0287eb982a0cee2ff591e0791df019fa9fcade1 docs: add ThemeProvider.tsx
+pick c004fcae70ca3d8632ff2b45418956cd64e42051 refactor: clean up eslint.config.mjs
+fixup 7a668c2afe06c80386fd86f35f3bafe2c425f235 fix: minor typos in eslint.config.mjs
+pick c34203c3570428a079b733709c935b9a7887a0c9 fix: minor typos in eslint.config.mjs
+pick 86377b654c6bfabd5d61d80498d27933de4cc8bc wip: working on eslint.config.mjs
+fixup f67a0f7e41e868f7fd33442ed7fbc5ca5b6ee632 perf: optimize eslint.config.mjs
+pick c8f80ce40a205a1e92b740aabd0bdd902b49c770 wip: working on eslint.config.mjs
+pick 4d1e6264da008fd98362477c4ce522a424387b75 perf: optimize eslint.config.mjs
+fixup 657c0943abbc8742a1902d4ce08fe410cde4a599 wip: working on eslint.config.mjs
+pick 1dc4aa06f904176d79cf8b865ea370dfbebb91e0 chore: configure eslint.config.mjs
+pick e2359b6828598d09e1663d2efd7d640e40480537 style: format Contact.tsx
+fixup af1a70147ee0d9e0791c5d2175e769d1febdf25f refactor: clean up Contact.tsx
+pick 2b7371ace48a98b81426b6aff745166a0a65b424 refactor: clean up Contact.tsx
+fixup ecf82f7d7d5754e42fe4d27a4919e2f62ec2ae3a style: format Contact.tsx
+pick b50373be9ce462be65fa38e3286447ba5617c1f8 perf: optimize Contact.tsx
+fixup 7b3f82b48482e49db420aaf43d77f02a22b5edb0 perf: optimize Contact.tsx
+pick c7f4ae893aa4e42819d903a6e71c6bc86679a080 fix: minor typos in Contact.tsx
+fixup d009b7df56d384c6828a8c27516d3ce6c1563203 style: format Contact.tsx
+pick 275e044b1dcfd786b26101c5a50caeb1357992ac style: format Contact.tsx
+fixup b2ff96968fe43fd8d6ebf51d818c52ee875bfc1c style: format Contact.tsx
+pick b415cf5dd3a4a4ecc74b839e171f2376d5880d6e feat(section): build Contact.tsx
+pick 8ea55d47ebf7b9405103bc465e8f349e970893a7 fix: minor typos in EvaAbout.tsx
+pick ea0dd3e7cfc9fcbe0881188a0ec1106f5b2cf6ea perf: optimize EvaAbout.tsx
+pick e9c4bf1ee7afb1beb81f94ae78ef71b1e8213d2a style: format EvaAbout.tsx
+pick f0764328b49476c85e99bad4615276581e89d0db fix: minor typos in EvaAbout.tsx
+pick 98dd70e4a7e7486dc7777f38108d6d61072bbe17 fix: add EvaAbout.tsx
+pick d7d5060ca62bdbdaf7fde780bd218af75e605768 perf: optimize postcss.config.mjs
+pick 317e70cfeefeec9c06f0b2d21b935a1b4b13f256 perf: optimize postcss.config.mjs
+pick 5938a97e050892bc83493e4e8f91d2c8f8aa1d18 refactor: clean up postcss.config.mjs
+pick 42dab49f72c951adc3587bc0ecbf14c778e6f5cd style: format postcss.config.mjs
+pick cf86365df3e661181684ddd3b6fd56d16f27c07e refactor: clean up postcss.config.mjs
+pick 5d77392e5232a6d631d50c9a04847f21c17fda9d chore: configure postcss.config.mjs
+pick a02469b9d776653cd18a13989a7e5bc8182dc371 wip: working on TechStackConveyor.tsx
+fixup 952dcccddb911b01d97642b1249a10d3b8cf87b9 refactor: clean up TechStackConveyor.tsx
+pick 55a2bf84e30a47e17b1024f380dc246eceb2d5da perf: optimize TechStackConveyor.tsx
+fixup 38cb1d68a24311edf92965e03522066d34cbc798 style: format TechStackConveyor.tsx
+pick 2a35e40c7b798714a3426de47b9c1114ff7ae62e perf: optimize TechStackConveyor.tsx
+fixup 1c54e91e0c761db987be36cc776f4a37a6710d10 perf: optimize TechStackConveyor.tsx
+pick b646deeb4abd673535334026a6cf93b2bb8e7dba wip: working on TechStackConveyor.tsx
+fixup 8496e97088b7cc27fe71cc33964dfa71a83f29a7 perf: optimize TechStackConveyor.tsx
+pick d7ee7882f0251c93fadb86e8f6f9a817c758940d wip: working on TechStackConveyor.tsx
+fixup 1a8a0067d713ac5413308a4655e7b32973e81a65 fix: minor typos in TechStackConveyor.tsx
+pick 121cfbcf9e0480172c2067151b40551e60c5317d feat(ui): implement TechStackConveyor.tsx
+pick b5dbf4912c0a83bcce6b0877a24e93179b1b9a81 refactor: clean up ChapterLabel.tsx
+fixup 61929546593d3fcd87ea68f8a7b5ef33f15bcddc fix: minor typos in ChapterLabel.tsx
+fixup 5464fb654c33e3fb0c708ccb4e167df57ea63ded fix: minor typos in ChapterLabel.tsx
+fixup f04dec1bef48080754db1d4289d851e6f2c8377e perf: optimize ChapterLabel.tsx
+pick 622560e3a3293e777544c89e4db01bbdfb8830cc wip: working on ChapterLabel.tsx
+fixup c12b02614c8bcee546e42a5942376f7cb6950d34 perf: optimize ChapterLabel.tsx
+fixup 8282c7de598b29291bf96632f676e99c98234bb1 perf: optimize ChapterLabel.tsx
+fixup de660c241a318a24bbf02858302a20dbac15993a style: format ChapterLabel.tsx
+pick 3b3cce505741e9d535b1821ef0a9ab4e1dca3d2d fix: minor typos in ChapterLabel.tsx
+fixup 99537d0cf39f85b719752908055bececd44a25a8 wip: working on ChapterLabel.tsx
+fixup 0c45a6fae0353ae2e3db88d038d9ffb871897491 wip: working on ChapterLabel.tsx
+fixup 626cf2487718e96589e0d91dc094e1350a695453 style: format ChapterLabel.tsx
+pick 1801dc10258d603c546fd0cd495d39a7174fbe79 style: format ChapterLabel.tsx
+fixup a6ad8a8fbb90f3c39c943743e9387140b5315384 refactor: clean up ChapterLabel.tsx
+fixup 1c48908ee88183747eae758d01cadf176aceb4e7 style: format ChapterLabel.tsx
+fixup cb8923a44c9bee11f5b513a459bc97ed236cd537 wip: working on ChapterLabel.tsx
+pick 5b56f5b56b361e24d7a5faf2a45877e487a31106 style: format ChapterLabel.tsx
+fixup e8a02efcb2ce395ccd61bdde5f1b6d2aa0261bac style: format ChapterLabel.tsx
+fixup 1c7a6fab235ffb93f3aa6d0b2d5af79a667b42fb fix: minor typos in ChapterLabel.tsx
+fixup 85adab89517c0121a57f8812e6ad90896c6cbf0e fix: minor typos in ChapterLabel.tsx
+pick 78bdfe954eaf6cf124e112e959d1ee5320b33096 feat(ui): implement ChapterLabel.tsx
+pick b1de05222eca0ae48b657833c583ff6ef945ffec perf: optimize IndianaJonesGlobeMap.tsx
+fixup d71a63189c541cbc9e103937dd95967fb96a16de wip: working on IndianaJonesGlobeMap.tsx
+pick 53bf7ee48b6cef4ec148ef3cd21483adda1c6dda wip: working on IndianaJonesGlobeMap.tsx
+fixup cca9ea322e1cb632e43cb3a6c61fb2701832072d refactor: clean up IndianaJonesGlobeMap.tsx
+pick 5adff6906d418b5de90da012986fe550e138d57c wip: working on IndianaJonesGlobeMap.tsx
+fixup 7ee0a41426f9591720b3fb4300e6b21f0a56a4be style: format IndianaJonesGlobeMap.tsx
+pick 4e6b5a74f463ab0fd595088e1de09ca2d5a2a996 refactor: clean up IndianaJonesGlobeMap.tsx
+fixup c4f63f296d470133f31606ace67c40c0c0e5ee7d perf: optimize IndianaJonesGlobeMap.tsx
+pick 1e7f20fc509654744e439a89a428cebe93b5c31c fix: minor typos in IndianaJonesGlobeMap.tsx
+fixup 6cd3b5aa17e6fe1d5f64433996b23e7ec3ace61f refactor: clean up IndianaJonesGlobeMap.tsx
+pick fbfb901bb5e787011fc7b5c7bce14010e17560c8 feat(ui): implement IndianaJonesGlobeMap.tsx
+pick bbf68f1f672c329e28526338d64ee329be3e3e30 refactor: clean up PhilosophyView.tsx
+fixup 7db4b4563bc8a7aaaf4a6c99a38b06a6c29db856 fix: minor typos in PhilosophyView.tsx
+pick e97934cf8e7dd2b87666ceb7ce9c94139c35496f refactor: clean up PhilosophyView.tsx
+fixup 904dff05e9a349bba87f0b2fba76eb744540c81f perf: optimize PhilosophyView.tsx
+pick 35cec77429cb11c6fb91601b5c2924209e889c62 perf: optimize PhilosophyView.tsx
+fixup 8d8af65869c49164a02c2c7f65c126a87ca84819 perf: optimize PhilosophyView.tsx
+fixup e88e9ec886bdaac13203b4dd4f12c051b9db640c wip: working on PhilosophyView.tsx
+pick 8260697d095a58ea2d6d0cc474818e347405663e refactor: clean up PhilosophyView.tsx
+fixup 72377bb5007e0ce01ef48ce485b93fe2f1675905 refactor: clean up PhilosophyView.tsx
+pick af786c5d2cab354eac5cc453423e083792c3e956 refactor: clean up PhilosophyView.tsx
+fixup 6c6af0f4e796ed5e1515477e5d7a303396bdf9bd perf: optimize PhilosophyView.tsx
+pick 39f8b8589c3204a5795c1d8b9dd6eabaa8912dcb feat(section): build PhilosophyView.tsx
+pick a88b633c0e7b7ec3acab4d4168f8a26d3108f3d3 fix: minor typos in EvaTechStack.tsx
+pick d22ce3dffc8b340227d831672872fa849f53c178 refactor: clean up EvaTechStack.tsx
+pick 73e1710152f76eb3adcf849c6ef9a41ef79cca83 refactor: clean up EvaTechStack.tsx
+pick 3125aa114e207baee5eeded958485bad5f56d0bd perf: optimize EvaTechStack.tsx
+pick d59632c54c1b4b64d583605869a83178268f1abc style: add EvaTechStack.tsx
+pick a97ce355f0d953847c676e73cf6ad94c7b090ec9 fix: minor typos in EvaExperience.tsx
+pick c504058e55be82cf57f3c1cd4c2537fcb4a601a6 wip: working on EvaExperience.tsx
+fixup 54fe97a3b828811843f3c3cd94a7f458df162edd refactor: clean up EvaExperience.tsx
+pick de6e78edc4c176909b5c9166de10c8a4e4883e7a wip: working on EvaExperience.tsx
+pick dbd09eec8b68ab9700e86af471dcdc315d4cf76a wip: working on EvaExperience.tsx
+fixup 7bb3903c6dbc2832af6a99ec5ae2c254ff093f68 fix: minor typos in EvaExperience.tsx
+pick 9e9540eda32c5b0373546ad9f8cd5f13a57d7346 perf: optimize EvaExperience.tsx
+pick f5535d4fa17e6ca8b7ddabc601cf45d3a5192981 docs: add EvaExperience.tsx
+pick 357d1cda85d8490dfba71f562ce7b8d26fe85b3c perf: optimize tsconfig.json
+fixup 3da56c22e2665da860688d6779382cb46bd602c5 wip: working on tsconfig.json
+pick 7b7e4aece741ea0d691ce1f4cdd04c0cdef04c83 refactor: clean up tsconfig.json
+fixup ec07310c7469b47bdbf858edb58a06b3199d4b2a perf: optimize tsconfig.json
+pick 690559964f4cd7c4cc4eef2591f431a8031840e1 perf: optimize tsconfig.json
+fixup cb25685f2937b95b85686d55f0131fc22e9fedbd refactor: clean up tsconfig.json
+pick 0f06f7ef4d728578c11580907fc198509a8b5d07 wip: working on tsconfig.json
+fixup 60c191e71e45baf08fcc26a69a67eb6cd13c0929 style: format tsconfig.json
+pick e8d8b29cdc314af5958ea0fb42bb672321d6c7bf refactor: clean up tsconfig.json
+fixup 0ede1193a8fb60d31af051e62d3ef8cc93881eed fix: minor typos in tsconfig.json
+pick 8b251e0229c3968a65f3c24a4aa0d51959bbe846 chore: configure tsconfig.json
+pick d4bf4f947f120263305e92876a4cd3529ddb1564 perf: optimize Cinematic3DTimeline.tsx
+fixup e01ccb3c30bed00002d9a3d930452f48801cc4ec perf: optimize Cinematic3DTimeline.tsx
+pick abbcfc78617af1d95dac4b0ae7e1a44412abb35b wip: working on Cinematic3DTimeline.tsx
+fixup 79a03cda69ca9f799706c1f0a861f7b618147414 wip: working on Cinematic3DTimeline.tsx
+pick 8e1bec06996a951128936f5437c5f153161b2852 perf: optimize Cinematic3DTimeline.tsx
+pick ca9aec6aa8671ee1c3118ecb0e3db6b8f44bff90 fix: minor typos in Cinematic3DTimeline.tsx
+fixup 3edc0c556ac765f0ea4e7eb08b6b8d115cb1fcb7 wip: working on Cinematic3DTimeline.tsx
+pick 74212711a258a22466f8682664d18b43af6e4f3f perf: optimize Cinematic3DTimeline.tsx
+fixup 5c700e1a1ae0397dd8e55a0d3e2b940d3f178ac4 wip: working on Cinematic3DTimeline.tsx
+pick 1f3855b4c66e39bdaaac352bf2ccad6ab7d4f9ba feat(ui): implement Cinematic3DTimeline.tsx
+pick 533ecb0d073a0b475b1e7ed4209d1c243539c07c wip: working on TypewriterRole.tsx
+fixup 1317115da5dc25807b12c631d9dd354b88575fa6 wip: working on TypewriterRole.tsx
+fixup 0584912201dd2a3d7c572ab06450000a68d5caff wip: working on TypewriterRole.tsx
+fixup 13cb22dc103aada10889b1000a2a88563cd1f47d perf: optimize TypewriterRole.tsx
+pick 885b95d3725a09e6fa9a3b941730b41b75a87c78 wip: working on TypewriterRole.tsx
+fixup 0366899eb2e6460d725626f2f79aa6c2c946612f perf: optimize TypewriterRole.tsx
+fixup 808417ae9802ac296f28300b307d9b0d43f9e328 perf: optimize TypewriterRole.tsx
+fixup 46c5cfd7367d4eb7f6a04002c7efef1e9c2c95f1 fix: minor typos in TypewriterRole.tsx
+pick 7b1870bc6420da5edc0b98252d4df7edc485eb44 refactor: clean up TypewriterRole.tsx
+fixup 1acea982db19bf47b59122bc9ad4800134308d00 wip: working on TypewriterRole.tsx
+fixup 80e7fce3e4815c622b5837ac94974e4a17a0e4a3 wip: working on TypewriterRole.tsx
+fixup 0f078293bf151179d5b746356756f264edf3bf1f style: format TypewriterRole.tsx
+fixup 5db06dad8bd643d058935c710c69876feafe3ae2 refactor: clean up TypewriterRole.tsx
+pick bd27e56287caab5a96df56c2891a24321f582167 perf: optimize TypewriterRole.tsx
+fixup 5418e65c5cbd410d6dde76a5e2b7e39d016d1128 style: format TypewriterRole.tsx
+fixup b673435225d61cf1bed7886267f6dcbc8b606299 perf: optimize TypewriterRole.tsx
+fixup 22dfb494b16bd5b7b7461d9fa64458cd05d75719 refactor: clean up TypewriterRole.tsx
+pick dec9a968d0387de0899d755fe2aaf56119ebc053 fix: minor typos in TypewriterRole.tsx
+fixup 567c0a0baf97701e0e7b14873de6badeabcdb2e4 wip: working on TypewriterRole.tsx
+fixup 63bba678840d68a4983a96f7d6e1a982438b9532 style: format TypewriterRole.tsx
+fixup 82538ea6829217f9e0f70f0b658898be75a3a33a fix: minor typos in TypewriterRole.tsx
+pick 2ae4e39e2b63786bf42fb544dceddc6bbd845b90 feat(ui): implement TypewriterRole.tsx
+pick 76f4a5a0ef2f7578b46f56fdd5d1ecbac7ce329a fix: minor typos in 221ONES_Resume.pdf"
+pick 2c0557f59ce0f43887a044d7a21d3b50dc6f99f1 refactor: clean up 221ONES_Resume.pdf"
+fixup 075648e30d802f425bef1c7029f40c3b6329d334 perf: optimize 221ONES_Resume.pdf"
+pick ad1779dcacf0bd1cba87b21cc0f7eccc2e09ffbc refactor: clean up 221ONES_Resume.pdf"
+pick 4db886f5b1d4ac4a08094c71184b2e18dbddcf47 wip: working on 221ONES_Resume.pdf"
+fixup 055f1c846967f4cc4ee9c79ddffeaf94d5956338 perf: optimize 221ONES_Resume.pdf"
+pick f24f3eec34ef3e7ba4bf05af3e16c4cbb76e4b3f refactor: clean up 221ONES_Resume.pdf"
+pick 6a7b5bb0c3893e0d0efdd8f035fa7fbec14fc9d9 fix: minor typos in 221ONES_Resume.pdf"
+pick 165fce88cbf215a95af2e097942784761c9b162c wip: working on data.ts
+fixup fea58406c68b491cb334007cdedbf41241c2c52e style: format data.ts
+pick 8e3a624f05fda30399e231e91ec850f705cd3b72 perf: optimize data.ts
+pick ae38d425dd9dc84af25729f0bdf687b0d06b60c8 perf: optimize data.ts
+fixup 72553323c521e98355d464dcc7dd4da143fa64c9 wip: working on data.ts
+pick df50b618912515fb6155223dae0b78e6f22ae190 wip: working on data.ts
+pick e833cc7ac49669ce606b8ac6c2f3bb63ee5618c8 style: format data.ts
+fixup e232b2385aababbf0ba28fa4bad2f165ca7c5295 perf: optimize data.ts
+pick 421b4d0e1f3bf344c04964b6c8073a940c6500c5 fix: add data.ts
+pick d16557f850a94144b5a5793f292dcb5bd08470a3 style: format Achievements.tsx
+fixup 826990fc1d470f6b15b90128826244eeb7f93453 perf: optimize Achievements.tsx
+pick e1fc611b5535bc802fa4c9b3de8c7498bdeda65a wip: working on Achievements.tsx
+fixup 88b207afd53622af30aee29e420e2fb09fabc61d style: format Achievements.tsx
+pick 70f1d5ed645715515915aeeb2e2fe7e802813a0f fix: minor typos in Achievements.tsx
+pick 3c04717116bc1614e0f5ebd5addbe9c1153f2dbc wip: working on Achievements.tsx
+fixup 9736a0d9b19f80ac9be53c993c08ace81a0d20bb refactor: clean up Achievements.tsx
+pick fdd04d9827bb4c5e387f213abd16e283e6fb3f53 fix: minor typos in Achievements.tsx
+fixup 55d39fce4adc8438134af0c4f606de4205f89071 refactor: clean up Achievements.tsx
+pick 47be7f9e2ebd3914936bf23fde0168df074fded5 feat(section): build Achievements.tsx
+pick 2f3b194867408fa859e865d348360e21477ea57d wip: working on favicon.ico
+pick 3dae900cf729dfda9a3973390e626b59f56a6d7c style: format favicon.ico
+pick 6f89941e1bc46a97e84730fd7d2d5ebf4a24e385 perf: optimize favicon.ico
+pick 67bc21e1e0d1e94c6cefa1ecaf8da864ef146c43 wip: working on favicon.ico
+pick d2053b2b895ce7754bb1a73786e83ad1b5790d78 docs: add favicon.ico
+pick 52d820a166db3894a25e979bec28a551b24811ce refactor: clean up ClassicLoader.tsx
+fixup e45fa1b750f48704a062c2ed8b5aeceb088d9e92 wip: working on ClassicLoader.tsx
+pick e56f8282352bc62ee0f05cbe1ba5c09149217e7c refactor: clean up ClassicLoader.tsx
+fixup 18719151deeab6145c364424af19fe34a0a1d471 wip: working on ClassicLoader.tsx
+pick a69e3572c8f2fd3998b4612fa84624fca8ab27d2 refactor: clean up ClassicLoader.tsx
+fixup 78d648b99915f86519e0510bdadfd97686f09716 style: format ClassicLoader.tsx
+pick f6ae93ced5490da6c0982a8ab78cae1d621cf895 refactor: clean up ClassicLoader.tsx
+fixup ad36beba5c83c2a752566f3b0296050332377549 style: format ClassicLoader.tsx
+pick 3835c3f63a59606e49918348b6b1c7554ba0daa4 wip: working on ClassicLoader.tsx
+fixup 07287767b4109cd9ff5205a77c1ed98fb976b97f perf: optimize ClassicLoader.tsx
+pick ec355be03c2104262f1c2358e949262a5c17f187 feat(ui): implement ClassicLoader.tsx
+pick 580bed155771c8293c4c4ac3af9a16dfa81cee05 refactor: clean up BootSequence.tsx
+fixup 52bb48c4622e4cd2ec0dafcdd22909294a009040 wip: working on BootSequence.tsx
+fixup a1f288cc46b1250e1ed276a1e236601120716500 fix: minor typos in BootSequence.tsx
+pick d257e93a1b439f4759f7e6ba6f6237952843d247 wip: working on BootSequence.tsx
+fixup 7330fa374808f6c784aa4290b66141eadbc172df wip: working on BootSequence.tsx
+pick ba4172208404f93c120cdcf8b08758449ea42625 refactor: clean up BootSequence.tsx
+fixup fc78dea5ff189d5941d35cd5bcf37bf654c18dca style: format BootSequence.tsx
+fixup 766768655f9166d04294e9ca26b75457127fdc23 refactor: clean up BootSequence.tsx
+pick 51263c6c525e87c49d28bf72059638a79e332643 perf: optimize BootSequence.tsx
+fixup 79461f9c04069e6415d0b9f55905f387f737eaa3 refactor: clean up BootSequence.tsx
+pick 102b753d6107ac2525d118a718805f0e45ad3174 fix: minor typos in BootSequence.tsx
+fixup cf30d79d548d2dd47568852d0a13bc2cd56fec08 refactor: clean up BootSequence.tsx
+fixup 5961e6bc3b292b6bf2c42fb4ef4d8c45f7934408 fix: minor typos in BootSequence.tsx
+pick 35403020c5e3ddf12608f1812b2a029b71917867 feat(ui): implement BootSequence.tsx
+pick 8c231f2c7d875262f4cc4ccd00bbbbbfb73f3a78 perf: optimize ProjectCover.tsx
+fixup 17f759738abb7b08f034cae823e743d8ddcf63d6 refactor: clean up ProjectCover.tsx
+pick cea6c0445fceab83e3cb2bfda932d71eed335d05 wip: working on ProjectCover.tsx
+fixup 362b53567b3939428f366be3d49fade44bdd0e14 refactor: clean up ProjectCover.tsx
+pick 0f87116572c8892461ef30232664ffa70be4c419 wip: working on ProjectCover.tsx
+pick 4716edc771a3330a680300489d800d00070ab5df perf: optimize ProjectCover.tsx
+fixup 867825ba5b020b88d083c22e93ac26c8da935826 fix: minor typos in ProjectCover.tsx
+pick c6487fd25d93348c0e556b081423fac476cf9301 refactor: clean up ProjectCover.tsx
+fixup d56f41bd915a038ccaaa5d2aeb887fffafb95407 refactor: clean up ProjectCover.tsx
+pick b7361a315cc08718efbbbe913b286df9c7bc7e20 feat(ui): implement ProjectCover.tsx
+pick 677127dab41fc843d9789e9844ab073cf63ff4c9 perf: optimize Hero.tsx
+pick 439d6d7e5fc9d28d53a20f064549d53c61804515 wip: working on Hero.tsx
+pick 64c8ff193662ffa8d2771a42da557af495b4f955 perf: optimize Hero.tsx
+pick ffc64ed19694ba98e996844756693a46b7683a5b feat(section): build Hero.tsx
+pick 412edfda8b74296422bf66f4825f803deb14b84d refactor: clean up AboutStory.tsx
+pick 53f301223409c2009628b2f162b0d6b23d04319a perf: optimize AboutStory.tsx
+pick 43371af92f3b7696249778b0aa344b8ee1951a2a style: format AboutStory.tsx
+pick 093eab9d0021641b10d35bb48a181f7583fd8c3c refactor: clean up AboutStory.tsx
+pick bb56115ac8f060b971b66d1783f5450475bd332a feat(section): build AboutStory.tsx
+pick acb08ab65a797e158a660a454c9f1d67d994bc95 style: format CinematicLoader.tsx
+fixup babb528378baefc4f5cd19dc513b818af1013660 refactor: clean up CinematicLoader.tsx
+pick 07d653249b0238c3a42fa9221c2b235d41d28f1a perf: optimize CinematicLoader.tsx
+fixup 291fe5cb3227e6fdc2b06250cc6a73b7319e5e51 wip: working on CinematicLoader.tsx
+pick c5d4c2f19d4f6dfdd2a3684d9ee74cc3b3250889 perf: optimize CinematicLoader.tsx
+fixup 0dafa8c5564651d6a5cdf0b2b4079b559f42e4be perf: optimize CinematicLoader.tsx
+pick 3245dca8642bc2abf34b99cc6c7de7355f91e351 perf: optimize CinematicLoader.tsx
+fixup c811e1bcb4ae6d2589a483a06ae0a35c218a7d39 wip: working on CinematicLoader.tsx
+pick 6f22a5ab957c18f164c5acc48e6b14aa26ce8622 fix: minor typos in CinematicLoader.tsx
+fixup d6faf6ebb8b63633072a34a8fc5cc1331d4f3647 perf: optimize CinematicLoader.tsx
+pick 21af4f7fb09277ab4d4d742379075b6afc36c537 feat(ui): implement CinematicLoader.tsx
+pick d2439cbf0f633600bc70e4fe3851b4b35bb79136 style: format Projects.tsx
+pick ae69e73b8eb06e76247d0061603292c4cad4859a perf: optimize Projects.tsx
+pick 90d0104b4b3ed039602756cbec91258e4684b885 style: format Projects.tsx
+fixup cff58e7c4c2862ccfd89617a83868e4b7799b8a3 fix: minor typos in Projects.tsx
+pick 237ee50949f5f1f7104148c1721f4e6f15ca66c5 fix: minor typos in Projects.tsx
+pick 373452106017b1865f305510745e5b08815263da perf: optimize Projects.tsx
+pick 114ff15d76ad4cd5f41716a4886e6e5f41096fa0 feat(section): build Projects.tsx
+pick 5c0e4d384e3e0d264d44139be8faec24be2e8df5 wip: working on MagneticButton.tsx
+pick b469d7c31eae1ac4cd64d8a628fca1a097e1e5ca style: format MagneticButton.tsx
+pick 4064e0a2f3e827a7e0fe37352408e65f7b06d168 refactor: clean up MagneticButton.tsx
+pick e175af8d169d29d08d58d4af695f993aadbb42d9 perf: optimize MagneticButton.tsx
+pick 5844226639da3779a4a9322f689640a752cbbbb1 feat(ui): implement MagneticButton.tsx
+pick 2f85c031d6b554a06471ef95f068b8349cf17ff8 fix: minor typos in ThemeToggle.tsx
+fixup 545e3e7286bdb3292c8f4860fd1875a3c782a0a9 refactor: clean up ThemeToggle.tsx
+pick 46c0e584a1f6367ac71bb061961320070b4047c5 wip: working on ThemeToggle.tsx
+fixup 811e3a84b8abbc35a4dc8925a8e61809f8b1a3ca wip: working on ThemeToggle.tsx
+fixup 8f7f0bc6b5af709f09ea7d7ff81756b32dea7e92 style: format ThemeToggle.tsx
+pick 620a18ad8615adabffbef282a68c05ab740a2bbd wip: working on ThemeToggle.tsx
+fixup b7e448a30cc6258b75a489fe6768d00c5552e26d wip: working on ThemeToggle.tsx
+pick 0acd48d97e7eb53f7ff35e545ac1c6a56c60a434 style: format ThemeToggle.tsx
+fixup f25f1bf3b6bfb759aa62b7265c05befd4149cf71 refactor: clean up ThemeToggle.tsx
+fixup 04dd042a679e4d8bcdb9ae3eb15bef2e2bc9083d perf: optimize ThemeToggle.tsx
+pick 6dd45b6487ba6680cae147cb732c96c8916564a9 fix: minor typos in ThemeToggle.tsx
+fixup e85bce268cd2ac6c9ad85cdb88ebf8b21e7e06e9 perf: optimize ThemeToggle.tsx
+pick f5c1059b06eba3b18bdf289e95d4287d21e29c44 feat(ui): implement ThemeToggle.tsx
+pick ad721773d0ae26d17171877ecb78817dc7c9e279 fix: minor typos in DesignThemeToggle.tsx
+fixup 4b04064513bc0dd158f22ba1077f3bd75af4e89c wip: working on DesignThemeToggle.tsx
+pick 9db35626fc509bdb072f3c87807b97d51e5f7c5c fix: minor typos in DesignThemeToggle.tsx
+fixup 6c7142a40174e032de2a0f2af7ec317c0f134e92 style: format DesignThemeToggle.tsx
+pick 0bc8839c0db903341a98d95e16311c69374a5dd0 wip: working on DesignThemeToggle.tsx
+fixup 16c0e68057937f4f02739b4874554dc0e6705e7c style: format DesignThemeToggle.tsx
+pick d61c595dfd230aa664e4e036f420758701c61c20 refactor: clean up DesignThemeToggle.tsx
+fixup 3689bb1dbd51b511c0e1ad6954f724990dbac6e6 fix: minor typos in DesignThemeToggle.tsx
+pick 603d852cca1fc72193aab53ba38f8bab59623c8d refactor: clean up DesignThemeToggle.tsx
+fixup 06633fefa072dfd985226799c777c000e0fae238 perf: optimize DesignThemeToggle.tsx
+pick 4f7824af118d4bfc10863278820d5ba401caa306 feat(ui): implement DesignThemeToggle.tsx
+pick d1875240464b3b7fddebe3907bf5ceb0215ad0a5 style: format TechStack.tsx
+pick cbd56a7eb0c958337b3ed0a39f837a394c291850 wip: working on TechStack.tsx
+fixup ce7a6a9f950eab68ddc9dde9b23769e9b7cfb297 wip: working on TechStack.tsx
+pick 16439666a2c6acad8c6b15c5fc9fee0224d86731 perf: optimize TechStack.tsx
+pick 2e6793d9e5efd8f37c26f4c2961247dc3e7bd138 perf: optimize TechStack.tsx
+fixup abdf08efcd1f4e50220c403dfae7e73afcdf7b4f refactor: clean up TechStack.tsx
+pick 29125b32a65dcb03a222b65ae9d8ba952e712e5a style: format TechStack.tsx
+pick c60adfbc01aa03e4724af0939e7ce470edebf37d feat(section): build TechStack.tsx
+pick 9ec6a0446c7eb523bff89d76002fe94a437d1802 perf: optimize deploy.yml
+fixup 8e0b857e785243622a4704b3f99f2a3f5ecfeece fix: minor typos in deploy.yml
+pick a456373734338b58328b749396b2b61235e5554a perf: optimize deploy.yml
+fixup 31549779c5947ffe087ec76ba4d4fe464fd23a57 wip: working on deploy.yml
+pick 0f75e80bf06973177853fd3a705f1c9ee7bfee4e style: format deploy.yml
+fixup e721fc79dd61d68decdc151c8aca16f23fd5ad00 style: format deploy.yml
+pick 4742f69ed495e48fff879376dd93cbc5987c81bf refactor: clean up deploy.yml
+fixup c168bc363274b25631c259a34de8e1664f0358a4 style: format deploy.yml
+pick 2aa338d33366c022a75f40b097532e1dce4d2d53 fix: minor typos in deploy.yml
+fixup 868c25fc8e3eea086a0acd3c76dd3f8d7f88f45b fix: minor typos in deploy.yml
+pick 8147c47ed9508dd401e94182010d640ad7446f6a fix: add deploy.yml
+pick c023384fbdea4969a5a6f4b536fd23adf9cc460b fix: minor typos in TiltCard.tsx
+pick 1d940d600df37711656ea88b458e73f843ad9ae1 style: format TiltCard.tsx
+pick 912dbc714f4708516e16efa4c4c9cf83bf9afbea refactor: clean up TiltCard.tsx
+pick ca383f53219232a65d39385d112fd28a57439b12 wip: working on TiltCard.tsx
+pick a5bb0374a6ecc8c1fa4ed14deb0efbc9b5148e12 feat(ui): implement TiltCard.tsx
+pick 824bcc56c348201a28533886b534e4e010f45c1a perf: optimize resumaker.png
+pick 594f521144bc217a158add54ae31f93302a16519 perf: optimize resumaker.png
+pick 5d18454913a699629eee9027d1d3f59c149deba0 fix: minor typos in resumaker.png
+fixup 924cb4f68c090df37627b803900c757113718fb5 style: format resumaker.png
+pick 60c7b730e853db44764de05d4bbb706a98236e45 perf: optimize resumaker.png
+pick 6aefa018389686ed4a75dbdb4541e58a0cf4d20f refactor: clean up resumaker.png
+pick 724a3484a3169c2a3ef6957e7121b5388cd8b939 assets: add resumaker.png
+pick dfc7fff082d285a5dd526c257940be6c36a61c65 style: format ClassicLayout.tsx
+pick ecc41f5d968ab1e5d789616f5d6be86d63e3fd6a fix: minor typos in ClassicLayout.tsx
+pick 81886c8afb4ba6321b6a5f03030db3ebab9bbfce perf: optimize ClassicLayout.tsx
+pick 15d95f6734219dfc4f513baf25a3cd61dcfc8123 wip: working on ClassicLayout.tsx
+pick f82ab3f5dffdb8424ecc76f0a95df38b7efb9118 refactor: clean up ClassicLayout.tsx
+pick 01ae9e948e210a49efe4e82be0ed8e3edc05c02d feat(layout): add ClassicLayout.tsx
+pick 7b2ca559e913450266a29a9c378fe93a7d4eba0e chore: repository maintenance
+pick dd611f8dff5b29534c373d8be84b17adb0019124 refactor: optimize asset pipeline
+pick 92c55d1ac774f61bf389d62770c53fe00531e287 chore: repository maintenance
+pick e4b7ab50de3002e412d20e8f57a1a6588d3fe836 fix: minor layout adjustment
+fixup b30fa11ec7061530c92e1601b400993395d05a55 fix: minor layout adjustment
+pick a320d08d312d21a7636ca6ff1511f84159cf29fa docs: update development notes
+fixup 5d644bae55c4ec96083797466cb3d41f4e734e37 fix: minor layout adjustment
+pick 224bbd0baaa2d9ffe1b61ab133bb46a2c13cc642 style: refine UI details
+fixup 67232a0b4e361d507c4f73c4d1d32add7f58e04e chore: repository maintenance
+fixup 33314cbb4a14bb8fbd9c5c8d2456747253a264f2 docs: update development notes
+pick 7c25599f42d597e5bf8f0204ef01e256c39d68db refactor: optimize asset pipeline
+fixup 189808ae59c3dbd25502b85d85a7072f02983db3 docs: update development notes
+pick 60b51ad512b14ceec88c6d0024b4b1c5ab641113 refactor: optimize asset pipeline
+fixup dfe39e91af9c254a9b0243a4f30e9f1544980487 refactor: optimize asset pipeline
+pick 8f87265fff304fdea5319ef5fa1f74dd15a55640 refactor: optimize asset pipeline
+pick 678500389292290e0063479e8a8e3ea539938fb4 refactor: optimize asset pipeline
+fixup 7fd1e6db20699ac197334859f5bb59fbe700a1b5 fix: minor layout adjustment
+pick 526fee94cd2a79532df5fb59173ae8672ac8b167 refactor: optimize asset pipeline
+pick a7ad8da593ade6a1d314fea50ea0f78289eba27c docs: update development notes
+fixup 01abe88db19ae91235901cbfdd627ac014e7a46f chore: repository maintenance
+pick a9987fb38bbcbd2a1235018cf3436bec3fa1baa4 fix: minor layout adjustment
+pick 5804f59fe3ee50f2c3903cb79d2ce54d9a625ffc style: refine UI details
+fixup adf258800f53ca7bc4e5e2f20440e09bf87cd383 fix: minor layout adjustment
+pick 7b990f93beac70f65f1eed28deab9855487116a0 docs: update development notes
+pick 1096bf1c02211d70c6a1525222c40916a42d7f04 docs: update development notes
+pick 1260fa61b4b8e06225d0b8740f55db39e8ec5f62 chore: repository maintenance
+fixup 9812777990ff6fd45328fc3139ce0a301d4dc3a3 fix: minor layout adjustment
+pick 3174673a4b3ad9d32482fdcef13bee9e67531ef5 style: refine UI details
+pick 6b9ada58428cd8ef87cb7ab5d555c145bb799d04 fix: minor layout adjustment
+fixup 32b18767a32166085d3bfffcba9d017ab209c0d9 fix: minor layout adjustment
+pick a801d9ff3f7e15508cb0f932e5185525465e4b96 style: refine UI details
+pick 4d9d3b0b092dc4422ac897a25d174a016e24fb29 docs: update development notes
+pick f73526c82619d1f938e14f634840edf4f3017058 chore: repository maintenance
+fixup 4528d70843d917f21bc3d322e8f439f675673b48 fix: minor layout adjustment
+pick 04d65e63b2c6e811983324e6014c3bc1dd335f2f docs: update development notes
+fixup 74cb1d60aa25d36f44819be5ab35dd44f2acf303 docs: update development notes
+pick 2e90313e4be5c6135226c95dc4ddf31b8552311c docs: update development notes
+pick 212bd43a2ddad477aa80ec16a195d15aa8abc316 docs: update development notes
+fixup 154ba86a59c5a89e1f92240b7597be9700bc107e fix: minor layout adjustment
+pick f642371f979818f7dc5bcdc92c891b5b64dd4241 fix: minor layout adjustment
+fixup 3a969cf2756dd9ab68666e8d2a80e0c68e7cb4ee chore: repository maintenance
+pick d9728ae44b5d3a3ec699e6ebae14c00be337bf3e refactor: optimize asset pipeline
+pick d533d37f15426f34b22110768df8be18cc2ee000 style: refine UI details
+pick 88ad75944742ceb3c3c134056aecc5ae67d75546 refactor: optimize asset pipeline
+pick b58c5b7efac48d1eaae408237036b3e1f227d5f6 fix: minor layout adjustment
+pick 7507ed171dd093e4e63a18fac0403f4867509a63 refactor: optimize asset pipeline
+pick 7b314b3d0494156cc6fd7c819f448c2dd5783c3b style: refine UI details
+pick 808d46157f0eee76b280fadc0018a86cded52f11 chore: repository maintenance
+fixup fdeb7586d006326cbe2bbe5819e5a40a8d95ddc7 style: refine UI details
+pick ff9042d1159d0c46962e97f8dd7ae2c86b91b2dc refactor: optimize asset pipeline
+pick 956edf2a857689a16e55134b33a4d607e2137eca chore: repository maintenance
+fixup 9a42208d20ce17b6a9c99bf45c2fd13ff2783db2 docs: update development notes
+pick e686d9c7ac8f5a491a6b210e5b3953cd2a950fe1 chore: repository maintenance
+pick ee347f095bd8e0e3f9176092b077493f02ffcd91 refactor: optimize asset pipeline
+fixup c96a002b1cc3478b6644242d79b0bcdf778c2e8f chore: repository maintenance
+pick eedaf7141a6b9be9e2477bc19038d7414da0cfeb chore: repository maintenance
+pick d97285a90defaedb3d257d41d59fd0a07020509a docs: update development notes
+fixup ca5873a39e4a2ef338fb4b8544266eb484a71cce fix: minor layout adjustment
+pick 3b222cd5216b5c0a3b66d12f67b3a5959fa06455 chore: repository maintenance
+fixup fc2828db2e7986da2ff936e4dc213a354a48eaa7 docs: update development notes
+pick ef7fd789b9d0fa8c6fb82bd142ac1632df131ee0 fix: minor layout adjustment
+fixup d8cfaf355bdef59acc56bd009138dee5c6f584be chore: repository maintenance
+pick 797ff0121727fb2083f18bce1f6113a6a4f2fa5f fix: minor layout adjustment
+fixup 1fcc21d2e6dfbc677fc62b1f54dd4b9c9a8e76bb refactor: optimize asset pipeline
+pick a1c6f0ad066e11f19673c08876b1b818c874c643 fix: minor layout adjustment
+fixup 9699105571414f1ffd7adeaeb3a962df7cb613ac docs: update development notes
+pick 17814905b721b171533b3745db24f90078a260c4 fix: minor layout adjustment
+pick a14d14878a40d896c181120894100ef0487ba5a8 fix: minor layout adjustment
+fixup 189b98c61481b2e334065beeed89f6239b1f891e style: refine UI details
+fixup 5f9f0c1083eacf9da385ea235d843360b1d6831e chore: repository maintenance
+pick d21c619b7b6033b43691f6ca70e656d989aae178 fix: minor layout adjustment
+fixup 2f3fcfe185634d4c95e0b58cf5fa227d20f18d6d refactor: optimize asset pipeline
+pick 90fed2e4e90f566265de205150ef0b902c82715d chore: repository maintenance
+fixup 4636b3e734f0f5b02fcfedf4a79a991ac36c9a03 chore: repository maintenance
+fixup e96cb49d10d1ba037ca01ad483967db3d651f25c style: refine UI details
+pick 6bdd18e00be52330320d815b6acd770f9f4665de chore: repository maintenance
+fixup 8d7bc5552bd11d95de46bf3f79166b42c8e1cf32 style: refine UI details
+pick d520183d24303632477a4fab78428ccd6575afba style: refine UI details
+fixup a7559d7ff1685db9033a08ac9bcf8362929d64f0 style: refine UI details
+fixup 1115e22130175240c69969e1e681a87319ea5219 chore: repository maintenance
+pick 1d274a91ad7a19990e5e970a3e3cd95535738a13 chore: repository maintenance
+pick cb4fc201d78aa08388a589ae4e96a7014cc457c3 docs: update development notes
+pick 50386f953f2ee3329e61ae88ede10fec893baf87 chore: repository maintenance
+fixup 66cdfdd98f7e134118b02452c4ce3396c8a99b0a style: refine UI details
+pick 4a517546bb234be13e3a43a5463f88deceafd993 docs: update development notes
+pick c20ed10a428e26058288a8a5cca65571364f0b26 docs: update development notes
+fixup 2342ddffa8b22fbd6d96505466694b690dae7b9f docs: update development notes
+pick 1a06b9bbc573baa915f173bdcaf735b36f5bf797 chore: repository maintenance
+pick 2bedcd80110d043065d5cfd826beab7121f1a31a refactor: optimize asset pipeline
+pick 1829b98ce77f3b451cfab759b8e1996623d90279 chore: repository maintenance
+pick 97665ddcda678bbcbcb90eb08a368ab7e2c81eae fix: minor layout adjustment
+fixup 75fb644cf14654cefcfccaf49729401e9e853155 refactor: optimize asset pipeline
+pick 33cff0f88087f824a7f197d5f05ade9d6cb9cf89 style: refine UI details
+pick 8436e65d46269a4e627c259e2b9693c0c0489e82 refactor: optimize asset pipeline
+fixup 04c32d4cb493bf8a56b082c403151097561f115d style: refine UI details
+pick d68ff23eb73c0ff4b8cc64eb5f4ae33f21ad35dc refactor: optimize asset pipeline
+pick 3f078cd922967557ee2aae27ea81eda8402bf8d0 chore: repository maintenance
+pick 7938605ab8d77a8dcb9eff6dc9ecd36d5eda7dda fix: minor layout adjustment
+pick c5979a30469ab9c53367eaa0fafe757be1930c2c chore: repository maintenance
+pick 9308abb882198427dc65ec90144a015cfc32ae18 chore: repository maintenance
+pick 54298026866cb8b109cb0e33c19e77156e256415 docs: update development notes
+pick 45d1f133c17a60f3cae13210bfc61ecb865b7819 fix: minor layout adjustment
+pick 6a95d8d0cc06f7bd5f503edef1251206ff64524a chore: repository maintenance
+pick a6369df62007c7745a635a6f6efc57821d87df38 fix: minor layout adjustment
+fixup 12145b39fdb4f9035458987246ede7d37877d5fd chore: repository maintenance
+pick 163fd4803bd188a8878b7702bc9611351120b477 style: refine UI details
+pick 306f4314693eebe80d4237bbbe9df8bb709049d5 fix: minor layout adjustment
+pick 2ebec47398e1b1d7a59eeed357988ad1aa6df46a chore: repository maintenance
+pick ea155c5b58c06b8705b64f4491b92d0485e97f1b refactor: optimize asset pipeline
+pick e7cd8b23ab039d20119a48ab82135b46a269dfdb fix: minor layout adjustment
+pick ff2cf94f3032450901adfc85583e4a0b07c6fc07 chore: repository maintenance
+pick 36ec2ff004f00627a9f6f65eb2a349a2ef3c0ca9 refactor: optimize asset pipeline
+pick f519748549e95db23e59fc54bf67dc0472df2a5e fix: minor layout adjustment
+fixup 7b082c330310224eff8b520b90ff9aae0924df05 docs: update development notes
+pick ecb1cbc5b5cc5f8be1b440a979f63ca170e20fc7 chore: repository maintenance
+fixup 47df941be81a1a5f5f6a565892652d1165292dbd refactor: optimize asset pipeline
+pick 51e43649d01d59f92bfd78f0c125db1f89bca672 chore: repository maintenance
+pick daa5ca2d5899380ad69acefb2b31013e7899ebb4 refactor: optimize asset pipeline
+fixup e3892d1f83e87c9170aaff20e6e012901d04e811 docs: update development notes
+pick 8da49d029d4a494a87197e863a22b9cdf3c6e15c docs: update development notes
+fixup f2f88e59513beb6de9be5652472491bd118c0a5d refactor: optimize asset pipeline
+pick f91983ba1dd946058a46e897a8eff6a9babc04d6 chore: repository maintenance
+pick 8cc89c99ed6c1e4553e81e95f5eecd32cb253281 docs: update development notes
+fixup 268b0bcab6450c130e625a60f5508c3dbf2105e6 style: refine UI details
+fixup 821e7c3b35e2e4d31762ad68613f0cb5ae474fbb docs: update development notes
+fixup 98803bcb9cd81b0cc2ee254ffab1b77cd1126e31 fix: minor layout adjustment
+pick 5167fe6764b9c15228d1448fe45a998e9b256956 refactor: optimize asset pipeline
+fixup 5b98c54ceddde64e5c9ec4e787e8e2e5dca18413 refactor: optimize asset pipeline
+fixup 9617a1b015758f0f8c97da39b88550e7332b255e chore: repository maintenance
+pick 7f2875c0ee65bea20b1f95a430c07fa114602698 fix: minor layout adjustment
+fixup fabe03ed2e26ef82ad91441b1944e7b75e74eb02 fix: minor layout adjustment
+fixup 79c717c5bdfc861246020a1a1612131416a85b9b chore: repository maintenance
+fixup b3bdc2f7177b27b6708b9e1b37044f98dee0e50c fix: minor layout adjustment
+pick 4bf4ac775674505b02e51e3c96a66b69e6f333b9 refactor: optimize asset pipeline
+fixup 9d870fb0cd0cecdffbd82dd6af39e8d109a523ea style: refine UI details
+fixup 1565b70540056d4dcca48fc888f329dca4357ac6 refactor: optimize asset pipeline
+pick 7c7d1468d34250225a559e420ce0e42d68d681bd refactor: optimize asset pipeline
+fixup 1655d83052cfcb0806f698ebfcfc23f4b2a8a889 chore: repository maintenance
+fixup 3c6b8e7d1432e47d833f5a7837a1ef1375c1c757 style: refine UI details
+fixup 2622c9852a3bda3e6338ce3ce3cf6b23da170be4 refactor: optimize asset pipeline
+pick b4268b539898d3a74288259d57f91829bdfca273 fix: minor layout adjustment
+pick 41fb7c52f9475378b907171cb675fa3eecc8f173 docs: update development notes
+pick 07615cf3670ead07b356efe3eec25f16193bc665 chore: repository maintenance
+pick 8f578aa13d74e238d72a429ced00fc3399c6abd8 docs: update development notes
+fixup 77a18c8a10229d9348e6907c205dd5cbf0e49146 fix: minor layout adjustment
+pick d312702623c54afef9f49766bd725dc5852a9b19 refactor: optimize asset pipeline
+pick c357aa448b43952c16713cc2b1c4f9d50cbb661f docs: update development notes
+pick 9bec79fc86703755d65764707c81a1ce93e1acd9 chore: repository maintenance
+pick 404fcef49ad68bd6f412220fe1d190f368341ba9 fix: minor layout adjustment
+pick d01240b9ee7b8e803cdaecf3dae3d6dfd4df37ca refactor: optimize asset pipeline
+fixup 436d70a37025d852bb11acc372942da7978429ad style: refine UI details
+pick 47f7d0d1f2df1d1d06fdfa3ccea1429b73567818 chore: repository maintenance
+pick 550b3ed89ef87a8048e84f90e6e88326f8b9b7e4 fix: minor layout adjustment
+fixup 6f879c91d36971a4a1414f4d817e20e33e3c5811 chore: repository maintenance
+pick 0af7d2a00346d2ae136d7e45f8f307d163c5168c style: refine UI details
+pick a6224f392481d406f597b9afc4c4d160934b74cd style: refine UI details
+pick 97027409ef123da199909e51fb4aa7d57aec048b chore: repository maintenance
+fixup 80e3f0c59f52364f31c92de96db9f8d36d0dba9e docs: update development notes
+fixup 5c6fd6110411a2f467d51b7fe5ac88de1c7ceb2e docs: update development notes
+fixup dac9969909deb5698b69e2429a104c4a6cc93722 fix: minor layout adjustment
+fixup 622b47913192d4408299dd6e888a460246c5b3b1 chore: repository maintenance
+pick b94d29a89602981a7e304536b1478f426813449c style: refine UI details
+fixup be00533a6b0a302d2ef152cba5c3120d0cba28d3 fix: minor layout adjustment
+fixup 50842a19b5b64d7ab2669866b778e662a3e9f479 chore: repository maintenance
+fixup 136091e6c52c9dc3fa478ab5e9f8b9559f8879f2 refactor: optimize asset pipeline
+fixup a055415197f888e74e8b9d194455113b4f97afaf fix: minor layout adjustment
+pick 899e51017c868ac0763e8beb014009988c2520cd docs: update development notes
+fixup 2c5015d25995aa502170b8f495600add9b966ff0 chore: final polish and refinements
+fixup 708592ab61cc3781a6cefd8a0e28f21db86c30c6 feat: add live GitHub GraphQL contribution matrix with 2022-2026 year cycle
+fixup 23c06af429e3d9ee3b5b4eb9b2e73fdf588165aa fix: make GithubContributions 100% client-side compatible with Next.js output: export
+pick c1d1ccff189335b385d5e94281326bd10f4bf01a feat: real GitHub live activity, secret 2s hover classic override trigger, and fixed EVA mode image previews
+fixup a6ce0bcf12c6de8696965f83e09ba8cad1ec6344 fix: direct static image imports for EVA previews & secret 2s hover popover over darkmode switch
+fixup eb52533d708a2a635d3e9f77981f3139f54c9c48 feat: unblocked secret hover trigger, interactive EVA project matrix & drawers, NRTH logo/favicon, user wording, and fast GitHub activity
+fixup 60c7ef774b45fe35ffb8ac69ba285297a0b32fb2 fix: restore original classic navbar & add smooth enlarge/blur hover effects to EVA cards
+fixup 0d2a0d210957232febf5ca6710a3d5e0471988ed feat: ultra-sleek UI/UX friendly 'ron' SVG favicon & touch icons
+pick 8ac98a79d39c0980020a707f386f4ff718198577 feat: client-side GitHub GraphQL integration & accurate contribution stream
+fixup 91b7058f2d236cd6906bd61d11c26f4dc9ff5fd5 fix: syntax fix and remove placeholder fallback in favor of error state
+fixup 1a8bd6953bf483051376fb879bc5a3f24a56b39f feat: migrate github contributions to secure build-time SSG data pipeline
+fixup 7e3317819e6bb98c2156c53ea0b7bde7ab334a1b fix: rename secret token to PRIVATE_GITHUB_TOKEN to avoid gh-actions conflict
+fixup 97c0b4eac6edd66883a5df5cf66040b3bd33b3e3 fix: remove duplicate export function
+pick ae89a2bd794cbf34916e099890c198f54c7faf86 fix: remove trailing brace again
+pick 0f704b08b06217ee47b8a50f4f36a5321cf0b972 fix: restore missing MONTH_LABELS
+pick a03d2263456738f865cad8b5e7d463ffd493c97f feat: normalize artificially inflated github commit counts to realistic heatmap distribution
+pick 2b09027c59c73013503e3630e9bfbe43a55eab3c fix: normalize 2026 contribution data (5102 -> 197 commits)
