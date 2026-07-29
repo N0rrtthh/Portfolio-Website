@@ -27,6 +27,8 @@ interface CalendarResponse {
   source: "live_graphql" | "live_api";
 }
 
+const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 import staticDataRaw from "@/data/github-data.json";
 
 // Type casting for imported static JSON
