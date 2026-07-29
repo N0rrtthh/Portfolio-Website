@@ -97,7 +97,7 @@ export default function EvaHero() {
               }}
               className="text-[var(--color-accent-primary)] drop-shadow-[0_0_20px_var(--color-accent-primary)]"
             >
-              01 // EQ
+              01 // NRTH
             </motion.span>
           </motion.h1>
 
