@@ -35,7 +35,7 @@ export default function EvaLayout() {
         <main className="relative z-10">
           {/* Phase 1: System Boot → Identity */}
           <EvaHero />
-          {/* Phase 2: Pilot Profile */}
+          {/* Phase 2: User Profile */}
           <EvaAbout />
           {/* Phase 3: Mission Archive */}
           <EvaProjects />

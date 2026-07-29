@@ -13,7 +13,7 @@ export default function AboutStory() {
   return (
     <section id="about" className="section-padding relative min-h-[90vh] flex flex-col justify-center">
       <div className="container-narrow">
-        <ChapterLabel index={2} classic="Who I Am" eva="PILOT IDENTITY" className="mb-8" />
+        <ChapterLabel index={2} classic="Who I Am" eva="USER IDENTITY" className="mb-8" />
 
         {/* Editorial Headline */}
         <div className="mb-16">

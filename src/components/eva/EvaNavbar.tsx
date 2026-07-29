@@ -64,30 +64,30 @@ export default function EvaNavbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? "py-2" : "py-3"
       }`}
     >
-      <div className="container-narrow">
+      <div className="container-narrow overflow-visible">
         <nav
-          className={`flex items-center justify-between px-5 py-2.5 transition-all duration-500 border rounded-full overflow-hidden ${
+          className={`flex items-center justify-between px-5 py-2.5 transition-all duration-500 border rounded-full overflow-visible relative ${
             scrolled
               ? "bg-[var(--color-void)]/90 backdrop-blur-xl border-[var(--color-accent-primary)]/40 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
               : "bg-transparent border-transparent"
           }`}
         >
-          {/* Logo */}
+          {/* Logo — Updated to NRTH */}
           <a
             href="#hero"
             onClick={(e) => handleNav(e, "#hero")}
             className="flex items-center gap-3 shrink-0 group"
             data-cursor-hover
           >
-            <div className="flex h-8 w-8 items-center justify-center border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-warm)] font-mono text-[10px] font-black transition-all group-hover:bg-[var(--color-accent-primary)] group-hover:text-white group-hover:shadow-[0_0_15px_var(--color-accent-primary)] rounded-lg">
-              EQ
+            <div className="flex px-2.5 py-1 items-center justify-center border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-warm)] font-mono text-xs font-black tracking-wider transition-all group-hover:bg-[var(--color-accent-primary)] group-hover:text-white group-hover:shadow-[0_0_15px_var(--color-accent-primary)] rounded-lg">
+              NRTH
             </div>
             <span className="font-mono text-xs font-bold tracking-[0.15em] text-[var(--color-accent-primary)] hidden sm:inline-block transition-colors group-hover:text-[var(--color-accent-warm)]">
-              NERV // UNIT-01
+              SYSTEM // NRTH
             </span>
           </a>
 
@@ -117,9 +117,9 @@ export default function EvaNavbar() {
             ))}
           </div>
 
-          {/* Right side — Cleanly contained ThemeToggle */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="shrink-0 flex items-center">
+          {/* Right side — Cleanly contained ThemeToggle with overflow visible for secret popover */}
+          <div className="flex items-center gap-3 shrink-0 relative overflow-visible z-50">
+            <div className="shrink-0 flex items-center overflow-visible">
               <ThemeToggle />
             </div>
 

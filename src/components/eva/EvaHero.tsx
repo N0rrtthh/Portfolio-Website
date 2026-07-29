@@ -5,10 +5,10 @@ import { ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const TYPING_LINES = [
-  "> ACCESSING PILOT DATABASE...",
+  "> ACCESSING USER DATABASE...",
   "> DIRECTIVE: BUILD HIGH-PERFORMANCE DIGITAL SYSTEMS",
   "> OPERATIONAL STATUS: FULL SYNC ACHIEVED",
-  "> PILOT: ELRONI QUIÑONES [UNIT-01 ENGAGED]",
+  "> USER: ELRONI QUIÑONES [UNIT-01 ENGAGED]",
 ];
 
 function useTypingEffect(lines: string[], charDelay = 18, lineDelay = 400) {

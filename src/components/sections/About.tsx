@@ -32,7 +32,7 @@ export default function About() {
   return (
     <section id="about" className="section-padding relative">
       <div className="container-narrow">
-        <ChapterLabel index={2} classic="About" eva="PILOT DATA" className="mb-8" />
+        <ChapterLabel index={2} classic="About" eva="USER DATA" className="mb-8" />
 
         {/* ── Editorial Headline ── */}
         <div className="mb-20">

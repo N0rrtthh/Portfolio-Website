@@ -43,11 +43,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Elroni Quiñones — Software Engineer & Creative Developer",
+  title: "Elroni Quiñones (ron) — Software Engineer & Creative Developer",
   description:
-    "Portfolio of Elroni Quiñones — a software engineer, full-stack developer, and creative technologist who builds digital experiences at the intersection of design and engineering.",
+    "Portfolio of Elroni Quiñones (ron) — a software engineer, full-stack developer, and creative technologist who builds digital experiences at the intersection of design and engineering.",
   keywords: [
     "Elroni Quiñones",
+    "ron",
     "Software Engineer",
     "Full Stack Developer",
     "Creative Developer",
@@ -57,21 +58,31 @@ export const metadata: Metadata = {
     "Portfolio",
     "Game Developer",
   ],
-  authors: [{ name: "Elroni Quiñones" }],
+  authors: [{ name: "Elroni Quiñones (ron)" }],
   creator: "Elroni Quiñones",
+  icons: {
+    icon: [
+      {
+        url: "icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    shortcut: "icon.svg",
+    apple: "icon.svg",
+  },
   metadataBase: new URL("https://elroniquinones.dev"),
   openGraph: {
-    title: "Elroni Quiñones — Software Engineer & Creative Developer",
+    title: "Elroni Quiñones (ron) — Software Engineer & Creative Developer",
     description:
       "I build digital experiences at the intersection of design and engineering. Explore my work.",
     url: "https://elroniquinones.dev",
-    siteName: "Elroni Quiñones",
+    siteName: "Elroni Quiñones (ron)",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Elroni Quiñones — Software Engineer & Creative Developer",
+    title: "Elroni Quiñones (ron) — Software Engineer & Creative Developer",
     description:
       "I build digital experiences at the intersection of design and engineering.",
     creator: "@skyl1nker390",
