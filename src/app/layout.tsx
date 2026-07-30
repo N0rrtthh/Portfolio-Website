@@ -112,6 +112,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href="/Portfolio-Website/Favicon.png" type="image/png" />
+        <link rel="shortcut icon" href="/Portfolio-Website/Favicon.png" />
+        <link rel="apple-touch-icon" href="/Portfolio-Website/Favicon.png" />
         <script
           id="no-flash-theme-script"
           suppressHydrationWarning
