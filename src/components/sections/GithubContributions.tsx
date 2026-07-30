@@ -247,14 +247,6 @@ export default function GithubContributions() {
                           return (
                             <motion.div
                               key={`${wIdx}-${dIdx}`}
-                              initial={{ opacity: 0, scale: 0.4 }}
-                              whileInView={{ opacity: 1, scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{
-                                duration: 0.2,
-                                delay: Math.min((wIdx * 7 + dIdx) * 0.0018, 0.4),
-                                ease: "easeOut",
-                              }}
                               whileHover={lvl !== -1 ? { scale: 1.4, zIndex: 20 } : undefined}
                               whileTap={lvl !== -1 ? { scale: 1.15 } : undefined}
                               onMouseEnter={() => lvl !== -1 && setHoveredDay(day)}
