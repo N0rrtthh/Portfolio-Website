@@ -45,8 +45,13 @@ export default function TiltCard({
       ref={ref}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      style={{ rotateX, rotateY, transformPerspective: 1000 }}
-      className={`relative group/tilt ${className}`}
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 1000,
+        transformStyle: "preserve-3d",
+      }}
+      className={`relative group/tilt will-change-transform transform-gpu ${className}`}
     >
       {children}
       <Glare x={glareX} y={glareY} />

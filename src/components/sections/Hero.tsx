@@ -62,6 +62,8 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
+  // GPU-only scroll exit: opacity + transform. Avoid animating filter:blur
+  // (forces continuous paint/composite on every scroll frame).
   const contentOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
   const contentBlur = useTransform(scrollYProgress, [0, 0.35], [0, 12]);
   const contentScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
@@ -112,9 +114,9 @@ export default function Hero() {
             opacity: contentOpacity,
             scale: contentScale,
             y: contentY,
-            filter: useTransform(contentBlur, (v) => `blur(${v}px)`),
+            filter: useTransform(contentBlur, (v) => v > 0.1 ? `blur(${v}px)` : "none"),
           }}
-          className="container-narrow relative z-10 flex flex-1 flex-col justify-center my-auto"
+          className="container-narrow relative z-10 flex flex-1 flex-col justify-center my-auto will-change-transform transform-gpu"
         >
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             {/* Left Column — Text & Identity */}

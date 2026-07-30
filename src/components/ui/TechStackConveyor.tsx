@@ -1,24 +1,22 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Sparkles, Layers } from "lucide-react";
+import { Sparkles, Layers, TrainTrack } from "lucide-react";
 import { TECH_STACK, type TechItem } from "@/lib/data";
 
 const EASING = [0.22, 1, 0.36, 1] as const;
 
 export default function TechStackConveyor() {
   const [hoveredTech, setHoveredTech] = useState<TechItem | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % TECH_STACK.length);
-  };
+  // Divide tech stack into two train tracks for parallel moving rails
+  const trackA = useMemo(() => TECH_STACK.slice(0, Math.ceil(TECH_STACK.length / 2)), []);
+  const trackB = useMemo(() => TECH_STACK.slice(Math.ceil(TECH_STACK.length / 2)), []);
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + TECH_STACK.length) % TECH_STACK.length);
-  };
+  // Triple items for seamless infinite train loop
+  const loopTrackA = useMemo(() => [...trackA, ...trackA, ...trackA], [trackA]);
+  const loopTrackB = useMemo(() => [...trackB, ...trackB, ...trackB], [trackB]);
 
   return (
     <div className="relative py-8 select-none">
@@ -27,107 +25,159 @@ export default function TechStackConveyor() {
         {hoveredTech && (
           <motion.div
             initial={{ opacity: 0, transform: "scale(0.8)" }}
-            animate={{ opacity: 0.3, transform: "scale(1.25)" }}
+            animate={{ opacity: 0.35, transform: "scale(1.25)" }}
             exit={{ opacity: 0, transform: "scale(0.8)" }}
             transition={{ duration: 0.4 }}
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] rounded-full blur-[130px] bg-[var(--color-accent-primary)] z-0"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[400px] rounded-full blur-[140px] bg-[var(--color-accent-primary)] z-0"
           />
         )}
       </AnimatePresence>
 
-      {/* Carousel Controls Bar */}
-      <div className="flex items-center justify-between gap-4 mb-6">
+      {/* Header Bar */}
+      <div className="flex items-center justify-between gap-4 mb-6 px-2">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 shadow-[0_0_12px_rgba(67,97,238,0.25)]">
             <Layers size={16} />
           </div>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-starlight)] font-bold">
-            Interactive Stack Carousel ({TECH_STACK.length} Core Tools)
+            DUAL-TRAIN CONTINUOUS STACK CONVEYOR ({TECH_STACK.length} CORE MODULES)
           </span>
         </div>
 
-        {/* Prev / Next Navigation Arrows */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="flex h-10 w-10 items-center justify-center rounded-full glass border border-[var(--color-glass-border)] text-[var(--color-starlight)] hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/20 transition-[background-color,border-color,color,transform] duration-200 ease-out active:scale-[0.97] cursor-pointer"
-            aria-label="Previous tech item"
-            data-cursor-hover
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            type="button"
-            onClick={handleNext}
-            className="flex h-10 w-10 items-center justify-center rounded-full glass border border-[var(--color-glass-border)] text-[var(--color-starlight)] hover:border-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)]/20 transition-[background-color,border-color,color,transform] duration-200 ease-out active:scale-[0.97] cursor-pointer"
-            aria-label="Next tech item"
-            data-cursor-hover
-          >
-            <ChevronRight size={18} />
-          </button>
+        <div className="flex items-center gap-2 font-mono text-[11px] text-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 px-3 py-1 rounded-full border border-[var(--color-accent-primary)]/30">
+          <TrainTrack size={14} className="animate-pulse" />
+          <span>SELF-PROPELLED PARALLEL TRACKS</span>
         </div>
       </div>
 
-      {/* Interactive Carousel Track */}
-      <div className="relative overflow-hidden rounded-3xl p-4 md:p-6 glass border border-[var(--color-glass-border)]">
-        <motion.div
-          ref={carouselRef}
-          className="flex gap-4 cursor-grab active:cursor-grabbing py-4"
-          drag="x"
-          dragConstraints={{ left: -1200, right: 0 }}
-          animate={{ x: -currentIndex * 240 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        >
-          {TECH_STACK.map((tech) => {
-            const isHovered = hoveredTech?.name === tech.name;
-            const isAnyHovered = hoveredTech !== null;
-            const isOtherHovered = isAnyHovered && !isHovered;
+      {/* DUAL TRAIN TRACK CONVEYOR SYSTEM */}
+      <div className="relative overflow-hidden rounded-3xl p-6 glass border border-[var(--color-glass-border)] flex flex-col gap-6">
+        {/* Track Line Overlay */}
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-0.5 bg-gradient-to-r from-transparent via-[var(--color-accent-primary)]/30 to-transparent pointer-events-none" />
 
-            return (
-              <motion.div
-                key={tech.name}
-                onMouseEnter={() => setHoveredTech(tech)}
-                onMouseLeave={() => setHoveredTech(null)}
-                animate={{
-                  scale: isHovered ? 1.05 : isOtherHovered ? 0.95 : 1,
-                  opacity: isOtherHovered ? 0.35 : 1,
-                }}
-                transition={{ duration: 0.3, ease: EASING }}
-                className={`relative shrink-0 w-[200px] md:w-[220px] rounded-2xl p-6 border transition-[background-color,border-color,box-shadow,transform,opacity] duration-[250ms] ease-out will-change-transform transform-gpu flex flex-col justify-between select-none ${
-                  isHovered
-                    ? "bg-[var(--color-obsidian)] border-[var(--color-accent-primary)] shadow-[0_0_40px_rgba(67,97,238,0.4)] z-30 scale-105"
-                    : "glass border-[var(--color-glass-border)] hover:border-white/30"
-                }`}
-                data-cursor-hover
-              >
-                {/* Icon & Category Tag */}
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="text-4xl h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-                      {tech.icon}
-                    </span>
-                    <span className="font-mono text-[9px] uppercase tracking-widest text-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 px-2.5 py-1 rounded-full border border-[var(--color-accent-primary)]/20">
-                      {tech.category}
-                    </span>
+        {/* --- TRACK 1: LEFTWARD TRAIN --- */}
+        <div className="relative overflow-hidden py-2 group/track1">
+          <div className="absolute inset-x-0 top-0 h-px bg-[var(--color-accent-primary)]/20" />
+          <motion.div
+            className="flex gap-5 w-max"
+            animate={{ x: ["0%", "-33.333%"] }}
+            transition={{
+              duration: 38,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            {loopTrackA.map((tech, idx) => {
+              const isHovered = hoveredTech?.name === tech.name;
+              const isAnyHovered = hoveredTech !== null;
+              const isOtherHovered = isAnyHovered && !isHovered;
+
+              return (
+                <motion.div
+                  key={`trackA-${tech.name}-${idx}`}
+                  onMouseEnter={() => setHoveredTech(tech)}
+                  onMouseLeave={() => setHoveredTech(null)}
+                  animate={{
+                    scale: isHovered ? 1.05 : isOtherHovered ? 0.95 : 1,
+                    opacity: isOtherHovered ? 0.35 : 1,
+                  }}
+                  transition={{ duration: 0.3, ease: EASING }}
+                  className={`relative shrink-0 w-[210px] md:w-[230px] rounded-2xl p-5 border transition-[background-color,border-color,box-shadow,opacity] duration-[250ms] ease-out will-change-transform transform-gpu flex flex-col justify-between select-none cursor-pointer ${
+                    isHovered
+                      ? "bg-[var(--color-obsidian)] border-[var(--color-accent-primary)] shadow-[0_0_40px_rgba(67,97,238,0.4)] z-30 scale-105"
+                      : "glass border-[var(--color-glass-border)] hover:border-white/40"
+                  }`}
+                  data-cursor-hover
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="text-3xl h-11 w-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-inner">
+                        {tech.icon}
+                      </span>
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 px-2.5 py-1 rounded-full border border-[var(--color-accent-primary)]/30 font-bold">
+                        {tech.category}
+                      </span>
+                    </div>
+
+                    <h4 className="font-display text-base font-bold text-[var(--color-starlight)] leading-snug">
+                      {tech.name}
+                    </h4>
                   </div>
 
-                  <h4 className="font-display text-lg font-bold text-[var(--color-starlight)] leading-snug">
-                    {tech.name}
-                  </h4>
-                </div>
+                  <div className="mt-4 pt-2.5 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-[var(--color-ash)]">
+                    <span>TRACK A // LINE 1</span>
+                    <span className="text-[var(--color-accent-primary)] font-bold">
+                      {isHovered ? "ACTIVE ✦" : "INSPECT"}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+          <div className="absolute inset-x-0 bottom-0 h-px bg-[var(--color-accent-primary)]/20" />
+        </div>
 
-                {/* Footer telemetry */}
-                <div className="mt-6 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-[var(--color-ash)]">
-                  <span>MODULE // READY</span>
-                  <span className="text-[var(--color-accent-primary)] font-bold">
-                    {isHovered ? "ACTIVE ✦" : "INSPECT"}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+        {/* --- TRACK 2: RIGHTWARD TRAIN --- */}
+        <div className="relative overflow-hidden py-2 group/track2">
+          <div className="absolute inset-x-0 top-0 h-px bg-[var(--color-accent-primary)]/20" />
+          <motion.div
+            className="flex gap-5 w-max"
+            animate={{ x: ["-33.333%", "0%"] }}
+            transition={{
+              duration: 42,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            {loopTrackB.map((tech, idx) => {
+              const isHovered = hoveredTech?.name === tech.name;
+              const isAnyHovered = hoveredTech !== null;
+              const isOtherHovered = isAnyHovered && !isHovered;
+
+              return (
+                <motion.div
+                  key={`trackB-${tech.name}-${idx}`}
+                  onMouseEnter={() => setHoveredTech(tech)}
+                  onMouseLeave={() => setHoveredTech(null)}
+                  animate={{
+                    scale: isHovered ? 1.05 : isOtherHovered ? 0.95 : 1,
+                    opacity: isOtherHovered ? 0.35 : 1,
+                  }}
+                  transition={{ duration: 0.3, ease: EASING }}
+                  className={`relative shrink-0 w-[210px] md:w-[230px] rounded-2xl p-5 border transition-[background-color,border-color,box-shadow,opacity] duration-[250ms] ease-out will-change-transform transform-gpu flex flex-col justify-between select-none cursor-pointer ${
+                    isHovered
+                      ? "bg-[var(--color-obsidian)] border-[var(--color-accent-primary)] shadow-[0_0_40px_rgba(67,97,238,0.4)] z-30 scale-105"
+                      : "glass border-[var(--color-glass-border)] hover:border-white/40"
+                  }`}
+                  data-cursor-hover
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="text-3xl h-11 w-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-inner">
+                        {tech.icon}
+                      </span>
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 px-2.5 py-1 rounded-full border border-[var(--color-accent-primary)]/30 font-bold">
+                        {tech.category}
+                      </span>
+                    </div>
+
+                    <h4 className="font-display text-base font-bold text-[var(--color-starlight)] leading-snug">
+                      {tech.name}
+                    </h4>
+                  </div>
+
+                  <div className="mt-4 pt-2.5 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-[var(--color-ash)]">
+                    <span>TRACK B // LINE 2</span>
+                    <span className="text-[var(--color-accent-primary)] font-bold">
+                      {isHovered ? "ACTIVE ✦" : "INSPECT"}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+          <div className="absolute inset-x-0 bottom-0 h-px bg-[var(--color-accent-primary)]/20" />
+        </div>
       </div>
 
       {/* Selected / Hovered Detailed Node Breakdown Card */}
@@ -146,7 +196,7 @@ export default function TechStackConveyor() {
               <span className="font-display text-base font-bold text-[var(--color-starlight)]">
                 {hoveredTech.name}
               </span>
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent-primary)] animate-ping" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent-primary)] shadow-[0_0_8px_var(--color-accent-primary)]" />
               <span className="font-mono text-xs text-[var(--color-accent-primary)] font-bold uppercase tracking-widest flex items-center gap-1.5">
                 <Sparkles size={14} />
                 {hoveredTech.category} MODULE ACTIVE
@@ -160,7 +210,7 @@ export default function TechStackConveyor() {
               className="font-mono text-xs text-[var(--color-ash)] tracking-widest uppercase flex items-center gap-2"
             >
               <Sparkles size={14} className="text-[var(--color-accent-primary)]" />
-              Hover or drag any card to highlight technology & blur surrounding stack
+              Continuous dual train stack — hover any module to pause rail line & inspect
             </motion.span>
           )}
         </AnimatePresence>

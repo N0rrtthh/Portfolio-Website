@@ -23,10 +23,22 @@ export default function EvaNavbar() {
   const lenis = useLenis();
 
   useEffect(() => {
+    let ticking = false;
+    let last = false;
     function onScroll() {
-      setScrolled(window.scrollY > 40);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const next = window.scrollY > 40;
+        if (next !== last) {
+          last = next;
+          setScrolled(next);
+        }
+        ticking = false;
+      });
     }
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -53,12 +65,35 @@ export default function EvaNavbar() {
   function handleNav(e: React.MouseEvent, href: string) {
     e.preventDefault();
     setOpen(false);
-    const target = document.querySelector(href);
+    setActive(href);
+    const target = document.querySelector(href) as HTMLElement | null;
     if (!target) return;
+
     if (lenis) {
-      lenis.scrollTo(target as HTMLElement, { offset: -60 });
+      lenis.scrollTo(target, {
+        offset: -60,
+        duration: 1.6,
+        easing: (t: number) => 1 - Math.pow(1 - t, 4),
+      });
     } else {
-      target.scrollIntoView({ behavior: "smooth" });
+      const startY = window.scrollY;
+      const targetY = target.getBoundingClientRect().top + window.scrollY - 60;
+      const distance = targetY - startY;
+      const duration = 1400;
+      let startTimestamp: number | null = null;
+
+      function step(timestamp: number) {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const elapsed = timestamp - startTimestamp;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 4);
+        window.scrollTo(0, startY + distance * ease);
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
     }
   }
 
@@ -76,18 +111,28 @@ export default function EvaNavbar() {
               : "bg-transparent border-transparent"
           }`}
         >
-          {/* Logo — Updated to NRTH */}
+          {/* Logo — Favicon + Nrth */}
           <a
             href="#hero"
             onClick={(e) => handleNav(e, "#hero")}
-            className="flex items-center gap-3 shrink-0 group"
+            className="flex items-center gap-2.5 shrink-0 group"
+            aria-label="Nrth — Home"
             data-cursor-hover
           >
-            <div className="flex px-2.5 py-1 items-center justify-center border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/10 text-[var(--color-accent-warm)] font-mono text-xs font-black tracking-wider transition-all group-hover:bg-[var(--color-accent-primary)] group-hover:text-white group-hover:shadow-[0_0_15px_var(--color-accent-primary)] rounded-lg">
-              NRTH
-            </div>
-            <span className="font-mono text-xs font-bold tracking-[0.15em] text-[var(--color-accent-primary)] hidden sm:inline-block transition-colors group-hover:text-[var(--color-accent-warm)]">
-              SYSTEM // NRTH
+            <motion.div
+              whileHover={{ scale: 1.12, rotate: -5 }}
+              whileTap={{ scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="flex h-9 w-9 items-center justify-center border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/15 rounded-xl shadow-[0_0_15px_var(--color-accent-primary)] group-hover:bg-[var(--color-accent-primary)]/30 group-hover:shadow-[0_0_22px_var(--color-accent-primary)] transition-all overflow-hidden p-1.5"
+            >
+              <img
+                src="/Favicon.png"
+                alt="Nrth Favicon"
+                className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(67,97,238,0.8)]"
+              />
+            </motion.div>
+            <span className="font-sans text-sm font-extrabold text-white hidden sm:inline-block tracking-tight group-hover:text-amber-300 transition-colors">
+              Nrth.
             </span>
           </a>
 
@@ -98,10 +143,10 @@ export default function EvaNavbar() {
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleNav(e, item.href)}
-                className={`relative font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 transition-all duration-300 rounded-full ${
+                className={`relative font-mono text-[11px] tracking-wider px-3.5 py-1.5 transition-all duration-300 rounded-full ${
                   active === item.href
-                    ? "text-[var(--color-accent-warm)] bg-[var(--color-accent-primary)]/15 font-bold"
-                    : "text-[var(--color-ash)] hover:text-white hover:bg-[var(--color-accent-primary)]/10"
+                    ? "text-amber-300 bg-white/10 border border-amber-500/30 font-bold shadow-sm"
+                    : "text-slate-300 hover:text-white hover:bg-white/5"
                 }`}
                 data-cursor-hover
               >

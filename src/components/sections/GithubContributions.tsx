@@ -29,8 +29,7 @@ const staticData = staticDataRaw as unknown as {
   years: Record<string, { totalContributions: number; weeks: WeekData[] }>;
 };
 
-// Light/dark aware cell colors. Both ramps read as GitHub-green but the
-// light ramp sits on white instead of near-black so contrast stays correct.
+// Light/dark aware cell colors
 const CELL_COLORS: Record<number, { border: string; bg: string; glow?: string }> = {
   0: { border: "border-black/[0.06] dark:border-white/[0.05]", bg: "bg-black/[0.03] dark:bg-white/[0.04]" },
   1: { border: "border-emerald-700/20 dark:border-[#006d32]/40", bg: "bg-emerald-100 dark:bg-[#0e4429]" },
@@ -70,27 +69,21 @@ export default function GithubContributions() {
 
   const totalCommits = data?.totalContributions || 0;
 
-  const realDays = useMemo(
-    () => (data?.weeks.flatMap((w) => w.contributionDays) || []).filter((d) => d.level !== -1),
-    [data]
-  );
-
-  const busiestDay = useMemo(
-    () => realDays.reduce<DayData | null>((max, d) => (!max || d.count > max.count ? d : max), null),
-    [realDays]
-  );
-
   return (
-    <section
+    <motion.section
       id="github-activity"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="relative py-24 border-t border-[var(--color-glass-border)] bg-white dark:bg-black/40 overflow-hidden transition-colors duration-500"
     >
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/10 blur-[120px] rounded-full" />
 
       <div className="container-narrow relative z-10">
-        <ChapterLabel index={9} classic="GitHub Activity Archive" eva="CONTRIBUTION MATRIX" className="mb-4" />
+        <ChapterLabel index={5} classic="GitHub Activity Archive" eva="CONTRIBUTION MATRIX" className="mb-4" />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
             <RevealText as="h2" className="text-section-title font-display text-[var(--color-ink,#111)] dark:text-[var(--color-starlight)]">
               GitHub Commit History
@@ -137,7 +130,7 @@ export default function GithubContributions() {
                     setSelectedYear(year);
                     setPinnedDay(null);
                   }}
-                  className="relative px-3 py-1.5 text-xs font-mono rounded-lg text-black/50 dark:text-[var(--color-pearl)]/60 hover:text-black dark:hover:text-white transition-colors"
+                  className="relative px-3 py-1.5 text-xs font-mono rounded-lg text-black/50 dark:text-[var(--color-pearl)]/60 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
                 >
                   {selectedYear === year && (
                     <motion.span
@@ -153,10 +146,12 @@ export default function GithubContributions() {
           </div>
         </div>
 
-        {/* Compact inline stat, replaces the old 4-card grid */}
+        {/* Clean Animated Stat Counter */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
           className="flex items-center gap-2 mb-8 text-sm font-mono text-black/60 dark:text-[var(--color-pearl)]/60"
         >
           <GitCommit className="w-4 h-4 text-emerald-500" />
@@ -166,7 +161,7 @@ export default function GithubContributions() {
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 6 }}
-              className="font-bold text-black dark:text-[var(--color-starlight)]"
+              className="font-bold text-black dark:text-[var(--color-starlight)] text-base"
             >
               {totalCommits.toLocaleString()}
             </motion.span>
@@ -174,7 +169,12 @@ export default function GithubContributions() {
           contributions in {selectedYear}
         </motion.div>
 
-        <div
+        {/* Contribution Heatmap Matrix Card with Entrance Scale Animation */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="relative p-6 rounded-3xl border border-[var(--color-glass-border)] bg-black/[0.02] dark:bg-[var(--color-obsidian)] backdrop-blur-xl min-h-[220px] flex flex-col justify-center"
           onMouseMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
@@ -206,7 +206,7 @@ export default function GithubContributions() {
                 transition={{ duration: 0.3 }}
                 className="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-emerald-500/20"
               >
-                {/* Floating tooltip that follows the cursor */}
+                {/* Floating tooltip that follows cursor */}
                 <AnimatePresence>
                   {hoveredDay && hoveredDay.level !== -1 && (
                     <motion.div
@@ -248,10 +248,11 @@ export default function GithubContributions() {
                             <motion.div
                               key={`${wIdx}-${dIdx}`}
                               initial={{ opacity: 0, scale: 0.4 }}
-                              animate={{ opacity: 1, scale: 1 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              viewport={{ once: true }}
                               transition={{
-                                duration: 0.25,
-                                delay: Math.min((wIdx * 7 + dIdx) * 0.0025, 0.6),
+                                duration: 0.2,
+                                delay: Math.min((wIdx * 7 + dIdx) * 0.0018, 0.4),
                                 ease: "easeOut",
                               }}
                               whileHover={lvl !== -1 ? { scale: 1.4, zIndex: 20 } : undefined}
@@ -259,9 +260,13 @@ export default function GithubContributions() {
                               onMouseEnter={() => lvl !== -1 && setHoveredDay(day)}
                               onMouseLeave={() => setHoveredDay(null)}
                               onClick={() => lvl !== -1 && setPinnedDay(isPinned ? null : day)}
-                              className={`w-3 h-3 rounded-[3px] border transition-colors duration-150 ${lvl === -1 ? "opacity-0 pointer-events-none border-transparent" : "cursor-pointer"
-                                } ${style?.border ?? ""} ${style?.bg ?? ""} ${style?.glow ?? ""} ${isPinned ? "ring-2 ring-emerald-400 ring-offset-1 ring-offset-transparent" : ""
-                                }`}
+                              className={`h-3 w-3 rounded-[3px] border transition-colors cursor-pointer ${
+                                lvl === -1
+                                  ? "opacity-0 pointer-events-none"
+                                  : `${style?.border} ${style?.bg} ${style?.glow ?? ""} ${
+                                      isPinned ? "ring-2 ring-emerald-400 ring-offset-1 dark:ring-offset-black" : ""
+                                    }`
+                              }`}
                             />
                           );
                         })}
@@ -269,59 +274,11 @@ export default function GithubContributions() {
                     ))}
                   </div>
                 </div>
-
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-glass-border)] text-xs font-mono">
-                  <div className="text-black/70 dark:text-[var(--color-pearl)]/80 min-h-[20px]">
-                    <AnimatePresence mode="wait">
-                      {activeDay ? (
-                        <motion.span
-                          key={activeDay.date}
-                          initial={{ opacity: 0, y: 4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -4 }}
-                          className="text-emerald-600 dark:text-emerald-400 font-semibold inline-flex items-center gap-1.5"
-                        >
-                          <CalendarIcon className="w-3.5 h-3.5" />
-                          {activeDay.count} contribution{activeDay.count === 1 ? "" : "s"} on{" "}
-                          {new Date(activeDay.date).toLocaleDateString(undefined, {
-                            weekday: "short",
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                          {pinnedDay?.date === activeDay.date && (
-                            <span className="opacity-50 font-normal">(pinned — click again to clear)</span>
-                          )}
-                        </motion.span>
-                      ) : (
-                        <motion.span
-                          key="hint"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="opacity-50"
-                        >
-                          Hover a cell for details, or click to pin it{busiestDay ? ` · busiest day: ${busiestDay.count} commits` : ""}
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-black/40 dark:text-[var(--color-pearl)]/50 text-[10px]">
-                    <span>Less</span>
-                    <div className="flex gap-1">
-                      {[0, 1, 2, 3, 4].map((l) => (
-                        <div key={l} className={`w-3 h-3 rounded-[2px] ${CELL_COLORS[l].bg}`} />
-                      ))}
-                    </div>
-                    <span>More</span>
-                  </div>
-                </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

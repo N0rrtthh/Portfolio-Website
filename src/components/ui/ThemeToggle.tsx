@@ -87,10 +87,10 @@ export default function ThemeToggle() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 450, damping: 25 }}
-            className="absolute top-12 right-0 z-[9999] p-3.5 rounded-2xl border border-[var(--color-accent-warm)] bg-[#070913]/98 backdrop-blur-3xl shadow-[0_10px_40px_rgba(57,255,20,0.5)] flex flex-col gap-2.5 min-w-[220px]"
+            className="absolute top-12 right-0 z-[9999] flex min-w-[220px] flex-col gap-2.5 rounded-2xl border border-[var(--color-accent-warm)] bg-[#070913]/98 p-3.5 shadow-[0_10px_40px_rgba(57,255,20,0.5)] backdrop-blur-3xl"
           >
-            <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold tracking-widest text-[var(--color-accent-warm)] uppercase border-b border-white/10 pb-2">
-              <Sparkles size={13} className="animate-spin text-emerald-400" />
+            <div className="flex items-center gap-1.5 border-b border-white/10 pb-2 font-mono text-[9px] font-bold tracking-widest text-[var(--color-accent-warm)] uppercase">
+              <Sparkles size={13} className="text-emerald-400" />
               <span>MAGI OVERRIDE UNLOCKED</span>
             </div>
 

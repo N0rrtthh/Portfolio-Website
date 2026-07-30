@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import EvaNavbar from "@/components/eva/EvaNavbar";
 import EvaHero from "@/components/eva/EvaHero";
@@ -7,47 +8,54 @@ import EvaAbout from "@/components/eva/EvaAbout";
 import EvaProjects from "@/components/eva/EvaProjects";
 import EvaTechStack from "@/components/eva/EvaTechStack";
 import EvaExperience from "@/components/eva/EvaExperience";
-import GithubContributions from "@/components/sections/GithubContributions";
-import Certifications from "@/components/sections/Certifications";
 import EvaContact from "@/components/eva/EvaContact";
+
+// Heavy below-fold sections — defer parse until after first paint
+const GithubContributions = dynamic(
+  () => import("@/components/sections/GithubContributions"),
+  { ssr: false }
+);
+const Certifications = dynamic(
+  () => import("@/components/sections/Certifications"),
+  { ssr: false }
+);
 
 export default function EvaLayout() {
   return (
     <SmoothScrollProvider weight="heavy">
-      <div className="min-h-screen bg-[var(--color-void)] text-[var(--color-pearl)] font-mono relative overflow-hidden">
-        {/* MAGI Hexagon Grid Background */}
+      <div className="relative min-h-screen overflow-hidden bg-[var(--color-void)] font-mono text-[var(--color-pearl)]">
+        {/* MAGI Hexagon Grid Background — static CSS, zero JS cost */}
         <div
           className="pointer-events-none fixed inset-0 z-0 opacity-[0.03]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='103.92' viewBox='0 0 60 103.92' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 17.32v34.64L30 69.28 0 51.96V17.32zM30 103.92l30-17.32V51.96l-30-17.32-30 17.32v34.64z' fill='%234361ee' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
             backgroundSize: "60px 103px",
           }}
+          aria-hidden
         />
 
         {/* Vertical Tactical Scanning Line */}
-        <div className="pointer-events-none fixed left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-accent-primary)] to-transparent z-[2] opacity-20 animate-[scan-down_10s_linear_infinite]" />
+        <div
+          className="pointer-events-none fixed right-0 left-0 z-[2] h-[2px] bg-gradient-to-r from-transparent via-[var(--color-accent-primary)] to-transparent opacity-20 animate-[scan-down_10s_linear_infinite]"
+          aria-hidden
+        />
 
         {/* Tactical HUD Corner Warning Borders */}
-        <div className="pointer-events-none fixed inset-0 z-[2] border-[1px] border-[var(--color-accent-primary)]/10" />
+        <div
+          className="pointer-events-none fixed inset-0 z-[2] border border-[var(--color-accent-primary)]/10"
+          aria-hidden
+        />
 
         <EvaNavbar />
 
         <main className="relative z-10">
-          {/* Phase 1: System Boot → Identity */}
           <EvaHero />
-          {/* Phase 2: User Profile */}
           <EvaAbout />
-          {/* Phase 3: Mission Archive */}
           <EvaProjects />
-          {/* Phase 4: Equipment Manifest */}
           <EvaTechStack />
-          {/* Phase 5: Deployment History */}
-          <EvaExperience />
-          {/* Phase 6: GitHub GraphQL Activity Stream */}
           <GithubContributions />
-          {/* Phase 7: Credential Vault & Certifications */}
+          <EvaExperience />
           <Certifications />
-          {/* Phase 8: Comms Uplink */}
           <EvaContact />
         </main>
       </div>

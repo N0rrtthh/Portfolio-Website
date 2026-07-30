@@ -43,6 +43,10 @@ next-env.d.ts
 # Temp / script artifacts
 temp_github.json
 scripts/.rebase-todo
+*.log
+*.tmp
+*.bak
+.turbo/
 
 # Agent & IDE workspace files
 .agents/

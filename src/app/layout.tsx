@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Syne, Plus_Jakarta_Sans, JetBrains_Mono, Outfit, Bebas_Neue } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import {
   NO_FLASH_THEME_SCRIPT,
@@ -63,12 +62,24 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "icon.svg",
-        type: "image/svg+xml",
+        url: "/icon.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+      {
+        url: "/Favicon.png",
+        sizes: "512x512",
+        type: "image/png",
       },
     ],
-    shortcut: "icon.svg",
-    apple: "icon.svg",
+    shortcut: "/Favicon.png",
+    apple: [
+      {
+        url: "/apple-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
   },
   metadataBase: new URL("https://elroniquinones.dev"),
   openGraph: {
@@ -111,12 +122,17 @@ export default function RootLayout({
       className={`${bebasNeue.variable} ${outfit.variable} ${syne.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-void text-pearl antialiased" suppressHydrationWarning>
-        <Script
+      <head>
+        <link rel="icon" href="/Favicon.png" sizes="512x512" type="image/png" />
+        <link rel="shortcut icon" href="/Favicon.png" />
+        <link rel="apple-touch-icon" href="/Favicon.png" sizes="180x180" />
+        <script
           id="no-flash-theme-script"
-          strategy="beforeInteractive"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: NO_FLASH_THEME_SCRIPT }}
         />
+      </head>
+      <body className="min-h-screen bg-void text-pearl antialiased" suppressHydrationWarning>
         <ThemeProvider>
           {children}
           {/* Film grain noise overlay */}

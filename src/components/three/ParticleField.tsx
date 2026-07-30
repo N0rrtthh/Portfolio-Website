@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { MotionValue } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { getAdaptiveQuality, observeVisibility } from "@/lib/performance";
 
 function ScrollRig({ progress }: { progress?: MotionValue<number> }) {
   const { camera } = useThree();
@@ -31,13 +32,14 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
   const midPointsRef = useRef<THREE.Points>(null);
   const fgPointsRef = useRef<THREE.Points>(null);
   const mouse = useRef({ x: 0, y: 0 });
+  const quality = useMemo(() => getAdaptiveQuality(), []);
 
   const isEva = design === "eva";
 
-  // Layer 1: Background (500 distant fine particles)
   const bgPositions = useMemo(() => {
-    const arr = new Float32Array(500 * 3);
-    for (let i = 0; i < 500; i++) {
+    const count = quality.particleBg;
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       const r = 5.0 + Math.random() * 5.0;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
@@ -46,12 +48,12 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
-  }, []);
+  }, [quality.particleBg]);
 
-  // Layer 2: Midground (250 responsive particles)
   const midPositions = useMemo(() => {
-    const arr = new Float32Array(250 * 3);
-    for (let i = 0; i < 250; i++) {
+    const count = quality.particleMid;
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       const r = 3.0 + Math.random() * 3.0;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
@@ -60,12 +62,12 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
-  }, []);
+  }, [quality.particleMid]);
 
-  // Layer 3: Foreground (75 large floating ambient dust particles)
   const fgPositions = useMemo(() => {
-    const arr = new Float32Array(75 * 3);
-    for (let i = 0; i < 75; i++) {
+    const count = quality.particleFg;
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
       const r = 1.5 + Math.random() * 2.5;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
@@ -74,20 +76,15 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
-  }, []);
+  }, [quality.particleFg]);
 
-  // Theme-aware particle colors
   const particleColor = useMemo(() => {
     if (isEva) return mode === "dark" ? "#39ff14" : "#ff6a00";
     return mode === "dark" ? "#818cf8" : "#4361ee";
   }, [isEva, mode]);
 
-  // Material refs for smooth color interpolation
   const bgMatRef = useRef<THREE.PointsMaterial>(null);
   const midMatRef = useRef<THREE.PointsMaterial>(null);
-  const fgMatRef = useRef<THREE.PointsMaterial>(null);
-
-  // Target Color
   const targetColor = useMemo(() => new THREE.Color(particleColor), [particleColor]);
 
   useFrame(({ clock, pointer }) => {
@@ -96,33 +93,32 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
 
     const t = clock.getElapsedTime();
     const p = progress?.get() ?? 0;
+    const slow = quality.reduceContinuousFx ? 0.6 : 1;
 
-    // Smoothly interpolate particle colors during theme transition
     if (bgMatRef.current) bgMatRef.current.color.lerp(targetColor, 0.08);
     if (midMatRef.current) midMatRef.current.color.lerp(targetColor, 0.08);
 
-    // Background Layer — slow drift
     if (bgPointsRef.current) {
-      bgPointsRef.current.rotation.y = t * 0.015 + mouse.current.x * 0.1 + p * 0.5;
+      bgPointsRef.current.rotation.y =
+        t * 0.015 * slow + mouse.current.x * 0.1 + p * 0.5;
       bgPointsRef.current.rotation.x = mouse.current.y * 0.05 + p * 0.2;
     }
 
-    // Midground Layer — medium parallax
     if (midPointsRef.current) {
-      midPointsRef.current.rotation.y = t * 0.035 + mouse.current.x * 0.25 + p * 1.0;
+      midPointsRef.current.rotation.y =
+        t * 0.035 * slow + mouse.current.x * 0.25 + p * 1.0;
       midPointsRef.current.rotation.x = mouse.current.y * 0.15 + p * 0.4;
     }
 
-    // Foreground Layer — fast floating dust
     if (fgPointsRef.current) {
-      fgPointsRef.current.rotation.y = -t * 0.06 + mouse.current.x * 0.4 + p * 1.5;
+      fgPointsRef.current.rotation.y =
+        -t * 0.06 * slow + mouse.current.x * 0.4 + p * 1.5;
       fgPointsRef.current.rotation.x = -mouse.current.y * 0.25;
     }
   });
 
   return (
     <group>
-      {/* Background Layer */}
       <points ref={bgPointsRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[bgPositions, 3]} />
@@ -138,7 +134,6 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
         />
       </points>
 
-      {/* Midground Layer */}
       <points ref={midPointsRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[midPositions, 3]} />
@@ -154,7 +149,6 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
         />
       </points>
 
-      {/* Foreground Layer */}
       <points ref={fgPointsRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[fgPositions, 3]} />
@@ -175,7 +169,6 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
 function WireframeIcosahedron({ progress }: { progress?: MotionValue<number> }) {
   const { mode, design } = useTheme();
   const ref = useRef<THREE.Mesh>(null);
-
   const isEva = design === "eva";
   const wireColor = isEva ? (mode === "dark" ? "#39ff14" : "#ff3333") : "#4361ee";
 
@@ -204,16 +197,36 @@ export default function ParticleField({
 }: {
   scrollProgress?: MotionValue<number>;
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(true);
+  const quality = useMemo(() => getAdaptiveQuality(), []);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    return observeVisibility(el, setActive, "15% 0px");
+  }, []);
+
   return (
-    <Canvas
-      camera={{ position: [0, 0, 8.5], fov: 42 }}
-      dpr={1}
-      gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-      className="absolute! inset-0"
-    >
-      <ScrollRig progress={scrollProgress} />
-      <LayeredParticleSwarm progress={scrollProgress} />
-      <WireframeIcosahedron progress={scrollProgress} />
-    </Canvas>
+    <div ref={wrapRef} className="absolute inset-0">
+      <Canvas
+        camera={{ position: [0, 0, 8.5], fov: 42 }}
+        dpr={quality.dpr}
+        frameloop={active ? "always" : "never"}
+        gl={{
+          antialias: false,
+          alpha: true,
+          powerPreference: "high-performance",
+          stencil: false,
+        }}
+        className="absolute! inset-0"
+      >
+        <ScrollRig progress={scrollProgress} />
+        <LayeredParticleSwarm progress={scrollProgress} />
+        {!quality.reduceContinuousFx && (
+          <WireframeIcosahedron progress={scrollProgress} />
+        )}
+      </Canvas>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { SlidersHorizontal, PanelLeft, Terminal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +8,14 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function FloatingThemeToggle() {
   const { design, evaLoaderStyle, toggleEvaLoaderStyle } = useTheme();
   const [showSettings, setShowSettings] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent hydration mismatch by returning null until mounted on client
+  if (!mounted) return null;
 
   // If in classic mode, return null
   if (design === "classic") {
@@ -24,7 +32,7 @@ export default function FloatingThemeToggle() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="p-4 rounded-2xl border backdrop-blur-2xl shadow-2xl flex flex-col gap-3 min-w-[260px] border-[var(--color-accent-primary)]/50 bg-[#070913]/95 text-white shadow-[0_0_30px_rgba(122,0,255,0.3)]"
+            className="flex min-w-[260px] flex-col gap-3 rounded-2xl border border-[var(--color-accent-primary)]/50 bg-[#070913]/95 p-4 text-white shadow-2xl shadow-[0_0_30px_rgba(122,0,255,0.3)] backdrop-blur-2xl"
           >
             <div className="px-2 py-1 flex items-center justify-between border-b border-white/10 text-[10px] font-mono font-bold tracking-widest text-[var(--color-accent-warm)] uppercase">
               <span>EVA SYSTEM PREFERENCES</span>

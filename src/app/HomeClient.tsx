@@ -77,17 +77,17 @@ export default function HomeClient() {
 
   return (
     <>
-      {/* Classic Mode Loader */}
+      {/* Classic Mode Loader — stable keys (Date.now() forced remount every render) */}
       {transitionTarget === "classic" && (
-        <CinematicLoader key={`loader-classic-${Date.now()}`} onComplete={handleLoaderComplete} />
+        <CinematicLoader key="loader-classic" onComplete={handleLoaderComplete} />
       )}
 
-      {/* Eva Mode Loader — Choice between Side HUD Loader (default) and Terminal Boot Sequence */}
+      {/* Eva Mode Loader — Side HUD (default) or Terminal Boot Sequence */}
       {transitionTarget === "eva" && (
         evaLoaderStyle === "side" ? (
-          <EvaSideLoader key={`loader-eva-side-${Date.now()}`} onComplete={handleLoaderComplete} />
+          <EvaSideLoader key="loader-eva-side" onComplete={handleLoaderComplete} />
         ) : (
-          <BootSequence key={`loader-eva-terminal-${Date.now()}`} onComplete={handleLoaderComplete} />
+          <BootSequence key="loader-eva-terminal" onComplete={handleLoaderComplete} />
         )
       )}
 

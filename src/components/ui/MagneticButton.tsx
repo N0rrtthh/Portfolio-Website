@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 interface MagneticButtonProps {
   children: React.ReactNode;
@@ -11,6 +11,10 @@ interface MagneticButtonProps {
   strength?: number;
 }
 
+/**
+ * Magnetic pull without setState on every mousemove.
+ * Motion values stay off the React render path — compositor-friendly.
+ */
 export default function MagneticButton({
   children,
   className = "",
@@ -19,36 +23,44 @@ export default function MagneticButton({
   strength = 0.3,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLAnchorElement | HTMLButtonElement>(null);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 140, damping: 14, mass: 0.4 });
+  const springY = useSpring(y, { stiffness: 140, damping: 14, mass: 0.4 });
 
   function handleMouseMove(e: React.MouseEvent) {
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) * strength;
-    const y = (e.clientY - rect.top - rect.height / 2) * strength;
-    setPos({ x, y });
+    x.set((e.clientX - rect.left - rect.width / 2) * strength);
+    y.set((e.clientY - rect.top - rect.height / 2) * strength);
   }
 
   function handleMouseLeave() {
-    setPos({ x: 0, y: 0 });
+    x.set(0);
+    y.set(0);
   }
 
-  const Component = href ? motion.a : motion.button;
+  const shared = {
+    ref: ref as never,
+    onMouseMove: handleMouseMove,
+    onMouseLeave: handleMouseLeave,
+    style: { x: springX, y: springY },
+    className: `magnetic-btn select-none will-change-transform transform-gpu ${className}`,
+    "data-cursor-hover": true as const,
+  };
+
+  if (href) {
+    return (
+      <motion.a href={href} {...shared}>
+        {children}
+      </motion.a>
+    );
+  }
 
   return (
-    <Component
-      ref={ref as never}
-      href={href}
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: "spring", stiffness: 140, damping: 14, mass: 0.4 }}
-      className={`magnetic-btn select-none ${className}`}
-      data-cursor-hover
-    >
+    <motion.button type="button" onClick={onClick} {...shared}>
       {children}
-    </Component>
+    </motion.button>
   );
 }

@@ -12,7 +12,7 @@ export default function ScrollProgress() {
 
   return (
     <motion.div
-      className="scroll-progress w-full"
+      className="scroll-progress w-full will-change-transform transform-gpu"
       style={{ scaleX }}
       aria-hidden="true"
     />

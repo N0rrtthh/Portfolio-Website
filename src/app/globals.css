@@ -234,6 +234,18 @@ body {
     0 16px 64px rgba(0, 0, 0, 0.15);
 }
 
+/* Glassmorphism media query — full blur when supported */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .glass-heavy {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
 /* ══════════════════════════════════════════════════════════
    NOISE OVERLAY — subtler for v2
    ══════════════════════════════════════════════════════════ */
@@ -320,6 +332,8 @@ body {
 .section-padding {
   padding-top: clamp(6rem, 14vh, 12rem);
   padding-bottom: clamp(6rem, 14vh, 12rem);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
 }
 
 .container-narrow {
@@ -358,19 +372,23 @@ body {
    ══════════════════════════════════════════════════════════ */
 
 .hover-focus-container:hover [data-hoverable] {
-  opacity: 0.4;
-  filter: blur(1px);
-  transform: scale(0.98);
+  opacity: 0.45;
+  filter: blur(3px);
+  transform: scale(0.975);
   transition:
-    opacity var(--duration-normal) var(--ease-cinematic),
-    filter var(--duration-normal) var(--ease-cinematic),
-    transform var(--duration-normal) var(--ease-cinematic);
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hover-focus-container [data-hoverable]:hover {
-  opacity: 1 !important;
-  filter: blur(0) !important;
-  transform: scale(1) !important;
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ══════════════════════════════════════════════════════════

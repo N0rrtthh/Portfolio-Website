@@ -34,18 +34,18 @@ export default function SmoothScrollProvider({
     const instance = new Lenis(
       isHeavy
         ? {
-            lerp: 0.06,              // very slow catch-up — heavy inertia tail
-            wheelMultiplier: 1.4,    // each tick travels far
-            touchMultiplier: 1.0,
+            lerp: 0.055,
+            wheelMultiplier: 1.35,
+            touchMultiplier: 1.6,
             smoothWheel: true,
             syncTouch: false,
           }
         : {
-            duration: 1.2,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            lerp: 0.075,
+            wheelMultiplier: 1.12,
+            touchMultiplier: 1.5,
             smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 1.2,
+            syncTouch: false,
           }
     );
 
@@ -62,7 +62,7 @@ export default function SmoothScrollProvider({
       instance.destroy();
       setLenis(null);
     };
-  }, []);
+  }, [weight]);
 
   return (
     <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>

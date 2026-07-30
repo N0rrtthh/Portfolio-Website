@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
@@ -825,17 +826,6 @@ const SUBJECT_CATEGORIES = [
 
 const AI_FUNDAMENTALS_CERT_IDS = new Set(["cert-01", "cert-02", "cert-03"]);
 
-/**
- * Badge artwork per cert. Most entries now point at the same Credly-hosted
- * image already stored in that cert's `variants[].credlyBadgeImageUrl` —
- * that's a real CDN asset (fast, permanent), unlike scraped search-thumbnail
- * URLs. cert-11, cert-20, and cert-21 have NO credly image anywhere in their
- * variants data, so they stay on local /Certificate Icons/ artwork until a
- * real hosted image is available for them.
- * A value can be a single URL (one badge) or an array (multiple badges
- * rendered side-by-side in the same tile, e.g. cert-28's two collaborating
- * schools).
- */
 const CERT_ARTWORK_BY_ID: Partial<Record<string, string | string[]>> = {
   "cert-04": "https://images.credly.com/images/33ba62e4-b26d-4b95-9121-1ad01b754224/linkedin_thumb_blob",
   "cert-05": "https://images.credly.com/images/62db59ef-19f9-4652-a00c-7582baee8177/linkedin_thumb_blob",
@@ -867,21 +857,12 @@ const CERT_ARTWORK_BY_ID: Partial<Record<string, string | string[]>> = {
   ],
 };
 
-/**
- * Shared card body — badge slot (rendered differently per-cert above this
- * component) + the identical title/description/skills/footer markup.
- * Keeping this in one place means the footer logic (verified badge, issuer
- * count, subject pill) can never drift between the three badge variants.
- */
 function CredentialCardBody({ cert, badge }: { cert: RealCertification; badge: ReactNode }) {
   const verifiedVariants = cert.variants.filter((variant) => variant.credlyPublicUrl);
   const issuerCount = cert.variants.length;
 
   return (
     <>
-      {/* Badge artwork — floats above the card edge. mb-5 (not mb-1) gives the
-          badge real clearance so it never visually collides with the issuer
-          label directly below it. */}
       <div className="relative -mt-14 mb-7 flex justify-center items-end px-5 pointer-events-none">
         {badge}
       </div>
@@ -948,6 +929,11 @@ export default function Certifications() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCert, setSelectedCert] = useState<RealCertification | null>(null);
   const [activeVariantId, setActiveVariantId] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!selectedCert) return;
@@ -1068,10 +1054,6 @@ export default function Certifications() {
               const badgeVariantsToShow = verifiedVariants.filter((variant) => variant.credlyBadgeImageUrl).slice(0, 3);
               const artworkUrl = CERT_ARTWORK_BY_ID[cert.id];
 
-              // Decide once which badge visual this card gets, in priority order:
-              // 1) the AI Fundamentals family shows real Credly badge art (single, grid, or embed)
-              // 2) certs with artwork (local or hosted, single or multi) show that image
-              // 3) everything else falls back to a symbol on a gradient tile
               let badgeNode: ReactNode;
               if (AI_FUNDAMENTALS_CERT_IDS.has(cert.id)) {
                 if (badgeVariantsToShow.length > 1) {
@@ -1083,7 +1065,7 @@ export default function Certifications() {
                       {badgeVariantsToShow.map((variant) => (
                         <div
                           key={variant.id}
-                          className="h-full flex items-center justify-center drop-shadow-[0_20px_26px_rgba(0,0,0,0.6)] transition-transform will-change-transform transform-gpu duration-300 group-hover:-translate-y-2"
+                          className="h-full flex items-center justify-center drop-shadow-[0_20px_26px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105"
                         >
                           <img
                             src={variant.credlyBadgeImageUrl}
@@ -1099,7 +1081,7 @@ export default function Certifications() {
                   );
                 } else if (badgeImageUrl) {
                   badgeNode = (
-                    <div className="w-36 h-36 flex items-center justify-center drop-shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-transform will-change-transform transform-gpu duration-300 group-hover:-translate-y-2.5">
+                    <div className="w-36 h-36 flex items-center justify-center drop-shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3.5 group-hover:scale-105">
                       <img
                         src={badgeImageUrl}
                         alt={`${defaultVariant?.name ?? cert.title} badge artwork`}
@@ -1112,7 +1094,7 @@ export default function Certifications() {
                   );
                 } else {
                   badgeNode = (
-                    <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${cert.badgeBgColor} flex items-center justify-center text-3xl shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-transform will-change-transform transform-gpu duration-300 group-hover:-translate-y-2.5`}>
+                    <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${cert.badgeBgColor} flex items-center justify-center text-3xl shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3.5 group-hover:scale-105`}>
                       {cert.badgeSymbol}
                     </div>
                   );
@@ -1129,7 +1111,7 @@ export default function Certifications() {
                       {artworkList.map((url) => (
                         <div
                           key={url}
-                          className="h-full flex items-center justify-center drop-shadow-[0_20px_26px_rgba(0,0,0,0.6)] transition-transform will-change-transform transform-gpu duration-300 group-hover:-translate-y-2"
+                          className="h-full flex items-center justify-center drop-shadow-[0_20px_26px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105"
                         >
                           <img
                             src={url}
@@ -1143,7 +1125,7 @@ export default function Certifications() {
                       ))}
                     </div>
                   ) : (
-                    <div className="w-full max-w-[17.5rem] h-28 flex items-center justify-center drop-shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-transform will-change-transform transform-gpu duration-300 group-hover:-translate-y-2.5">
+                    <div className="w-full max-w-[17.5rem] h-28 flex items-center justify-center drop-shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3.5 group-hover:scale-105">
                       <img
                         src={artworkList[0]}
                         alt={`${cert.title} certificate artwork`}
@@ -1156,7 +1138,7 @@ export default function Certifications() {
                   );
               } else {
                 badgeNode = (
-                  <div className={`w-full max-w-[15rem] h-28 rounded-[1.5rem] bg-gradient-to-br ${cert.badgeBgColor} shadow-[0_16px_28px_-18px_rgba(0,0,0,0.6)] flex items-center justify-center`}>
+                  <div className={`w-full max-w-[15rem] h-28 rounded-[1.5rem] bg-gradient-to-br ${cert.badgeBgColor} shadow-[0_16px_28px_-18px_rgba(0,0,0,0.6)] flex items-center justify-center transition-all duration-500 ease-out group-hover:-translate-y-3`}>
                     <div className="text-4xl">{cert.badgeSymbol}</div>
                   </div>
                 );
@@ -1166,14 +1148,21 @@ export default function Certifications() {
                 <motion.div
                   key={cert.id}
                   layout="position"
-                  initial={{ opacity: 0, transform: "translateY(8px)" }}
-                  animate={{ opacity: 1, transform: "translateY(0px)" }}
-                  exit={{ opacity: 0, transform: "translateY(8px)" }}
-                  transition={{ duration: 0.35, ease: EASING }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 16 }}
+                  whileHover={{ scale: 1.035, y: -8 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 240,
+                    damping: 22,
+                    mass: 1.2,
+                  }}
                   onClick={() => handleOpenInspector(cert)}
                   data-hoverable
                   data-cursor-hover
-                  className="group relative rounded-2xl glass border border-[var(--color-glass-border)] hover:border-[var(--color-accent-primary)]/60 transition-[border-color,box-shadow,opacity,transform] will-change-transform transform-gpu duration-[250ms] ease-out flex flex-col overflow-visible cursor-pointer pt-12 hover:z-30 hover:shadow-[0_28px_60px_-18px_rgba(67,97,238,0.5)] hover:scale-[1.045] active:scale-[0.97]"
+                  className="group relative rounded-2xl glass border border-[var(--color-glass-border)] hover:border-[var(--color-accent-primary)]/70 transition-[border-color,box-shadow] duration-500 ease-out flex flex-col overflow-visible cursor-pointer pt-12 hover:z-30 hover:shadow-[0_32px_75px_-16px_rgba(67,97,238,0.55)]"
                 >
                   <CredentialCardBody cert={cert} badge={badgeNode} />
                 </motion.div>
@@ -1191,160 +1180,168 @@ export default function Certifications() {
         )}
       </div>
 
-      {/* Interactive Tile Inspector Modal with Multi-Issuer Tab Switcher */}
-      <AnimatePresence>
-        {selectedCert && currentVariant && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedCert(null)}
-            className="fixed inset-0 z-[999] flex items-start justify-center overflow-hidden px-4 py-6 bg-black/60 backdrop-blur-sm select-none"
-          >
-            <motion.div
-              initial={{ transform: "scale(0.96) translateY(12px)", opacity: 0 }}
-              animate={{ transform: "scale(1) translateY(0px)", opacity: 1 }}
-              exit={{ transform: "scale(0.96) translateY(12px)", opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASING }}
-              onClick={(e) => e.stopPropagation()}
-              onWheelCapture={(e) => e.stopPropagation()}
-              className="relative w-full max-w-6xl my-auto rounded-[1.75rem] p-4 sm:p-5 border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white flex flex-col max-h-[calc(100vh-3rem)] overflow-hidden bg-[#0a0a0a]"
-            >
-              <div className="flex items-center justify-between gap-4 pb-5 mb-5 border-b border-white/10">
-                <div className="pr-10">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-amber-300 font-bold bg-amber-950/40 px-2.5 py-0.5 rounded-full border border-amber-500/25 inline-flex items-center gap-1 mb-2">
-                    <CheckCircle2 size={10} />
-                    AUTHENTICATED CREDENTIAL VAULT ({selectedCert.issueDate})
-                  </span>
-                  <h3 className="font-display text-2xl sm:text-[2rem] font-bold text-slate-50 leading-tight max-w-3xl">
-                    {selectedCert.title}
-                  </h3>
-                  <p className="font-body text-sm text-slate-300 mt-3 leading-relaxed max-w-3xl">
-                    {selectedCert.description}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedCert(null)}
-                  className="shrink-0 h-10 px-4 rounded-full bg-white/10 hover:bg-white/15 flex items-center gap-2 text-white/80 hover:text-white transition-[background-color,color,transform] duration-150 ease-out cursor-pointer active:scale-[0.97] border border-white/10 font-mono text-[10px] font-bold uppercase tracking-widest"
+      {/* PORTAL MODAL — Mounted under document.body to prevent parent hover-focus-container blur */}
+      {mounted &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {selectedCert && currentVariant && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => setSelectedCert(null)}
+                className="fixed inset-0 z-[99999] flex items-start justify-center overflow-hidden px-4 py-6 bg-black/65 backdrop-blur-md select-none pointer-events-auto"
+              >
+                <motion.div
+                  initial={{ scale: 0.92, opacity: 0, y: 16 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.92, opacity: 0, y: 16 }}
+                  transition={{ type: "spring", stiffness: 360, damping: 30 }}
+                  onClick={(e) => e.stopPropagation()}
+                  onWheelCapture={(e) => e.stopPropagation()}
+                  className="relative w-full max-w-6xl my-auto rounded-[1.75rem] p-4 sm:p-5 border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white flex flex-col max-h-[calc(100vh-3rem)] overflow-hidden bg-[#0a0a0a] z-[100000]"
                 >
-                  <X size={16} />
-                  Close inspector
-                </button>
-              </div>
-
-              <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none overscroll-contain pr-1 space-y-4 pb-2">
-                {selectedCert.variants.length > 1 && (
-                  <div className="px-1">
-                    <div className="flex items-center justify-between gap-3 mb-3">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-slate-400">
-                        Issued by
+                  <div className="flex items-center justify-between gap-4 pb-5 mb-5 border-b border-white/10">
+                    <div className="pr-10">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-amber-300 font-bold bg-amber-950/40 px-2.5 py-0.5 rounded-full border border-amber-500/25 inline-flex items-center gap-1 mb-2">
+                        <CheckCircle2 size={10} />
+                        AUTHENTICATED CREDENTIAL VAULT ({selectedCert.issueDate})
                       </span>
-                      <span className="font-mono text-[9px] uppercase tracking-wider text-cyan-300 bg-cyan-950/60 border border-cyan-500/40 px-2.5 py-1 rounded-full flex items-center gap-1 shrink-0">
-                        <Layers size={10} />
-                        {selectedCert.variants.length} issuers
-                      </span>
+                      <h3 className="font-display text-2xl sm:text-[2rem] font-bold text-slate-50 leading-tight max-w-3xl">
+                        {selectedCert.title}
+                      </h3>
+                      <p className="font-body text-sm text-slate-300 mt-3 leading-relaxed max-w-3xl">
+                        {selectedCert.description}
+                      </p>
                     </div>
 
-                    {/* Notch-style animated pill tab switcher — spans full width, tabs share it evenly */}
-                    <div className="relative flex items-end gap-1 rounded-full bg-white/[0.04] border border-white/10 p-1.5 pt-4 w-full">
-                      {selectedCert.variants.map((variant) => {
-                        const isTabActive = variant.id === currentVariant.id;
-                        return (
-                          <button
-                            key={variant.id}
-                            type="button"
-                            onClick={() => setActiveVariantId(variant.id)}
-                            className="relative z-10 flex-1 min-w-0 whitespace-nowrap px-3 sm:px-5 py-2.5 rounded-full font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider cursor-pointer"
-                          >
-                            {isTabActive && (
-                              <motion.span
-                                layoutId="issuerTabPill"
-                                transition={TAB_SPRING}
-                                className="absolute inset-0 -top-3 rounded-t-2xl rounded-b-xl bg-[var(--color-accent-primary)] shadow-[0_10px_28px_rgba(67,97,238,0.5)]"
-                              />
-                            )}
-                            <span
-                              className={`relative block truncate transition-colors duration-200 ${isTabActive ? "text-white" : "text-slate-400 hover:text-slate-100"
-                                }`}
-                            >
-                              {variant.name}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCert(null)}
+                      className="shrink-0 h-10 px-4 rounded-full bg-white/10 hover:bg-white/15 flex items-center gap-2 text-white/80 hover:text-white transition-[background-color,color,transform] duration-150 ease-out cursor-pointer active:scale-[0.97] border border-white/10 font-mono text-[10px] font-bold uppercase tracking-widest"
+                    >
+                      <X size={16} />
+                      Close inspector
+                    </button>
                   </div>
-                )}
 
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentVariant.id}
-                    initial={{ opacity: 0, transform: "translateY(6px)" }}
-                    animate={{ opacity: 1, transform: "translateY(0px)" }}
-                    exit={{ opacity: 0, transform: "translateY(-6px)" }}
-                    transition={{ duration: 0.2, ease: EASING }}
-                    className="rounded-3xl border border-white/10 bg-slate-950/70 p-3 sm:p-4 overflow-hidden min-h-[42rem] flex flex-col gap-3"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block mb-1">
-                          Certificate Preview
-                        </span>
-                        <h4 className="font-display text-lg font-bold text-white leading-tight truncate">
-                          {currentVariant.name}
-                        </h4>
+                  <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none overscroll-contain pr-1 space-y-4 pb-2">
+                    {selectedCert.variants.length > 1 && (
+                      <div className="px-1">
+                        <div className="flex items-center justify-between gap-3 mb-3">
+                          <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-slate-400">
+                            Issued by
+                          </span>
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-cyan-300 bg-cyan-950/60 border border-cyan-500/40 px-2.5 py-1 rounded-full flex items-center gap-1 shrink-0">
+                            <Layers size={10} />
+                            {selectedCert.variants.length} issuers
+                          </span>
+                        </div>
+
+                        {/* Notch-style animated pill tab switcher — spans full width, tabs share it evenly */}
+                        <div className="relative flex items-end gap-1 rounded-full bg-white/[0.04] border border-white/10 p-1.5 pt-4 w-full">
+                          {selectedCert.variants.map((variant) => {
+                            const isTabActive = variant.id === currentVariant.id;
+                            return (
+                              <button
+                                key={variant.id}
+                                type="button"
+                                onClick={() => setActiveVariantId(variant.id)}
+                                className="relative z-10 flex-1 min-w-0 whitespace-nowrap px-3 sm:px-5 py-2.5 rounded-full font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider cursor-pointer"
+                              >
+                                {isTabActive && (
+                                  <motion.span
+                                    layoutId="issuerTabPill"
+                                    transition={TAB_SPRING}
+                                    className="absolute inset-0 -top-3 rounded-t-2xl rounded-b-xl bg-[var(--color-accent-primary)] shadow-[0_10px_28px_rgba(67,97,238,0.5)]"
+                                  />
+                                )}
+                                <span
+                                  className={`relative block truncate transition-colors duration-200 ${
+                                    isTabActive ? "text-white" : "text-slate-400 hover:text-slate-100"
+                                  }`}
+                                >
+                                  {variant.name}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="relative flex-[1.8] rounded-2xl border border-white/10 bg-black/20 overflow-hidden min-h-[42rem]">
-                      <iframe
-                        src={currentVariant.viewWebUrl}
-                        title={`${currentVariant.name} certificate preview`}
-                        className="absolute inset-0 h-[185%] w-[185%] scale-[0.54] origin-top-left border-0"
-                      />
-                    </div>
-
-                    <div className="rounded-2xl border border-white/10 bg-black/55 backdrop-blur-md p-3.5 sm:p-4">
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 block mb-3">
-                        Issued by <span className="text-slate-200 font-bold">{currentVariant.name}</span> — confirm this credential
-                      </span>
-
-                      <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
-                        <a
-                          href={currentVariant.viewWebUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group/btn flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-white transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-white/20 hover:border-white/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]"
-                        >
-                          <Globe size={17} className="text-cyan-400 shrink-0" />
-                          Visit certificate page
-                        </a>
-                        {currentVariant.credlyPublicUrl ? (
-                          <a
-                            href={currentVariant.credlyPublicUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group/btn flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-amber-400/40 bg-amber-400 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-black shadow-[0_8px_24px_rgba(251,191,36,0.25)] transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-amber-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(251,191,36,0.4)] active:translate-y-0 active:scale-[0.97]"
-                          >
-                            <BadgeCheck size={17} className="shrink-0" />
-                            Verify on Credly
-                          </a>
-                        ) : (
-                          <div className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 font-mono text-[11px] uppercase tracking-wide text-slate-500">
-                            No Credly badge for this issuer
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentVariant.id}
+                        initial={{ opacity: 0, transform: "translateY(6px)" }}
+                        animate={{ opacity: 1, transform: "translateY(0px)" }}
+                        exit={{ opacity: 0, transform: "translateY(-6px)" }}
+                        transition={{ duration: 0.2, ease: EASING }}
+                        className="rounded-3xl border border-white/10 bg-slate-950/70 p-3 sm:p-4 overflow-hidden min-h-[42rem] flex flex-col gap-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block mb-1">
+                              Certificate Preview
+                            </span>
+                            <h4 className="font-display text-lg font-bold text-white leading-tight truncate">
+                              {currentVariant.name}
+                            </h4>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          </motion.div>
+                        </div>
+
+                        {/* Certificate Document Viewer - Embedded Certificate Preview */}
+                        <div className="relative flex-[1.8] rounded-2xl border border-white/10 bg-black/20 overflow-hidden min-h-[42rem]">
+                          <iframe
+                            src={currentVariant.viewWebUrl}
+                            title={`${currentVariant.name} certificate preview`}
+                            className="absolute inset-0 h-[185%] w-[185%] scale-[0.54] origin-top-left border-0"
+                          />
+                        </div>
+
+                        <div className="rounded-2xl border border-white/10 bg-black/55 backdrop-blur-md p-3.5 sm:p-4">
+                          <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 block mb-3">
+                            Issued by <span className="text-slate-200 font-bold">{currentVariant.name}</span> — confirm this credential
+                          </span>
+
+                          <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+                            <a
+                              href={currentVariant.viewWebUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/btn flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-white transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-white/20 hover:border-white/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]"
+                            >
+                              <Globe size={17} className="text-cyan-400 shrink-0" />
+                              Visit certificate page
+                            </a>
+                            {currentVariant.credlyPublicUrl ? (
+                              <a
+                                href={currentVariant.credlyPublicUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group/btn flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-amber-400/40 bg-amber-400 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-black shadow-[0_8px_24px_rgba(251,191,36,0.25)] transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-amber-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(251,191,36,0.4)] active:translate-y-0 active:scale-[0.97]"
+                              >
+                                <BadgeCheck size={17} className="shrink-0" />
+                                Verify on Credly
+                              </a>
+                            ) : (
+                              <div className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 font-mono text-[11px] uppercase tracking-wide text-slate-500">
+                                No Credly badge for this issuer
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </section>
   );
 }
