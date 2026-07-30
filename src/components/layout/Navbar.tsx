@@ -132,7 +132,7 @@ export default function Navbar() {
               className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/40 group-hover:bg-[var(--color-accent-primary)]/20 group-hover:border-[var(--color-accent-primary)] transition-[background-color,border-color,box-shadow] duration-200 shadow-[0_0_15px_rgba(67,97,238,0.25)] group-hover:shadow-[0_0_20px_rgba(67,97,238,0.5)] overflow-hidden p-1.5"
             >
               <img
-                src="/Favicon.png"
+                src="/Portfolio-Website/Favicon.png"
                 alt="Nrth Favicon"
                 className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(67,97,238,0.6)]"
               />

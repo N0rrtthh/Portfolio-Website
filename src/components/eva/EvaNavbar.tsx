@@ -126,7 +126,7 @@ export default function EvaNavbar() {
               className="flex h-9 w-9 items-center justify-center border border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/15 rounded-xl shadow-[0_0_15px_var(--color-accent-primary)] group-hover:bg-[var(--color-accent-primary)]/30 group-hover:shadow-[0_0_22px_var(--color-accent-primary)] transition-all overflow-hidden p-1.5"
             >
               <img
-                src="/Favicon.png"
+                src="/Portfolio-Website/Favicon.png"
                 alt="Nrth Favicon"
                 className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(67,97,238,0.8)]"
               />
