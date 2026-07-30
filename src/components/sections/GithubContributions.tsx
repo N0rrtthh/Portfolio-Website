@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { GitCommit, Calendar, Flame, Activity, WifiOff } from "lucide-react";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { GitCommit, Calendar as CalendarIcon, WifiOff } from "lucide-react";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import RevealText from "@/components/ui/RevealText";
 
@@ -19,170 +19,169 @@ interface WeekData {
   contributionDays: DayData[];
 }
 
-interface CalendarResponse {
-  username: string;
-  year: number;
-  totalContributions: number;
-  weeks: WeekData[];
-  source: "live_graphql" | "live_api";
-}
-
 const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 import staticDataRaw from "@/data/github-data.json";
 
-// Type casting for imported static JSON
 const staticData = staticDataRaw as unknown as {
   source: string;
   error: string | null;
   years: Record<string, { totalContributions: number; weeks: WeekData[] }>;
 };
 
+// Light/dark aware cell colors. Both ramps read as GitHub-green but the
+// light ramp sits on white instead of near-black so contrast stays correct.
+const CELL_COLORS: Record<number, { border: string; bg: string; glow?: string }> = {
+  0: { border: "border-black/[0.06] dark:border-white/[0.05]", bg: "bg-black/[0.03] dark:bg-white/[0.04]" },
+  1: { border: "border-emerald-700/20 dark:border-[#006d32]/40", bg: "bg-emerald-100 dark:bg-[#0e4429]" },
+  2: { border: "border-emerald-600/30 dark:border-[#26a641]/50", bg: "bg-emerald-300 dark:bg-[#006d32]" },
+  3: { border: "border-emerald-500/40 dark:border-[#39d353]/60", bg: "bg-emerald-500 dark:bg-[#26a641]" },
+  4: {
+    border: "border-emerald-600 dark:border-[#39d353]",
+    bg: "bg-emerald-600 dark:bg-[#39d353]",
+    glow: "shadow-[0_0_10px_rgba(16,185,129,0.45)] dark:shadow-[0_0_12px_rgba(57,211,83,0.5)]",
+  },
+};
+
+function levelFor(level: number, count: number) {
+  if (level === -1) return -1;
+  if (count === 0 || level === 0) return 0;
+  if (level === 1 || count < 4) return 1;
+  if (level === 2 || count < 8) return 2;
+  if (level === 3 || count < 14) return 3;
+  return 4;
+}
+
 export default function GithubContributions() {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
+  const [pinnedDay, setPinnedDay] = useState<DayData | null>(null);
+
+  // Cursor-following tooltip position
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
+  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
 
   const error = staticData.error;
   const isLive = staticData.source === "build_graphql";
   const data = staticData.years[String(selectedYear)];
-  const loading = false;
+  const activeDay = hoveredDay ?? pinnedDay;
 
-  // Compute Statistics
-  const realDays = (data?.weeks.flatMap((w) => w.contributionDays) || []).filter((d) => d.level !== -1);
   const totalCommits = data?.totalContributions || 0;
-  const activeDays = realDays.filter((d) => d.count > 0).length;
-  const maxDayCount = Math.max(0, ...realDays.map((d) => d.count));
 
-  // Calculate longest streak
-  let longestStreak = 0;
-  let currentStreak = 0;
-  realDays.forEach((d) => {
-    if (d.count > 0) {
-      currentStreak++;
-      if (currentStreak > longestStreak) longestStreak = currentStreak;
-    } else {
-      currentStreak = 0;
-    }
-  });
+  const realDays = useMemo(
+    () => (data?.weeks.flatMap((w) => w.contributionDays) || []).filter((d) => d.level !== -1),
+    [data]
+  );
 
-  // Get color for contribution level
-  const getCellColor = (level: number, count: number) => {
-    if (level === -1) return "opacity-0 pointer-events-none border-transparent";
-    if (count === 0 || level === 0) return "bg-white/[0.04] border-white/[0.05]";
-    if (level === 1 || count < 4) return "bg-[#0e4429] border-[#006d32]/40 text-emerald-200";
-    if (level === 2 || count < 8) return "bg-[#006d32] border-[#26a641]/50 text-emerald-100";
-    if (level === 3 || count < 14) return "bg-[#26a641] border-[#39d353]/60 text-white";
-    return "bg-[#39d353] border-[#39d353] text-black font-bold shadow-[0_0_12px_rgba(57,211,83,0.5)]";
-  };
+  const busiestDay = useMemo(
+    () => realDays.reduce<DayData | null>((max, d) => (!max || d.count > max.count ? d : max), null),
+    [realDays]
+  );
 
   return (
-    <section id="github-activity" className="relative py-24 border-t border-[var(--color-glass-border)] bg-black/40 overflow-hidden">
-      {/* Background Glow */}
+    <section
+      id="github-activity"
+      className="relative py-24 border-t border-[var(--color-glass-border)] bg-white dark:bg-black/40 overflow-hidden transition-colors duration-500"
+    >
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/10 blur-[120px] rounded-full" />
 
       <div className="container-narrow relative z-10">
         <ChapterLabel index={9} classic="GitHub Activity Archive" eva="CONTRIBUTION MATRIX" className="mb-4" />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
-            <RevealText as="h2" className="text-section-title font-display text-[var(--color-starlight)]">
+            <RevealText as="h2" className="text-section-title font-display text-[var(--color-ink,#111)] dark:text-[var(--color-starlight)]">
               GitHub Commit History
             </RevealText>
-            <p className="mt-2 text-sm text-[var(--color-pearl)]/70 max-w-xl">
+            <p className="mt-2 text-sm text-black/60 dark:text-[var(--color-pearl)]/70 max-w-xl">
               Real contribution activity fetched from{" "}
-              <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold font-mono underline hover:text-white">
+              <a
+                href={`https://github.com/${GITHUB_USERNAME}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-600 dark:text-emerald-400 font-bold font-mono underline hover:text-emerald-800 dark:hover:text-white transition-colors"
+              >
                 @{GITHUB_USERNAME}
               </a>{" "}
               on GitHub.
             </p>
           </div>
 
-          {/* Sync Status Indicator & Year Selector */}
           <div className="flex flex-wrap items-center gap-3">
-            {loading ? (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-[var(--color-pearl)]/60 text-xs font-mono">
-                <span className="w-2 h-2 rounded-full bg-white/30 animate-pulse" />
-                Loading…
-              </div>
-            ) : isLive ? (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono">
+            {isLive ? (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-mono"
+              >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
                 Live from GitHub
-              </div>
+              </motion.div>
             ) : error ? (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 text-xs font-mono">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400 text-xs font-mono">
                 <WifiOff className="w-3.5 h-3.5" />
                 Connection Error
               </div>
             ) : null}
 
-            {/* Year Cycle Buttons */}
-            <div className="flex items-center gap-1 p-1 rounded-xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)]">
+            <div className="flex items-center gap-1 p-1 rounded-xl border border-[var(--color-glass-border)] bg-black/[0.03] dark:bg-[var(--color-obsidian)]">
               {YEARS.map((year) => (
                 <button
                   key={year}
-                  onClick={() => setSelectedYear(year)}
-                  className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all duration-200 ${
-                    selectedYear === year
-                      ? "bg-emerald-500 text-black font-bold shadow-[0_0_10px_rgba(16,185,129,0.4)]"
-                      : "text-[var(--color-pearl)]/60 hover:text-white hover:bg-white/5"
-                  }`}
+                  onClick={() => {
+                    setSelectedYear(year);
+                    setPinnedDay(null);
+                  }}
+                  className="relative px-3 py-1.5 text-xs font-mono rounded-lg text-black/50 dark:text-[var(--color-pearl)]/60 hover:text-black dark:hover:text-white transition-colors"
                 >
-                  {year}
+                  {selectedYear === year && (
+                    <motion.span
+                      layoutId="year-pill"
+                      className="absolute inset-0 rounded-lg bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]"
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <span className={`relative z-10 ${selectedYear === year ? "text-black font-bold" : ""}`}>{year}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-          <div className="p-5 rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)]/80 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-xs text-[var(--color-pearl)]/60 mb-1 font-mono">
-              <GitCommit className="w-4 h-4 text-emerald-400" />
-              Total Commits
-            </div>
-            <div className="text-2xl font-bold font-display text-[var(--color-starlight)]">
+        {/* Compact inline stat, replaces the old 4-card grid */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-center gap-2 mb-8 text-sm font-mono text-black/60 dark:text-[var(--color-pearl)]/60"
+        >
+          <GitCommit className="w-4 h-4 text-emerald-500" />
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={`${selectedYear}-${totalCommits}`}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              className="font-bold text-black dark:text-[var(--color-starlight)]"
+            >
               {totalCommits.toLocaleString()}
-            </div>
-          </div>
+            </motion.span>
+          </AnimatePresence>
+          contributions in {selectedYear}
+        </motion.div>
 
-          <div className="p-5 rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)]/80 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-xs text-[var(--color-pearl)]/60 mb-1 font-mono">
-              <Flame className="w-4 h-4 text-amber-400" />
-              Longest Streak
-            </div>
-            <div className="text-2xl font-bold font-display text-[var(--color-starlight)]">
-              {longestStreak} Days
-            </div>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)]/80 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-xs text-[var(--color-pearl)]/60 mb-1 font-mono">
-              <Activity className="w-4 h-4 text-cyan-400" />
-              Active Coding Days
-            </div>
-            <div className="text-2xl font-bold font-display text-[var(--color-starlight)]">
-              {activeDays} Days
-            </div>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)]/80 backdrop-blur-md">
-            <div className="flex items-center gap-2 text-xs text-[var(--color-pearl)]/60 mb-1 font-mono">
-              <Calendar className="w-4 h-4 text-indigo-400" />
-              Max Commits/Day
-            </div>
-            <div className="text-2xl font-bold font-display text-[var(--color-starlight)]">
-              {maxDayCount}
-            </div>
-          </div>
-        </div>
-
-        {/* Heatmap Grid Container */}
-        <div className="relative p-6 rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] backdrop-blur-xl min-h-[220px] flex flex-col justify-center">
+        <div
+          className="relative p-6 rounded-3xl border border-[var(--color-glass-border)] bg-black/[0.02] dark:bg-[var(--color-obsidian)] backdrop-blur-xl min-h-[220px] flex flex-col justify-center"
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            mouseX.set(e.clientX - rect.left);
+            mouseY.set(e.clientY - rect.top);
+          }}
+        >
           <AnimatePresence mode="wait">
             {error ? (
               <motion.div
@@ -193,87 +192,132 @@ export default function GithubContributions() {
                 className="flex flex-col items-center justify-center text-center p-8"
               >
                 <WifiOff className="w-10 h-10 text-red-500/50 mb-3" />
-                <p className="text-red-400 font-mono text-sm">{error}</p>
-                <p className="text-[var(--color-pearl)]/50 text-xs mt-2 max-w-sm">
+                <p className="text-red-500 dark:text-red-400 font-mono text-sm">{error}</p>
+                <p className="text-black/40 dark:text-[var(--color-pearl)]/50 text-xs mt-2 max-w-sm">
                   The GitHub API is currently unreachable or rate-limited. Please try again later or provide a personal access token.
                 </p>
               </motion.div>
             ) : (
-            <motion.div
-              key={selectedYear}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-emerald-500/20"
-            >
-              {/* Month Labels */}
-              <div className="flex text-[10px] font-mono text-[var(--color-pearl)]/50 mb-2 pl-8 min-w-[760px] justify-between">
-                {MONTH_LABELS.map((m) => (
-                  <span key={m}>{m}</span>
-                ))}
-              </div>
+              <motion.div
+                key={selectedYear}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-emerald-500/20"
+              >
+                {/* Floating tooltip that follows the cursor */}
+                <AnimatePresence>
+                  {hoveredDay && hoveredDay.level !== -1 && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.12 }}
+                      style={{ left: springX, top: springY }}
+                      className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-[calc(100%+10px)] px-3 py-1.5 rounded-lg bg-black text-white dark:bg-white dark:text-black text-[11px] font-mono whitespace-nowrap shadow-xl"
+                    >
+                      <span className="font-bold">{hoveredDay.count}</span>{" "}
+                      contribution{hoveredDay.count === 1 ? "" : "s"} ·{" "}
+                      {new Date(hoveredDay.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-              <div className="flex items-start gap-3 min-w-[760px]">
-                {/* Day Labels */}
-                <div className="flex flex-col justify-between text-[9px] font-mono text-[var(--color-pearl)]/40 h-[105px] pt-1">
-                  <span>Mon</span>
-                  <span>Wed</span>
-                  <span>Fri</span>
-                </div>
-
-                {/* Grid of Weeks */}
-                <div className="grid grid-flow-col gap-1.5 flex-1">
-                  {data?.weeks.map((week, wIdx) => (
-                    <div key={wIdx} className="grid grid-rows-7 gap-1.5">
-                      {week.contributionDays.map((day, dIdx) => (
-                        <div
-                          key={`${wIdx}-${dIdx}`}
-                          onMouseEnter={() => day.level !== -1 && setHoveredDay(day)}
-                          onMouseLeave={() => setHoveredDay(null)}
-                          className={`w-3 h-3 rounded-[3px] border transition-all duration-150 ${
-                            day.level === -1 ? "" : "cursor-pointer hover:scale-125 hover:z-20"
-                          } ${getCellColor(day.level, day.count)}`}
-                        />
-                      ))}
-                    </div>
+                <div className="flex text-[10px] font-mono text-black/40 dark:text-[var(--color-pearl)]/50 mb-2 pl-8 min-w-[760px] justify-between">
+                  {MONTH_LABELS.map((m) => (
+                    <span key={m}>{m}</span>
                   ))}
                 </div>
-              </div>
 
-              {/* Footer Legend & Tooltip */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-glass-border)] text-xs font-mono">
-                {/* Active Tooltip Info */}
-                <div className="text-[var(--color-pearl)]/80 min-h-[20px]">
-                  {hoveredDay ? (
-                    <span className="text-emerald-400 font-semibold">
-                      {hoveredDay.count} contribution{hoveredDay.count === 1 ? "" : "s"} on{" "}
-                      {new Date(hoveredDay.date).toLocaleDateString(undefined, {
-                        weekday: "short",
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                  ) : (
-                    <span className="opacity-50">Hover over any cell for detailed commit data</span>
-                  )}
-                </div>
-
-                {/* Intensity Legend */}
-                <div className="flex items-center gap-2 text-[var(--color-pearl)]/50 text-[10px]">
-                  <span>Less</span>
-                  <div className="flex gap-1">
-                    <div className="w-3 h-3 rounded-[2px] bg-white/[0.04] border border-white/[0.05]" />
-                    <div className="w-3 h-3 rounded-[2px] bg-[#0e4429]" />
-                    <div className="w-3 h-3 rounded-[2px] bg-[#006d32]" />
-                    <div className="w-3 h-3 rounded-[2px] bg-[#26a641]" />
-                    <div className="w-3 h-3 rounded-[2px] bg-[#39d353]" />
+                <div className="flex items-start gap-3 min-w-[760px]">
+                  <div className="flex flex-col justify-between text-[9px] font-mono text-black/30 dark:text-[var(--color-pearl)]/40 h-[105px] pt-1">
+                    <span>Mon</span>
+                    <span>Wed</span>
+                    <span>Fri</span>
                   </div>
-                  <span>More</span>
+
+                  <div className="grid grid-flow-col gap-1.5 flex-1">
+                    {data?.weeks.map((week, wIdx) => (
+                      <div key={wIdx} className="grid grid-rows-7 gap-1.5">
+                        {week.contributionDays.map((day, dIdx) => {
+                          const lvl = levelFor(day.level, day.count);
+                          const style = lvl === -1 ? null : CELL_COLORS[lvl];
+                          const isPinned = pinnedDay?.date === day.date;
+                          return (
+                            <motion.div
+                              key={`${wIdx}-${dIdx}`}
+                              initial={{ opacity: 0, scale: 0.4 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{
+                                duration: 0.25,
+                                delay: Math.min((wIdx * 7 + dIdx) * 0.0025, 0.6),
+                                ease: "easeOut",
+                              }}
+                              whileHover={lvl !== -1 ? { scale: 1.4, zIndex: 20 } : undefined}
+                              whileTap={lvl !== -1 ? { scale: 1.15 } : undefined}
+                              onMouseEnter={() => lvl !== -1 && setHoveredDay(day)}
+                              onMouseLeave={() => setHoveredDay(null)}
+                              onClick={() => lvl !== -1 && setPinnedDay(isPinned ? null : day)}
+                              className={`w-3 h-3 rounded-[3px] border transition-colors duration-150 ${lvl === -1 ? "opacity-0 pointer-events-none border-transparent" : "cursor-pointer"
+                                } ${style?.border ?? ""} ${style?.bg ?? ""} ${style?.glow ?? ""} ${isPinned ? "ring-2 ring-emerald-400 ring-offset-1 ring-offset-transparent" : ""
+                                }`}
+                            />
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-[var(--color-glass-border)] text-xs font-mono">
+                  <div className="text-black/70 dark:text-[var(--color-pearl)]/80 min-h-[20px]">
+                    <AnimatePresence mode="wait">
+                      {activeDay ? (
+                        <motion.span
+                          key={activeDay.date}
+                          initial={{ opacity: 0, y: 4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -4 }}
+                          className="text-emerald-600 dark:text-emerald-400 font-semibold inline-flex items-center gap-1.5"
+                        >
+                          <CalendarIcon className="w-3.5 h-3.5" />
+                          {activeDay.count} contribution{activeDay.count === 1 ? "" : "s"} on{" "}
+                          {new Date(activeDay.date).toLocaleDateString(undefined, {
+                            weekday: "short",
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                          {pinnedDay?.date === activeDay.date && (
+                            <span className="opacity-50 font-normal">(pinned — click again to clear)</span>
+                          )}
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="hint"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="opacity-50"
+                        >
+                          Hover a cell for details, or click to pin it{busiestDay ? ` · busiest day: ${busiestDay.count} commits` : ""}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-black/40 dark:text-[var(--color-pearl)]/50 text-[10px]">
+                    <span>Less</span>
+                    <div className="flex gap-1">
+                      {[0, 1, 2, 3, 4].map((l) => (
+                        <div key={l} className={`w-3 h-3 rounded-[2px] ${CELL_COLORS[l].bg}`} />
+                      ))}
+                    </div>
+                    <span>More</span>
+                  </div>
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>

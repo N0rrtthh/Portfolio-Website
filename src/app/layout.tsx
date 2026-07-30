@@ -111,7 +111,7 @@ export default function RootLayout({
       className={`${bebasNeue.variable} ${outfit.variable} ${syne.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-void text-pearl antialiased">
+      <body className="min-h-screen bg-void text-pearl antialiased" suppressHydrationWarning>
         <Script
           id="no-flash-theme-script"
           strategy="beforeInteractive"
