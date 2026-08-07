@@ -36,6 +36,10 @@ const Achievements = dynamic(() => import("@/components/sections/Achievements"),
 const Roadmap = dynamic(() => import("@/components/sections/Roadmap"), {
   ssr: false,
 });
+const HologramShowcase = dynamic(
+  () => import("@/components/sections/HologramShowcase"),
+  { ssr: false }
+);
 
 export default function ClassicLayout() {
   return (
@@ -64,7 +68,9 @@ export default function ClassicLayout() {
         <Achievements />
         {/* Chapter 11 — Looking Ahead (Future R&D Roadmap) */}
         <Roadmap />
-        {/* Chapter 12 — Contact & Conclusion */}
+        {/* Chapter 12 — 3D Hologram Showcase */}
+        <HologramShowcase />
+        {/* Chapter 13 — Contact & Conclusion */}
         <Contact />
       </main>
     </SmoothScrollProvider>
