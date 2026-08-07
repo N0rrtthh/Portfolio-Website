@@ -26,7 +26,10 @@ export default function BootSequence({ onComplete }: { onComplete?: () => void }
   const [glitchFlash, setGlitchFlash] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";

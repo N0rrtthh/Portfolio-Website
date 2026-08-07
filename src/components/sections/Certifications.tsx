@@ -924,15 +924,19 @@ function CredentialCardBody({ cert, badge }: { cert: RealCertification; badge: R
   );
 }
 
+const INITIAL_VISIBLE = 6;
+
 export default function Certifications() {
   const [activeSubject, setActiveSubject] = useState<string>("ALL SUBJECTS (28)");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCert, setSelectedCert] = useState<RealCertification | null>(null);
   const [activeVariantId, setActiveVariantId] = useState<string>("");
   const [mounted, setMounted] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
   useEffect(() => {
@@ -1015,7 +1019,10 @@ export default function Certifications() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setExpanded(false);
+              }}
               placeholder="Search by title, issuer, or skill…"
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-[var(--color-glass-border)] font-mono text-xs text-white placeholder-[var(--color-ash)] focus:outline-none focus:border-[var(--color-accent-primary)]/60 focus:bg-white/[0.05] transition-colors"
             />
@@ -1030,7 +1037,10 @@ export default function Certifications() {
                 <button
                   key={cat}
                   type="button"
-                  onClick={() => setActiveSubject(cat)}
+                  onClick={() => {
+                    setActiveSubject(cat);
+                    setExpanded(false);
+                  }}
                   className={`px-3 py-2 rounded-lg font-mono text-[10.5px] uppercase tracking-wider transition-[color,background-color,transform] duration-200 ease-out cursor-pointer active:scale-[0.97] ${isActive
                     ? "bg-[var(--color-accent-primary)] text-white font-bold"
                     : "text-[var(--color-ash)] hover:text-white hover:bg-white/[0.05]"
@@ -1047,7 +1057,7 @@ export default function Certifications() {
         {/* Credential Grid */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 hover-focus-container">
           <AnimatePresence mode="popLayout">
-            {filteredCerts.map((cert) => {
+            {(expanded ? filteredCerts : filteredCerts.slice(0, INITIAL_VISIBLE)).map((cert) => {
               const defaultVariant = cert.variants.find((variant) => variant.credlyBadgeId) ?? cert.variants[0];
               const verifiedVariants = cert.variants.filter((variant) => variant.credlyPublicUrl);
               const badgeImageUrl = defaultVariant?.credlyBadgeImageUrl;
@@ -1144,20 +1154,28 @@ export default function Certifications() {
                 );
               }
 
+              // Index within the currently visible list — used for stagger
+              const visibleList = expanded ? filteredCerts : filteredCerts.slice(0, INITIAL_VISIBLE);
+              const visibleIdx = visibleList.indexOf(cert);
+              // Cards beyond the initial 6 get a staggered pop-in delay
+              const isNewCard = visibleIdx >= INITIAL_VISIBLE;
+              const staggerDelay = isNewCard ? (visibleIdx - INITIAL_VISIBLE) * 0.055 : 0;
+
               return (
                 <motion.div
                   key={cert.id}
                   layout="position"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, scale: 0.88, y: 24 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.88, y: 16 }}
                   whileHover={{ scale: 1.035, y: -8 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{
                     type: "spring",
-                    stiffness: 240,
+                    stiffness: 280,
                     damping: 22,
-                    mass: 1.2,
+                    mass: 0.9,
+                    delay: staggerDelay,
                   }}
                   onClick={() => handleOpenInspector(cert)}
                   data-hoverable
@@ -1170,6 +1188,69 @@ export default function Certifications() {
             })}
           </AnimatePresence>
         </div>
+
+        {/* Fade mask + expand button */}
+        {filteredCerts.length > INITIAL_VISIBLE && (
+          <div className="relative">
+            {/* Gradient that fades over the last row when collapsed */}
+            <AnimatePresence>
+              {!expanded && (
+                <motion.div
+                  key="fade"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute -top-52 inset-x-0 h-56 pointer-events-none z-10"
+                  style={{ background: "linear-gradient(to bottom, transparent 0%, var(--color-void) 80%)" }}
+                />
+              )}
+            </AnimatePresence>
+
+            <div className="relative z-20 mt-2 flex flex-col items-center gap-3">
+              <motion.button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                data-cursor-hover
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-3 rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] backdrop-blur-md px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-silver)] hover:border-[var(--color-accent-primary)]/60 hover:text-white transition-colors duration-200"
+              >
+                <motion.span
+                  animate={{ rotate: expanded ? 180 : 0 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                  className="inline-block"
+                >
+                  {expanded ? "↑" : "↓"}
+                </motion.span>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={expanded ? "less" : "more"}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    {expanded ? "Collapse — show less" : `See all ${filteredCerts.length} credentials`}
+                  </motion.span>
+                </AnimatePresence>
+              </motion.button>
+              <AnimatePresence>
+                {!expanded && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                    className="font-mono text-[10px] text-[var(--color-ash)]"
+                  >
+                    Showing {Math.min(INITIAL_VISIBLE, filteredCerts.length)} of {filteredCerts.length}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        )}
 
         {filteredCerts.length === 0 && (
           <div className="py-16 text-center glass rounded-3xl border border-[var(--color-glass-border)] p-8">

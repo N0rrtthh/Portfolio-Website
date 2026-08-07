@@ -32,7 +32,7 @@ export default function PhilosophyView() {
             >
               <div>
                 <span className="font-mono text-xs text-[var(--color-accent-primary)] block mb-4">
-                  0{i + 1} // PRINCIPLE
+                  {"0" + (i + 1)} {"// PRINCIPLE"}
                 </span>
                 <p className="font-display text-2xl font-bold text-[var(--color-starlight)] leading-snug mb-4">
                   &ldquo;{item.title}&rdquo;

@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowDown, ArrowUpRight, Zap, ShieldAlert, Cpu } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ShieldAlert, Cpu } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import AnimeText from "@/components/ui/AnimeText";
@@ -23,13 +23,6 @@ import TypewriterRole from "@/components/ui/TypewriterRole";
 
 const EASING = [0.22, 1, 0.36, 1] as const;
 
-const ROLES = [
-  "Software Engineer",
-  "Full Stack Developer",
-  "Creative Technologist",
-  "Game Dev Enthusiast",
-];
-
 const METRICS = [
   { value: "12+", label: "Projects Shipped" },
   { value: "4+ Yrs", label: "Building & Crafting" },
@@ -38,8 +31,7 @@ const METRICS = [
 
 export default function Hero() {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [roleIndex, setRoleIndex] = useState(0);
-  const { design, setDesign } = useTheme();
+  const { setDesign } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
 
   // Secret transition trigger into EVA mode
@@ -49,13 +41,6 @@ export default function Hero() {
     setDesign("eva", origin);
   };
 
-  // Rotating roles sequence
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % ROLES.length);
-    }, 2800);
-    return () => clearInterval(interval);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
@@ -232,7 +217,7 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1.0, delay: 1.1, ease: EASING }}
-                className="mt-8 flex items-center gap-4 text-xs font-mono text-[var(--color-ash)]"
+                className="mt-8 flex flex-wrap items-center gap-3 text-xs font-mono text-[var(--color-ash)]"
               >
                 <span className="uppercase tracking-widest text-[10px]">Connect:</span>
                 {SOCIAL_LINKS.map((link) => (
@@ -249,7 +234,7 @@ export default function Hero() {
                 ))}
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="hover:text-[var(--color-starlight)] transition-colors p-1 font-mono text-xs"
+                  className="hover:text-[var(--color-starlight)] transition-colors p-1 font-mono text-xs break-all"
                 >
                   {CONTACT_EMAIL}
                 </a>

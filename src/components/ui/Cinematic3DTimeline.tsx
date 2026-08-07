@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, useEffect, memo } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback, memo } from "react";
 import { createPortal } from "react-dom";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -17,14 +17,8 @@ import {
   CornerDownRight,
   Layers,
   Activity,
-  Zap,
-  Target,
-  Crosshair,
-  Radio,
   Terminal,
   Cpu,
-  Globe,
-  Lock,
   FileText,
 } from "lucide-react";
 import ChapterLabel from "@/components/ui/ChapterLabel";
@@ -154,10 +148,25 @@ const TIMELINE_DATA = [
   },
 ];
 
+const CURVE_SAMPLE_COUNT = 480;
+
+function samplePath(
+  samples: THREE.Vector3[],
+  progress: number,
+  target: THREE.Vector3
+) {
+  const clamped = Math.max(0, Math.min(progress, 1));
+  const scaled = clamped * (samples.length - 1);
+  const i = Math.floor(scaled);
+  const j = Math.min(i + 1, samples.length - 1);
+  const t = scaled - i;
+  return target.lerpVectors(samples[i], samples[j], t);
+}
+
 // --- LIGHTWEIGHT ZERO-DEPRECATION STARFIELD ---
 const Starfield = memo(function Starfield({ count = 60 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const positions = useMemo(() => {
+  const [positions] = useState(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i += 3) {
       pos[i] = (Math.random() - 0.5) * 60;
@@ -165,7 +174,7 @@ const Starfield = memo(function Starfield({ count = 60 }: { count?: number }) {
       pos[i + 2] = (Math.random() - 0.5) * 160 - 45;
     }
     return pos;
-  }, [count]);
+  });
 
   useFrame((_, delta) => {
     if (pointsRef.current) {
@@ -192,10 +201,10 @@ const Starfield = memo(function Starfield({ count = 60 }: { count?: number }) {
 // --- 3D NEON DIRECTIONAL ARROW POINTER ---
 const TimelineArrowPointer = memo(function TimelineArrowPointer({
   scrollRef,
-  curve,
+  samples,
 }: {
   scrollRef: React.MutableRefObject<number>;
-  curve: THREE.CatmullRomCurve3;
+  samples: THREE.Vector3[];
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -213,8 +222,12 @@ const TimelineArrowPointer = memo(function TimelineArrowPointer({
       delta
     );
 
-    curve.getPoint(smoothProgress.current, currentPos);
-    curve.getPoint(Math.min(smoothProgress.current + 0.05, 0.98), forwardPoint);
+    samplePath(samples, smoothProgress.current, currentPos);
+    samplePath(
+      samples,
+      Math.min(smoothProgress.current + 0.05, 0.98),
+      forwardPoint
+    );
 
     groupRef.current.position.copy(currentPos);
 
@@ -310,6 +323,112 @@ const SpatialTechObjects = memo(function SpatialTechObjects() {
   );
 });
 
+const NodeCard = memo(function NodeCard({
+  item,
+  index,
+  onInspectNode,
+}: {
+  item: (typeof TIMELINE_DATA)[number];
+  index: number;
+  onInspectNode: (index: number) => void;
+}) {
+  const Icon = item.icon;
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setShown(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return (
+    <Html
+      position={[0, 0, 0]}
+      distanceFactor={32}
+      center
+      zIndexRange={[80, 0]}
+      style={{
+        display: "block",
+        pointerEvents: "auto",
+        opacity: shown ? 1 : 0,
+        transition: "opacity 200ms ease-out",
+      }}
+    >
+      <div
+        onClick={() => onInspectNode(index)}
+        className="relative group/card w-[22rem] md:w-[26rem] rounded-3xl border transition-all duration-300 ease-out p-6 will-change-transform transform-gpu border-red-500 bg-slate-950/95 shadow-lg shadow-red-500/20 scale-105 cursor-pointer pointer-events-auto opacity-100"
+      >
+        <div className="flex items-center justify-between mb-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/40 bg-red-500/20 px-2.5 py-0.5 font-mono text-[9px] font-bold text-red-400 tracking-widest uppercase">
+            <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-ping" />
+            {item.badge}
+          </span>
+          <span className="font-mono text-2xl font-black text-red-400">
+            {item.number}
+          </span>
+        </div>
+
+        <div className="flex items-start gap-3 mb-2.5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-500/50 bg-red-500/20 text-red-400 shadow-inner">
+            <Icon size={20} />
+          </div>
+          <div>
+            <h3 className="font-brand text-lg font-extrabold text-white leading-snug group-hover/card:text-amber-300 transition-colors">
+              {item.role}
+            </h3>
+            <p className="font-mono text-xs font-bold tracking-wider text-red-400 mt-0.5">
+              {item.company}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between mb-2.5 py-1.5 px-2.5 rounded-lg bg-slate-900/90 border border-slate-800 font-mono text-[11px] text-slate-300">
+          <div className="flex items-center gap-1">
+            <Calendar size={12} className="text-red-400" />
+            <span className="font-semibold text-white">{item.period}</span>
+          </div>
+          <div className="flex items-center gap-1 text-slate-400">
+            <MapPin size={12} className="text-red-400" />
+            <span>{item.location}</span>
+          </div>
+        </div>
+
+        <p className="mb-3 font-sans text-xs leading-relaxed text-slate-200 line-clamp-3">
+          {item.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1.5 pt-2.5 border-t border-slate-800/80 justify-between items-center">
+          <div className="flex flex-wrap gap-1">
+            {item.tech.slice(0, 3).map((t, i) => (
+              <span
+                key={i}
+                className="rounded-md border border-red-500/30 bg-red-950/40 px-2 py-0.5 font-mono text-[9px] text-red-200 font-semibold"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onInspectNode(index);
+            }}
+            className="group/btn px-3.5 py-1.5 rounded-full border border-red-500/40 bg-slate-950/80 backdrop-blur-md text-red-300 font-mono text-[11px] font-bold tracking-wider shadow-[0_0_18px_rgba(239,68,68,0.25)] hover:bg-red-950/70 hover:border-red-400 hover:text-white hover:shadow-[0_0_24px_rgba(239,68,68,0.5)] hover:scale-105 transition-all duration-200 ease-out active:scale-[0.97] flex items-center gap-2 cursor-pointer will-change-transform transform-gpu"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+            </span>
+            <span>INSPECT DOSSIER</span>
+            <span className="text-red-400 group-hover/btn:translate-x-0.5 transition-transform font-sans">→</span>
+          </button>
+        </div>
+      </div>
+    </Html>
+  );
+});
+
 // --- 3D SCENE ---
 const Scene = memo(function Scene({
   scrollRef,
@@ -335,6 +454,11 @@ const Scene = memo(function Scene({
 
   const linePoints = useMemo(() => curve.getPoints(120), [curve]);
 
+  const pathSamples = useMemo(
+    () => curve.getPoints(CURVE_SAMPLE_COUNT),
+    [curve]
+  );
+
   const nodePositions = useMemo(() => {
     const fractions = [0.14, 0.38, 0.64, 0.88];
     return fractions.map((f) => curve.getPoint(f));
@@ -353,7 +477,7 @@ const Scene = memo(function Scene({
       delta
     );
 
-    curve.getPoint(smoothProgress.current, currentShipPoint);
+    samplePath(pathSamples, smoothProgress.current, currentShipPoint);
 
     cameraPOV.set(
       currentShipPoint.x,
@@ -387,17 +511,14 @@ const Scene = memo(function Scene({
       />
 
       {/* 3D Directional Arrow Pointer */}
-      <TimelineArrowPointer scrollRef={scrollRef} curve={curve} />
+      <TimelineArrowPointer scrollRef={scrollRef} samples={pathSamples} />
 
-      {/* RENDER 4 FLOATING 3D ENVIRONMENT TILES ATTACHED TO NODES ALONG 3D PATH */}
       {TIMELINE_DATA.map((item, index) => {
         const pos = nodePositions[index];
-        const Icon = item.icon;
         const isActive = activeNode === index;
 
         return (
           <group key={item.id} position={pos}>
-            {/* Glowing Hoop */}
             <mesh rotation={[0, 0, 0]}>
               <torusGeometry args={[4.8, 0.04, 8, 16]} />
               <meshBasicMaterial
@@ -407,7 +528,6 @@ const Scene = memo(function Scene({
               />
             </mesh>
 
-            {/* Node Marker */}
             <mesh position={[0, 0, 0]}>
               <sphereGeometry args={[isActive ? 0.6 : 0.35, 12, 12]} />
               <meshStandardMaterial
@@ -418,105 +538,13 @@ const Scene = memo(function Scene({
               />
             </mesh>
 
-            {/* 3D FLOATING HTML ENVIRONMENT CARD — Attached in 3D space to node */}
-            <Html
-              position={[0, 0, 0]}
-              distanceFactor={32}
-              center
-              zIndexRange={[80, 0]}
-              style={{
-                display: isActive ? "block" : "none",
-                pointerEvents: isActive ? "auto" : "none",
-                opacity: isActive ? 1 : 0,
-                transition: "opacity 200ms ease-out, transform 200ms ease-out",
-              }}
-            >
-              <div
-                onClick={() => isActive && onInspectNode(index)}
-                className={`relative group/card w-[22rem] md:w-[26rem] rounded-3xl border transition-all duration-300 ease-out p-6 will-change-transform transform-gpu ${
-                  isActive
-                    ? "border-red-500 bg-slate-950/95 shadow-lg shadow-red-500/20 scale-105 cursor-pointer pointer-events-auto opacity-100"
-                    : "border-slate-800/80 bg-slate-950/80 opacity-40 scale-95 pointer-events-none"
-                }`}
-              >
-                {/* Badge & Checkpoint Number */}
-                <div className="flex items-center justify-between mb-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-red-500/40 bg-red-500/20 px-2.5 py-0.5 font-mono text-[9px] font-bold text-red-400 tracking-widest uppercase">
-                    <span
-                      className={`h-1.5 w-1.5 rounded-full bg-red-500 ${isActive ? "animate-ping" : ""
-                        }`}
-                    />
-                    {item.badge}
-                  </span>
-                  <span className="font-mono text-2xl font-black text-red-400">
-                    {item.number}
-                  </span>
-                </div>
-
-                {/* Role Title */}
-                <div className="flex items-start gap-3 mb-2.5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-500/50 bg-red-500/20 text-red-400 shadow-inner">
-                    <Icon size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-brand text-lg font-extrabold text-white leading-snug group-hover/card:text-amber-300 transition-colors">
-                      {item.role}
-                    </h3>
-                    <p className="font-mono text-xs font-bold tracking-wider text-red-400 mt-0.5">
-                      {item.company}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Period & Location */}
-                <div className="flex items-center justify-between mb-2.5 py-1.5 px-2.5 rounded-lg bg-slate-900/90 border border-slate-800 font-mono text-[11px] text-slate-300">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={12} className="text-red-400" />
-                    <span className="font-semibold text-white">{item.period}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-slate-400">
-                    <MapPin size={12} className="text-red-400" />
-                    <span>{item.location}</span>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="mb-3 font-sans text-xs leading-relaxed text-slate-200 line-clamp-3">
-                  {item.description}
-                </p>
-
-                {/* Tech Stack & CLICK ME BUTTON */}
-                <div className="flex flex-wrap gap-1.5 pt-2.5 border-t border-slate-800/80 justify-between items-center">
-                  <div className="flex flex-wrap gap-1">
-                    {item.tech.slice(0, 3).map((t, i) => (
-                      <span
-                        key={i}
-                        className="rounded-md border border-red-500/30 bg-red-950/40 px-2 py-0.5 font-mono text-[9px] text-red-200 font-semibold"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* HIGH-END TACTICAL INSPECT DOSSIER BUTTON */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onInspectNode(index);
-                    }}
-                    className="group/btn px-3.5 py-1.5 rounded-full border border-red-500/40 bg-slate-950/80 backdrop-blur-md text-red-300 font-mono text-[11px] font-bold tracking-wider shadow-[0_0_18px_rgba(239,68,68,0.25)] hover:bg-red-950/70 hover:border-red-400 hover:text-white hover:shadow-[0_0_24px_rgba(239,68,68,0.5)] hover:scale-105 transition-all duration-200 ease-out active:scale-[0.97] flex items-center gap-2 cursor-pointer will-change-transform transform-gpu"
-                  >
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
-                    </span>
-                    <span>INSPECT DOSSIER</span>
-                    <span className="text-red-400 group-hover/btn:translate-x-0.5 transition-transform font-sans">→</span>
-                  </button>
-                </div>
-              </div>
-            </Html>
+            {isActive && (
+              <NodeCard
+                item={item}
+                index={index}
+                onInspectNode={onInspectNode}
+              />
+            )}
           </group>
         );
       })}
@@ -530,7 +558,6 @@ export default function Cinematic3DTimeline() {
   const [activeNode, setActiveNode] = useState(0);
   const [inspectedNode, setInspectedNode] = useState<number | null>(null);
   const [canvasActive, setCanvasActive] = useState(false);
-  const [canvasMounted, setCanvasMounted] = useState(false);
 
   const scrollRef = useRef(0);
 
@@ -542,10 +569,14 @@ export default function Cinematic3DTimeline() {
   const quality = useMemo(() => getAdaptiveQuality(), []);
 
   const [mounted, setMounted] = useState(false);
+  const [canvasMounted, setCanvasMounted] = useState(false);
 
   useEffect(() => {
-    setCanvasMounted(true);
-    setMounted(true);
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+      setCanvasMounted(true);
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   // Pause WebGL rendering loop when offscreen
@@ -596,6 +627,8 @@ export default function Cinematic3DTimeline() {
       behavior: "smooth",
     });
   };
+
+  const handleInspect = useCallback((idx: number) => setInspectedNode(idx), []);
 
   const inspectedItem = inspectedNode !== null ? TIMELINE_DATA[inspectedNode] : null;
 
@@ -844,7 +877,7 @@ export default function Cinematic3DTimeline() {
               <Scene
                 scrollRef={scrollRef}
                 activeNode={activeNode}
-                onInspectNode={(idx) => setInspectedNode(idx)}
+                onInspectNode={handleInspect}
                 quality={quality}
               />
             </Canvas>

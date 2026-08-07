@@ -34,9 +34,11 @@ export default function TypewriterRole() {
         setDisplayText(currentRole.slice(0, displayText.length - 1));
       }, 25);
     } else if (isDeleting && displayText.length === 0) {
-      // Move to next role
-      setIsDeleting(false);
-      setRoleIdx((prev) => (prev + 1) % ROLES.length);
+      // Move to next role (deferred to avoid cascading renders)
+      timer = setTimeout(() => {
+        setIsDeleting(false);
+        setRoleIdx((prev) => (prev + 1) % ROLES.length);
+      }, 50);
     }
 
     return () => clearTimeout(timer);

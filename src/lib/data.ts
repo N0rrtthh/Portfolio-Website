@@ -110,7 +110,7 @@ export const PROJECTS: Project[] = [
     color: "#f97316",
     github: "https://github.com/N0rrtthh/ResuMaker",
     live: "https://n0rrtthh.github.io/ResuMaker/",
-    image: "/Portfolio-Website/projects/resumaker.png",
+    image: "/projects/resumaker.png",
     featured: true,
   },
   {
@@ -131,7 +131,7 @@ export const PROJECTS: Project[] = [
     color: "#3b82f6",
     github: "https://github.com/N0rrtthh/JasFocus",
     live: "https://n0rrtthh.github.io/JasFocus/",
-    image: "/Portfolio-Website/projects/jasfocus.png",
+    image: "/projects/jasfocus.png",
     featured: true,
   },
   {

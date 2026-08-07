@@ -20,7 +20,10 @@ export default function EvaSideLoader({ onComplete }: { onComplete?: () => void 
   const [progress, setProgress] = useState(0);
   const [visibleCount, setVisibleCount] = useState(1);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";

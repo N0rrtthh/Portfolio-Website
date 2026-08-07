@@ -49,7 +49,8 @@ export default function SmoothScrollProvider({
           }
     );
 
-    setLenis(instance);
+    // Defer state update to avoid cascading renders from synchronous setState in effect
+    const id = requestAnimationFrame(() => setLenis(instance));
 
     function raf(time: number) {
       instance.raf(time);
@@ -58,6 +59,7 @@ export default function SmoothScrollProvider({
     rafRef.current = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(id);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       instance.destroy();
       setLenis(null);

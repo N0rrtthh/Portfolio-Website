@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { GitCommit, Calendar as CalendarIcon, WifiOff } from "lucide-react";
+import { GitCommit, WifiOff } from "lucide-react";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import RevealText from "@/components/ui/RevealText";
 
@@ -65,7 +65,6 @@ export default function GithubContributions() {
   const error = staticData.error;
   const isLive = staticData.source === "build_graphql";
   const data = staticData.years[String(selectedYear)];
-  const activeDay = hoveredDay ?? pinnedDay;
 
   const totalCommits = data?.totalContributions || 0;
 

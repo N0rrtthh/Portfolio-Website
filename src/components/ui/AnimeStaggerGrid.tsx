@@ -27,17 +27,20 @@ export default function AnimeStaggerGrid({
 
   useEffect(() => {
     const q = getAdaptiveQuality();
-    setDims({
-      rows:
-        q.tier === "low" ? Math.min(rows, 4) : q.tier === "medium" ? Math.min(rows, 6) : rows,
-      cols:
-        q.tier === "low"
-          ? Math.min(columns, 8)
-          : q.tier === "medium"
-            ? Math.min(columns, 10)
-            : columns,
+    const id = requestAnimationFrame(() => {
+      setDims({
+        rows:
+          q.tier === "low" ? Math.min(rows, 4) : q.tier === "medium" ? Math.min(rows, 6) : rows,
+        cols:
+          q.tier === "low"
+            ? Math.min(columns, 8)
+            : q.tier === "medium"
+              ? Math.min(columns, 10)
+              : columns,
+      });
+      setAllowHoverFx(!q.reduceContinuousFx);
     });
-    setAllowHoverFx(!q.reduceContinuousFx);
+    return () => cancelAnimationFrame(id);
   }, [rows, columns]);
 
   useEffect(() => {

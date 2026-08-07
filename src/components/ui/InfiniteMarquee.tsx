@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 
 interface InfiniteMarqueeProps {
   children: React.ReactNode;

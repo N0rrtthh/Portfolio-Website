@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Compass, Gamepad2, Code2, Sparkles, ArrowRight } from "lucide-react";
+import { Gamepad2, Code2, Sparkles, ArrowRight } from "lucide-react";
 import RevealText from "@/components/ui/RevealText";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 

@@ -50,6 +50,7 @@ scripts/.rebase-todo
 
 # Agent & IDE workspace files
 .agents/
+.claude/
 skills-lock.json
 AGENTS.md
 CLAUDE.md
@@ -59,5 +60,12 @@ scratch/
 scratch_extract.js
 screenshot.js
 .playwright-mcp/
+
+# Obsidian vault & personal notes
+Vault/
+
+# Root-level markdown docs (personal/AI notes, not part of deployment)
 Crafting An Unforgettable Digital Identity.md
+*.canvas
+*.base
 

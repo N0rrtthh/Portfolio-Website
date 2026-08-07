@@ -13,12 +13,16 @@ export default function CustomCursor({ design }: { design: "classic" | "eva" }) 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    if (coarse) {
-      setIsCoarse(true);
-      return;
-    }
+    // Defer to avoid cascading renders from synchronous setState in effect
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+      setIsCoarse(window.matchMedia("(pointer: coarse)").matches);
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  useEffect(() => {
+    if (isCoarse) return;
 
     const ring = { x: 0, y: 0 };
     let target = { x: 0, y: 0 };
@@ -100,7 +104,7 @@ export default function CustomCursor({ design }: { design: "classic" | "eva" }) 
       window.removeEventListener("mouseout", onMouseOut);
       cancelAnimationFrame(raf);
     };
-  }, [design]);
+  }, [design, isCoarse]);
 
   if (!mounted || isCoarse) return null;
 

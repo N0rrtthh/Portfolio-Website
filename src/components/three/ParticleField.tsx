@@ -36,7 +36,7 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
 
   const isEva = design === "eva";
 
-  const bgPositions = useMemo(() => {
+  const [bgPositions] = useState(() => {
     const count = quality.particleBg;
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -48,9 +48,9 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
-  }, [quality.particleBg]);
+  });
 
-  const midPositions = useMemo(() => {
+  const [midPositions] = useState(() => {
     const count = quality.particleMid;
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -62,9 +62,9 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
-  }, [quality.particleMid]);
+  });
 
-  const fgPositions = useMemo(() => {
+  const [fgPositions] = useState(() => {
     const count = quality.particleFg;
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -76,7 +76,7 @@ function LayeredParticleSwarm({ progress }: { progress?: MotionValue<number> }) 
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
-  }, [quality.particleFg]);
+  });
 
   const particleColor = useMemo(() => {
     if (isEva) return mode === "dark" ? "#39ff14" : "#ff6a00";

@@ -11,7 +11,8 @@ export default function FloatingThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
   // Prevent hydration mismatch by returning null until mounted on client

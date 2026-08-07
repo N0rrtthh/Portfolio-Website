@@ -4,14 +4,95 @@ import { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, X, ExternalLink, Sparkles, Layers, Image as ImageIcon } from "lucide-react";
+import { ArrowUpRight, X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { GitHubIcon } from "@/components/ui/BrandIcons";
 import RevealText from "@/components/ui/RevealText";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import { PROJECTS, type Project } from "@/lib/data";
 
-const EASING = [0.22, 1, 0.36, 1] as const;
 const featured = PROJECTS.filter((p) => p.featured);
+
+// Mobile card carousel — shown below md breakpoint
+function MobileProjectCarousel({ onSelect }: { onSelect: (p: Project) => void }) {
+  const [idx, setIdx] = useState(0);
+  const dragStart = useRef(0);
+  const all = PROJECTS;
+  const project = all[idx];
+  const prev = () => setIdx((i) => (i - 1 + all.length) % all.length);
+  const next = () => setIdx((i) => (i + 1) % all.length);
+
+  return (
+    <div className="md:hidden section-padding" id="projects">
+      <div className="container-narrow">
+        <ChapterLabel index={7} classic="Selected Work" eva="OPERATION LOG" className="mb-3" />
+        <RevealText as="h2" className="text-section-title font-display text-[var(--color-starlight)] mb-8">
+          Projects, built with craft.
+        </RevealText>
+
+        <AnimatePresence mode="wait">
+          <motion.article
+            key={project.id}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            onClick={() => onSelect(project)}
+            onTouchStart={(e) => { dragStart.current = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              const delta = dragStart.current - e.changedTouches[0].clientX;
+              if (Math.abs(delta) > 40) {
+                if (delta > 0) next();
+                else prev();
+              }
+            }}
+            className="group relative flex flex-col justify-end overflow-hidden rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] cursor-pointer"
+            style={{ minHeight: "60vw", maxHeight: 420 }}
+          >
+            {project.image && (
+              <div className="absolute inset-0 opacity-30">
+                <Image src={project.image} alt={project.title} fill sizes="100vw" className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-obsidian)] via-[var(--color-obsidian)]/60 to-transparent" />
+              </div>
+            )}
+            {!project.image && (
+              <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 40% 60%, ${project.color}20, transparent 70%)` }} />
+            )}
+            <div className="relative z-10 p-6">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: project.color }} />
+                <span className="chapter-label">{project.type} · {project.year}</span>
+              </div>
+              <h3 className="font-display text-2xl font-bold text-[var(--color-starlight)]">{project.title}</h3>
+              <p className="mt-1 font-body text-sm text-[var(--color-silver)] line-clamp-2">{project.subtitle}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {project.technologies.slice(0, 3).map((t) => (
+                  <span key={t} className="rounded-full border border-[var(--color-glass-border)] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-silver)] bg-white/[0.03]">{t}</span>
+                ))}
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-indigo-500/40 bg-indigo-950/60 px-4 py-1.5 font-mono text-[11px] font-bold text-indigo-300">
+                VIEW DETAILS <ArrowUpRight size={12} />
+              </span>
+            </div>
+          </motion.article>
+        </AnimatePresence>
+
+        <div className="mt-6 flex items-center justify-between">
+          <button onClick={prev} className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] text-[var(--color-silver)]" aria-label="Previous">
+            <ChevronLeft size={18} />
+          </button>
+          <div className="flex items-center gap-2">
+            {all.map((_, i) => (
+              <button key={i} onClick={() => setIdx(i)} className={`rounded-full transition-all duration-300 ${i === idx ? "w-5 h-2 bg-indigo-400" : "w-2 h-2 bg-[var(--color-ash)]"}`} aria-label={`Project ${i + 1}`} />
+            ))}
+          </div>
+          <button onClick={next} className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] text-[var(--color-silver)]" aria-label="Next">
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Projects() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -22,7 +103,8 @@ export default function Projects() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
   // Measure track overflow for horizontal scroll
@@ -48,12 +130,17 @@ export default function Projects() {
   const sectionHeight = Math.max(300, trackWidth + viewportH);
 
   return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      className="relative"
-      style={{ height: sectionHeight }}
-    >
+    <>
+      {/* Mobile carousel — shown below md */}
+      <MobileProjectCarousel onSelect={setSelectedProject} />
+
+      {/* Desktop horizontal scroll section — hidden on mobile */}
+      <section
+        ref={sectionRef}
+        id="projects"
+        className="relative hidden md:block"
+        style={{ height: sectionHeight }}
+      >
       {/* Pinned viewport */}
       <div className="sticky top-0 h-svh overflow-hidden">
         {/* Header — always visible, positioned safely below sticky navbar */}
@@ -76,7 +163,7 @@ export default function Projects() {
           {/* Original spacer for the header area */}
           <div className="w-[40vw] shrink-0" />
 
-          {featured.map((project, i) => (
+          {featured.map((project) => (
             <motion.article
               key={project.id}
               whileHover={{ scale: 1.02, y: -6 }}
@@ -420,6 +507,7 @@ export default function Projects() {
           </AnimatePresence>,
           document.body
         )}
-    </section>
+      </section>
+    </>
   );
 }

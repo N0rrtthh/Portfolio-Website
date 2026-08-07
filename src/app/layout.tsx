@@ -42,9 +42,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Elroni Quiñones (ron) — Software Engineer & Creative Developer",
+  title: "Elroni Quiñones — Portfolio",
   description:
-    "Portfolio of Elroni Quiñones (ron) — a software engineer, full-stack developer, and creative technologist who builds digital experiences at the intersection of design and engineering.",
+    "Portfolio of Elroni Quiñones— a software engineer, full-stack developer, and creative technologist who builds digital experiences at the intersection of design and engineering.",
   keywords: [
     "Elroni Quiñones",
     "ron",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     "Portfolio",
     "Game Developer",
   ],
-  authors: [{ name: "Elroni Quiñones (ron)" }],
+  authors: [{ name: "Elroni Quiñones" }],
   creator: "Elroni Quiñones",
   icons: {
     icon: [
@@ -112,9 +112,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/Portfolio-Website/Favicon.png" type="image/png" />
-        <link rel="shortcut icon" href="/Portfolio-Website/Favicon.png" />
-        <link rel="apple-touch-icon" href="/Portfolio-Website/Favicon.png" />
+        <link rel="icon" href={`${process.env.NODE_ENV === 'production' ? '/Portfolio-Website' : ''}/Favicon.png`} type="image/png" />
+        <link rel="shortcut icon" href={`${process.env.NODE_ENV === 'production' ? '/Portfolio-Website' : ''}/Favicon.png`} />
+        <link rel="apple-touch-icon" href={`${process.env.NODE_ENV === 'production' ? '/Portfolio-Website' : ''}/Favicon.png`} />
         <script
           id="no-flash-theme-script"
           suppressHydrationWarning
