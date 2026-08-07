@@ -40,46 +40,90 @@ const SLOTS = [
   },
 ];
 
-/* ─── Hologram shader ───────────────────────────────────── */
-const VERT = /* glsl */ `
+/* ─── Point-cloud hologram shader ──────────────────────── */
+// Uses ONLY position — no normals needed
+const POINT_VERT = /* glsl */ `
   uniform float uTime;
   uniform float uGlitch;
-  varying vec3 vPos;
-  varying float vFresnel;
-  void main() {
-    vPos = position;
-    vec3 n = normalize(normalMatrix * normal);
-    vFresnel = pow(1.0 - abs(dot(n, vec3(0.0,0.0,1.0))), 2.2);
-    vec3 p = position;
-    p.x += sin(p.y * 40.0 + uTime * 8.0) * uGlitch * 0.01;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-  }
-`;
-
-const FRAG = /* glsl */ `
-  uniform float uTime;
-  uniform vec3  uColor;
   uniform float uOpacity;
-  uniform float uScanY;
-  uniform float uGlitch;
-  varying vec3  vPos;
-  varying float vFresnel;
+  varying float vY;
+  varying float vAlpha;
+
   void main() {
-    float bands  = mix(0.5, 1.0, sin(vPos.y * 80.0 + uTime * 2.0) * 0.5 + 0.5);
-    float fine   = mix(0.8, 1.0, sin(vPos.y * 320.0) * 0.5 + 0.5);
-    float beam   = smoothstep(0.05, 0.0, abs(vPos.y - uScanY)) * 0.8;
-    float rim    = vFresnel * 1.6;
-    float flick  = 0.9 + 0.1 * sin(uTime * 17.3);
-    vec3  col    = uColor;
-    col.r += uGlitch * sin(uTime * 23.0) * 0.25;
-    col.b += uGlitch * cos(uTime * 19.0) * 0.25;
-    float a = (bands * fine * 0.5 + rim * 0.5 + beam) * uOpacity * flick;
-    gl_FragColor = vec4(col, clamp(a, 0.0, 1.0));
+    vY = position.y;
+
+    // glitch: random horizontal jitter on some rows
+    vec3 p = position;
+    float jitter = sin(p.y * 37.0 + uTime * 9.0) * uGlitch * 0.04;
+    p.x += jitter;
+
+    // scanline flicker per-point
+    float flick = 0.7 + 0.3 * sin(p.y * 60.0 + uTime * 3.0);
+    vAlpha = flick * uOpacity;
+
+    vec4 mvPos = modelViewMatrix * vec4(p, 1.0);
+    // perspective point size
+    gl_PointSize = (3.5 / -mvPos.z) * 120.0;
+    gl_Position  = projectionMatrix * mvPos;
   }
 `;
 
-/* ─── Single hologram model ─────────────────────────────── */
-function HologramModel({
+const POINT_FRAG = /* glsl */ `
+  uniform vec3  uColor;
+  uniform float uTime;
+  uniform float uScanY;
+  varying float vY;
+  varying float vAlpha;
+
+  void main() {
+    // round point
+    vec2 uv = gl_PointCoord - 0.5;
+    float d = length(uv);
+    if (d > 0.5) discard;
+
+    // soft point edge
+    float soft = 1.0 - smoothstep(0.3, 0.5, d);
+
+    // scan beam brightens points near the beam
+    float beam = smoothstep(0.12, 0.0, abs(vY - uScanY));
+
+    // scanline bands
+    float band = mix(0.5, 1.0, sin(vY * 80.0 + uTime * 2.0) * 0.5 + 0.5);
+
+    float a = soft * vAlpha * band + beam * 0.8 * soft;
+    gl_FragColor = vec4(uColor + beam * 0.4, clamp(a, 0.0, 1.0));
+  }
+`;
+
+/* ─── Extract all positions from a GLTF scene ──────────── */
+function extractPositions(scene: THREE.Group): Float32Array {
+  const arrays: Float32Array[] = [];
+  scene.traverse((obj) => {
+    const mesh = obj as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const pos = mesh.geometry.attributes.position;
+    if (!pos) return;
+    // Transform to world space
+    const arr = new Float32Array(pos.count * 3);
+    const v = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
+      arr[i * 3]     = v.x;
+      arr[i * 3 + 1] = v.y;
+      arr[i * 3 + 2] = v.z;
+    }
+    arrays.push(arr);
+  });
+  if (arrays.length === 0) return new Float32Array(0);
+  const total = arrays.reduce((s, a) => s + a.length, 0);
+  const merged = new Float32Array(total);
+  let offset = 0;
+  for (const a of arrays) { merged.set(a, offset); offset += a.length; }
+  return merged;
+}
+
+/* ─── Single hologram point cloud ──────────────────────── */
+function HologramCloud({
   url,
   accent,
   active,
@@ -89,10 +133,9 @@ function HologramModel({
   active: boolean;
 }) {
   const { scene } = useGLTF(url);
-  const groupRef = useRef<THREE.Group>(null);
-  const glitchTimer = useRef(2 + Math.random() * 3);
+  const groupRef  = useRef<THREE.Points>(null);
+  const glitchT   = useRef(2 + Math.random() * 3);
 
-  // Build material once per accent colour
   const mat = useMemo(
     () =>
       new THREE.ShaderMaterial({
@@ -103,64 +146,64 @@ function HologramModel({
           uScanY:   { value: 0 },
           uGlitch:  { value: 0 },
         },
-        vertexShader: VERT,
-        fragmentShader: FRAG,
+        vertexShader:   POINT_VERT,
+        fragmentShader: POINT_FRAG,
         transparent: true,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        depthWrite:  false,
+        blending:    THREE.AdditiveBlending,
       }),
     [accent]
   );
 
-  // Clone + normalise scale + centre — runs once per scene+accent
-  const cloned = useMemo(() => {
-    const clone = scene.clone(true);
-    // Apply material
-    clone.traverse((o) => {
-      if ((o as THREE.Mesh).isMesh) (o as THREE.Mesh).material = mat;
-    });
-    // Compute bounding box on the raw clone (scale=1)
-    const box = new THREE.Box3().setFromObject(clone);
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const s = 2.0 / maxDim;
-    clone.scale.setScalar(s);
-    // Re-centre after scaling
-    const box2 = new THREE.Box3().setFromObject(clone);
-    const centre = new THREE.Vector3();
-    box2.getCenter(centre);
-    clone.position.sub(centre);
-    return clone;
-  }, [scene, mat]);
+  // Extract positions + normalise into [-1, 1] bounding box
+  const geo = useMemo(() => {
+    // Make sure matrices are up to date
+    scene.updateMatrixWorld(true);
+    const positions = extractPositions(scene);
+    if (positions.length === 0) return new THREE.BufferGeometry();
+
+    // Compute bounds
+    let minX = Infinity, minY = Infinity, minZ = Infinity;
+    let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+    for (let i = 0; i < positions.length; i += 3) {
+      minX = Math.min(minX, positions[i]);     maxX = Math.max(maxX, positions[i]);
+      minY = Math.min(minY, positions[i + 1]); maxY = Math.max(maxY, positions[i + 1]);
+      minZ = Math.min(minZ, positions[i + 2]); maxZ = Math.max(maxZ, positions[i + 2]);
+    }
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
+    const scale = 2.0 / Math.max(maxX - minX, maxY - minY, maxZ - minZ, 0.001);
+
+    const norm = new Float32Array(positions.length);
+    for (let i = 0; i < positions.length; i += 3) {
+      norm[i]     = (positions[i]     - cx) * scale;
+      norm[i + 1] = (positions[i + 1] - cy) * scale;
+      norm[i + 2] = (positions[i + 2] - cz) * scale;
+    }
+
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(norm, 3));
+    return g;
+  }, [scene]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     const u = mat.uniforms;
 
-    // Smooth opacity fade
-    const target = active ? 1 : 0;
-    u.uOpacity.value += (target - u.uOpacity.value) * 0.07;
+    u.uOpacity.value += ((active ? 1 : 0) - u.uOpacity.value) * 0.07;
+    u.uTime.value     = t;
+    u.uScanY.value    = ((t * 0.4) % 2.4) - 1.2;
 
-    u.uTime.value  = t;
-    u.uScanY.value = ((t * 0.35) % 2.2) - 1.1;
-
-    // Glitch burst
-    glitchTimer.current -= 1 / 60;
-    if (glitchTimer.current <= 0) {
+    glitchT.current -= 1 / 60;
+    if (glitchT.current <= 0) {
       u.uGlitch.value = Math.random() > 0.65 ? 1 : 0;
-      glitchTimer.current = 2 + Math.random() * 4;
+      glitchT.current = 2 + Math.random() * 4;
     }
     u.uGlitch.value += (0 - u.uGlitch.value) * 0.1;
 
-    // Slow Y rotation
-    if (groupRef.current) {
-      groupRef.current.rotation.y = t * 0.2;
-    }
+    if (groupRef.current) groupRef.current.rotation.y = t * 0.2;
   });
 
-  return <primitive ref={groupRef} object={cloned} />;
+  return <points ref={groupRef} geometry={geo} material={mat} />;
 }
 
 /* ─── Floor grid ────────────────────────────────────────── */
@@ -177,9 +220,9 @@ function FloorGrid({ accent }: { accent: string }) {
           uniform float uTime; uniform vec3 uColor; varying vec2 vUv;
           void main(){
             float g = max(step(0.96,mod(vUv.x*16.0,1.0)), step(0.96,mod(vUv.y*16.0,1.0)));
-            float fade = smoothstep(0.0,0.25,vUv.y)*(1.0-vUv.y);
-            float pulse = 0.6+0.4*sin(uTime*0.9);
-            gl_FragColor = vec4(uColor, g*fade*0.22*pulse);
+            float fade = smoothstep(0.0,0.2,vUv.y)*(1.0-vUv.y);
+            float pulse = 0.55+0.45*sin(uTime*0.9);
+            gl_FragColor = vec4(uColor, g*fade*0.25*pulse);
           }
         `,
         transparent: true,
@@ -196,7 +239,7 @@ function FloorGrid({ accent }: { accent: string }) {
   });
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.2, 0]}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.1, 0]}>
       <planeGeometry args={[7, 7]} />
       <primitive object={mat} attach="material" />
     </mesh>
@@ -207,8 +250,8 @@ function FloorGrid({ accent }: { accent: string }) {
 function Scene({ activeIdx }: { activeIdx: number }) {
   const { camera } = useThree();
   useEffect(() => {
-    (camera as THREE.PerspectiveCamera).fov = 38;
-    camera.position.set(0, 0.3, 4.5);
+    camera.position.set(0, 0.2, 4.0);
+    (camera as THREE.PerspectiveCamera).fov = 40;
     (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
   }, [camera]);
 
@@ -216,7 +259,7 @@ function Scene({ activeIdx }: { activeIdx: number }) {
     <>
       <FloorGrid accent={SLOTS[activeIdx].accent} />
       {SLOTS.map((slot, i) => (
-        <HologramModel
+        <HologramCloud
           key={slot.id}
           url={slot.model}
           accent={slot.accent}
@@ -240,41 +283,26 @@ function HudCorners({ accent }: { accent: string }) {
   );
 }
 
-/* ─── Scan beam (CSS) ───────────────────────────────────── */
-function ScanBeam({ accent }: { accent: string }) {
-  return (
-    <div
-      className="absolute inset-x-0 h-px pointer-events-none z-10"
-      style={{
-        background: `linear-gradient(90deg, transparent, ${accent}cc, transparent)`,
-        animation: "hologram-scan 3s linear infinite",
-        top: 0,
-      }}
-    />
-  );
-}
-
 /* ─── Main export ───────────────────────────────────────── */
 export default function HologramShowcase() {
-  const [active, setActive] = useState(0);
+  const [active, setActive]   = useState(0);
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const quality = useMemo(() => getAdaptiveQuality(), []);
-  const slot = SLOTS[active];
+  const quality    = useMemo(() => getAdaptiveQuality(), []);
+  const slot       = SLOTS[active];
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    return observeVisibility(el, setVisible, "0px 0px -10% 0px");
+    return observeVisibility(el, setVisible, "0px");
   }, []);
 
   return (
     <>
-      {/* Keyframe injected once */}
       <style>{`
-        @keyframes hologram-scan {
-          0%   { top: 0%; }
-          100% { top: 100%; }
+        @keyframes holo-scan {
+          from { top: -2px; }
+          to   { top: 100%; }
         }
       `}</style>
 
@@ -313,11 +341,7 @@ export default function HologramShowcase() {
             {/* Left — slot tabs */}
             <div className="flex md:flex-col gap-4 justify-center md:justify-start md:pt-6">
               {SLOTS.map((s, i) => (
-                <button
-                  key={s.id}
-                  onClick={() => setActive(i)}
-                  className="text-left"
-                >
+                <button key={s.id} onClick={() => setActive(i)} className="text-left">
                   <span
                     className="font-mono text-[10px] tracking-widest block mb-0.5"
                     style={{ color: i === active ? s.accent : "var(--color-ash)" }}
@@ -346,14 +370,22 @@ export default function HologramShowcase() {
             <div
               className="relative overflow-hidden rounded-sm"
               style={{
-                aspectRatio: "3/4",
-                minHeight: 420,
-                border: `1px solid ${slot.accent}33`,
+                minHeight: 460,
+                border: `1px solid ${slot.accent}44`,
                 transition: "border-color 0.5s ease",
               }}
             >
               <HudCorners accent={slot.accent} />
-              <ScanBeam accent={slot.accent} />
+
+              {/* CSS scan beam */}
+              <div
+                className="absolute inset-x-0 h-px pointer-events-none z-10"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${slot.accent}dd, transparent)`,
+                  animation: "holo-scan 3s linear infinite",
+                  top: 0,
+                }}
+              />
 
               {/* Bottom label */}
               <span
@@ -363,10 +395,9 @@ export default function HologramShowcase() {
                 SCAN {slot.index} — {slot.title}
               </span>
 
-              {/* Canvas — always mounted once section is visible */}
               {visible ? (
                 <Canvas
-                  camera={{ position: [0, 0.3, 4.5], fov: 38 }}
+                  camera={{ position: [0, 0.2, 4.0], fov: 40 }}
                   dpr={[1, quality.dpr]}
                   frameloop="always"
                   gl={{
@@ -403,27 +434,21 @@ export default function HologramShowcase() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p
-                    className="font-mono text-[10px] tracking-widest mb-2"
-                    style={{ color: slot.accent }}
-                  >
+                  <p className="font-mono text-[10px] tracking-widest mb-2" style={{ color: slot.accent }}>
                     {slot.index} — {slot.label}
                   </p>
                   <h3 className="font-display text-xl font-bold text-[var(--color-starlight)] mb-3 tracking-wide">
                     {slot.title}
                   </h3>
-                  <p className="text-[var(--color-silver)] text-sm leading-relaxed">
-                    {slot.body}
-                  </p>
+                  <p className="text-[var(--color-silver)] text-sm leading-relaxed">{slot.body}</p>
                 </motion.div>
               </AnimatePresence>
 
-              {/* HUD rows */}
               <div className="space-y-2 border-t pt-4" style={{ borderColor: slot.accent + "22" }}>
                 {[
-                  { k: "SIGNAL",  v: "ACTIVE" },
-                  { k: "OUTPUT",  v: "PRODUCTION" },
-                  { k: "RENDER",  v: "REAL-TIME 3D" },
+                  { k: "SIGNAL", v: "ACTIVE" },
+                  { k: "OUTPUT", v: "PRODUCTION" },
+                  { k: "RENDER", v: "REAL-TIME 3D" },
                 ].map(({ k, v }) => (
                   <div key={k} className="flex justify-between font-mono text-[10px] tracking-widest">
                     <span className="text-[var(--color-ash)]">{k}</span>
@@ -432,7 +457,6 @@ export default function HologramShowcase() {
                 ))}
               </div>
 
-              {/* Dot nav */}
               <div className="flex gap-2 pt-1">
                 {SLOTS.map((s, i) => (
                   <button
