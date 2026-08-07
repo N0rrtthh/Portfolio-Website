@@ -41,6 +41,16 @@ const HologramShowcase = dynamic(
   { ssr: false }
 );
 
+// Preload GLB models so they're cached before the section scrolls into view
+if (typeof window !== "undefined") {
+  const BASE = process.env.NODE_ENV === "production" ? "/Portfolio-Website" : "";
+  import("@react-three/drei").then(({ useGLTF }) => {
+    useGLTF.preload(`${BASE}/3d/model_a.glb`);
+    useGLTF.preload(`${BASE}/3d/model_b.glb`);
+    useGLTF.preload(`${BASE}/3d/model_c.glb`);
+  });
+}
+
 export default function ClassicLayout() {
   return (
     <SmoothScrollProvider>
