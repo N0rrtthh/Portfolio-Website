@@ -1,7 +1,7 @@
 "use client";
 
-import Cinematic3DTimeline from "@/components/ui/Cinematic3DTimeline";
+import ExperienceTimeline from "@/components/sections/experience/ExperienceTimeline";
 
 export default function Experience() {
-  return <Cinematic3DTimeline />;
+  return <ExperienceTimeline />;
 }

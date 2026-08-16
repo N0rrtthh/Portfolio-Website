@@ -10,14 +10,18 @@ import PhilosophyView from "@/components/sections/PhilosophyView";
 import TechStack from "@/components/sections/TechStack";
 import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
+import { TIMELINE_SCROLL_VH } from "@/data/experience";
 
 // Heavy / below-fold sections: defer JS parse+eval until after first paint.
+// The placeholder reserves the section's *real* height so resolving the chunk
+// doesn't shift ~280vh of layout out from under an in-progress scroll.
 const Experience = dynamic(() => import("@/components/sections/Experience"), {
   ssr: false,
   loading: () => (
     <div
       id="experience"
-      className="relative h-[40vh] w-full bg-[#05060b]"
+      className="relative w-full bg-[#05060b]"
+      style={{ height: `${TIMELINE_SCROLL_VH}vh` }}
       aria-hidden
     />
   ),
