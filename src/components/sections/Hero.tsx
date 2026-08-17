@@ -205,7 +205,7 @@ export default function Hero() {
                 >
                   <MagneticButton
                     href="#contact"
-                    className="rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] px-7 py-3.5 font-body text-sm font-medium text-[var(--color-silver)] backdrop-blur-md transition-[background-color,border-color,color,box-shadow,transform] duration-[250ms] ease-out hover:border-[var(--color-accent-primary)] hover:text-white hover:shadow-[0_8px_30px_rgba(67,97,238,0.15)] will-change-transform transform-gpu active:scale-[0.97]"
+                    className="rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] px-7 py-3.5 font-body text-sm font-medium text-[var(--color-silver)] backdrop-blur-md transition-[background-color,border-color,color,box-shadow,transform] duration-[250ms] ease-out hover:border-[var(--color-accent-primary)] hover:text-[var(--color-starlight)] hover:shadow-[0_8px_30px_rgba(67,97,238,0.15)] will-change-transform transform-gpu active:scale-[0.97]"
                   >
                     Get in touch <ArrowUpRight className="inline-block h-4 w-4 ml-1 opacity-70" />
                   </MagneticButton>
@@ -268,7 +268,7 @@ export default function Hero() {
                       <span className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-accent-warm)]">
                         Engineer & Creative
                       </span>
-                      <h2 className="font-display text-lg font-bold text-white">
+                      <h2 className="font-display text-lg font-bold text-[var(--color-starlight)]">
                         Elroni Quiñones
                       </h2>
                     </div>

@@ -5,12 +5,23 @@ import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import AboutStory from "@/components/sections/AboutStory";
-import ProcessSystem from "@/components/sections/ProcessSystem";
-import PhilosophyView from "@/components/sections/PhilosophyView";
 import TechStack from "@/components/sections/TechStack";
 import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 import { TIMELINE_SCROLL_VH } from "@/data/experience";
+
+/* ══════════════════════════════════════════════════════════
+   Classic running order
+   ──────────────────────────────────────────────────────────
+   Five acts, in this order: INTRO → CERTIFICATIONS → PROJECTS →
+   EXPERIENCE → CONTACT.
+
+   The sections that aren't act headings sit with the act they
+   support rather than standing alone: the GitHub archive follows
+   "Who I Am" (the same identity claim, measured instead of
+   narrated), Tech Stack closes the intro (what I work with), and
+   the Hologram showcase closes Projects (it IS work).
+   ══════════════════════════════════════════════════════════ */
 
 // Heavy / below-fold sections: defer JS parse+eval until after first paint.
 // The placeholder reserves the section's *real* height so resolving the chunk
@@ -34,12 +45,6 @@ const Certifications = dynamic(
   () => import("@/components/sections/Certifications"),
   { ssr: false }
 );
-const Achievements = dynamic(() => import("@/components/sections/Achievements"), {
-  ssr: false,
-});
-const Roadmap = dynamic(() => import("@/components/sections/Roadmap"), {
-  ssr: false,
-});
 const HologramShowcase = dynamic(
   () => import("@/components/sections/HologramShowcase"),
   { ssr: false }
@@ -60,31 +65,23 @@ export default function ClassicLayout() {
     <SmoothScrollProvider>
       <Navbar />
       <main>
-        {/* Chapter 1 — Arrival */}
+        {/* ── ACT I — INTRO ──────────────────────────────── */}
         <Hero />
-        {/* Chapter 2 — Who I Am */}
         <AboutStory />
-        {/* Chapter 3 — How I Build */}
-        <ProcessSystem />
-        {/* Chapter 4 — Core Philosophy */}
-        <PhilosophyView />
-        {/* Chapter 5 — Live GitHub Commit Stream & Activity Archive */}
         <GithubContributions />
-        {/* Chapter 6 — The Expedition Journey (3D floating cards timeline) */}
-        <Experience />
-        {/* Chapter 7 — Tech Stack (Unified Moving Conveyor System) */}
         <TechStack />
-        {/* Chapter 8 — Featured Work (Case Study Scenes) */}
-        <Projects />
-        {/* Chapter 9 — Certifications & Honors */}
+
+        {/* ── ACT II — CERTIFICATIONS ────────────────────── */}
         <Certifications />
-        {/* Chapter 10 — Achievements & Impact Metrics */}
-        <Achievements />
-        {/* Chapter 11 — Looking Ahead (Future R&D Roadmap) */}
-        <Roadmap />
-        {/* Chapter 12 — 3D Hologram Showcase */}
+
+        {/* ── ACT III — PROJECTS ─────────────────────────── */}
+        <Projects />
         <HologramShowcase />
-        {/* Chapter 13 — Contact & Conclusion */}
+
+        {/* ── ACT IV — EXPERIENCE ────────────────────────── */}
+        <Experience />
+
+        {/* ── ACT V — CONTACT ────────────────────────────── */}
         <Contact />
       </main>
     </SmoothScrollProvider>

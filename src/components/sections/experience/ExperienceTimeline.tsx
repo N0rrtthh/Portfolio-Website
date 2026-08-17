@@ -12,7 +12,10 @@ import {
   TIMELINE_SCROLL_VH,
 } from "@/data/experience";
 import { useSectionProgress } from "@/lib/hooks/useSectionProgress";
+import { useScrollLock } from "@/lib/hooks/useScrollLock";
+import { useLenis } from "@/components/providers/SmoothScrollProvider";
 import { getAdaptiveQuality, observeVisibility } from "@/lib/performance";
+
 import DossierModal from "./DossierModal";
 import NodeCard from "./NodeCard";
 import TimelineScene from "./TimelineScene";
@@ -47,7 +50,9 @@ export default function ExperienceTimeline() {
   const [inView, setInView] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  const lenis = useLenis();
   const quality = useMemo(() => getAdaptiveQuality(), []);
+
 
   const handleProgress = useCallback((progress: number) => {
     const next = nodeForProgress(progress);
@@ -73,14 +78,11 @@ export default function ExperienceTimeline() {
   }, []);
 
   // Lock page scroll while the dossier is open.
-  useEffect(() => {
-    if (inspectedNode === null) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [inspectedNode]);
+  // `overflow: hidden` alone is not enough: Lenis drives scroll from its own
+  // rAF loop and keeps going straight through it. The shared hook stops the
+  // instance and pins the body, so the timeline cannot advance underneath.
+  useScrollLock(inspectedNode !== null, lenis);
+
 
   const handleWaypoint = useCallback(
     (index: number) => scrollToProgress(TIMELINE_DATA[index].scrollTarget),
@@ -125,7 +127,7 @@ export default function ExperienceTimeline() {
           <div className="mx-auto flex max-w-7xl items-end justify-between">
             <div>
               <ChapterLabel
-                index={5}
+                index={7}
                 classic="Expedition Timeline"
                 eva="MISSION LOG"
                 className="mb-1"
@@ -148,11 +150,6 @@ export default function ExperienceTimeline() {
 
         <WaypointNav activeNode={activeNode} onSelect={handleWaypoint} />
 
-        {/* Scroll guidance */}
-        <div className="pointer-events-none absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 font-mono text-[11px] text-slate-400">
-          <span>SCROLL TO PILOT THE JOURNEY // WARPS TO TECH STACK</span>
-          <CornerDownRight className="h-3.5 w-3.5 text-red-500" />
-        </div>
 
         {/* Dossier card — positioned imperatively by the scene */}
         <div
@@ -179,7 +176,13 @@ export default function ExperienceTimeline() {
                 stencil: false,
                 depth: true,
               }}
-              style={{ touchAction: "none" }}
+              /* `touchAction: "none"` here swallowed vertical swipes: the
+                 canvas covers the whole sticky viewport, and this section is
+                 scroll-driven over ~280vh, so on a phone the timeline could
+                 not be advanced or scrolled past at all. `pan-y` keeps the
+                 canvas from hijacking the gesture while still blocking
+                 horizontal pan / double-tap zoom. */
+              style={{ touchAction: "pan-y" }}
             >
               <TimelineScene
                 progressRef={progressRef}

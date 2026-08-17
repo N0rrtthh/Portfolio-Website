@@ -78,7 +78,7 @@ export default function EvaAbout() {
               {/* Data strip */}
               <div className="p-4 space-y-2 border-t border-[var(--color-accent-primary)]/30 bg-[var(--color-obsidian)]">
                 {[
-                  { label: "DESIGNATION", value: "UNIT-01 USER" },
+                  { label: "DESIGNATION", value: "NRTH." },
                   { label: "SYNC RATIO", value: "400.00%" },
                   { label: "STATUS", value: "OPERATIONAL" },
                 ].map((item) => (

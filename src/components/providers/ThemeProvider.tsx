@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { flushSync } from "react-dom";
 
 export type ColorMode = "light" | "dark";
 export type DesignTheme = "classic" | "eva";
@@ -27,6 +28,28 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 const MODE_KEY = "eq-color-mode";
 const DESIGN_KEY = "eq-design-theme";
 const EVA_LOADER_KEY = "eq-eva-loader-style";
+
+/**
+ * Pins the reveal origin used by the `::view-transition-new(root)` clip-path,
+ * plus the radius it has to grow to.
+ *
+ * The radius is measured rather than hard-coded: `circle(150%)` is relative to
+ * the viewport's diagonal, so a toggle in the corner of a wide screen finishes
+ * its wipe early and then animates nothing for the rest of the duration. The
+ * real target is the distance from the origin to the furthest corner.
+ */
+function setRevealOrigin(origin: { x: number; y: number }) {
+  const root = document.documentElement;
+  const { innerWidth: w, innerHeight: h } = window;
+
+  const dx = Math.max(origin.x, w - origin.x);
+  const dy = Math.max(origin.y, h - origin.y);
+  const radius = Math.hypot(dx, dy);
+
+  root.style.setProperty("--vt-x", `${origin.x}px`);
+  root.style.setProperty("--vt-y", `${origin.y}px`);
+  root.style.setProperty("--vt-r", `${Math.ceil(radius)}px`);
+}
 
 /**
  * Read initial state from DOM or localStorage.
@@ -61,29 +84,64 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(EVA_LOADER_KEY, evaLoaderStyle);
   }, [evaLoaderStyle]);
 
+  /* ══════════════════════════════════════════════════════════
+     Light ⇄ dark
+     ──────────────────────────────────────────────────────────
+     globals.css has always carried the `::view-transition-*` rules for
+     this, but nothing ever called `startViewTransition` — so flipping
+     `data-mode` re-evaluated every colour variable inside one frame and
+     the whole page hard-cut. That snap is the "unpolished" part.
+
+     Two details make it read as deliberate instead:
+
+     1. The swap runs inside a view transition, so the browser holds a
+        snapshot of the old palette and the new one wipes in from the
+        toggle itself — the change appears to come from the thing you
+        pressed, rather than from nowhere.
+     2. `flushSync` inside the callback. `startViewTransition` captures
+        "before", runs the callback, then captures "after". React would
+        normally batch `setMode` past that second capture, and the
+        transition would animate two identical frames — i.e. look broken.
+        Committing synchronously is what actually makes it work.
+
+     No support / reduced motion → plain state change, same end result.
+     ══════════════════════════════════════════════════════════ */
+  const commitMode = useCallback((next: ColorMode) => {
+    // Written here as well as in the effect below: the effect runs after
+    // the transition has already sampled the DOM, which is too late.
+    document.documentElement.setAttribute("data-mode", next);
+    setMode(next);
+  }, []);
+
   const toggleMode = useCallback(
     (origin?: { x: number; y: number }) => {
-      const root = document.documentElement;
       const nextMode: ColorMode = mode === "dark" ? "light" : "dark";
 
-      if (origin) {
-        root.style.setProperty("--vt-x", `${origin.x}px`);
-        root.style.setProperty("--vt-y", `${origin.y}px`);
+      // Origin of the wipe. Defaults live in the CSS, so an
+      // origin-less call still behaves.
+      if (origin) setRevealOrigin(origin);
+
+      const reduced =
+        typeof window !== "undefined" &&
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+      const startViewTransition = document.startViewTransition?.bind(document);
+
+      if (!startViewTransition || reduced) {
+        commitMode(nextMode);
+        return;
       }
 
-      setMode(nextMode);
+      startViewTransition(() => {
+        flushSync(() => commitMode(nextMode));
+      });
     },
-    [mode]
+    [mode, commitMode]
   );
 
   const setDesign = useCallback(
     (nextDesign: DesignTheme, origin?: { x: number; y: number }) => {
-      const root = document.documentElement;
-      if (origin) {
-        root.style.setProperty("--vt-x", `${origin.x}px`);
-        root.style.setProperty("--vt-y", `${origin.y}px`);
-      }
-
+      if (origin) setRevealOrigin(origin);
       setDesignState(nextDesign);
     },
     []

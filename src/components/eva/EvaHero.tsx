@@ -2,13 +2,15 @@
 
 import { useRef, useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "framer-motion";
+import { useSectionNav } from "@/lib/hooks/useSectionNav";
+import { DUR, EASE } from "@/lib/motion";
 
 const TYPING_LINES = [
   "> ACCESSING USER DATABASE...",
   "> DIRECTIVE: BUILD HIGH-PERFORMANCE DIGITAL SYSTEMS",
   "> OPERATIONAL STATUS: FULL SYNC ACHIEVED",
-  "> USER: ELRONI QUIÑONES [UNIT-01 ENGAGED]",
+  "> USER: ELRONI QUIÑONES [NRTH.]",
 ];
 
 function useTypingEffect(lines: string[], charDelay = 18, lineDelay = 400) {
@@ -53,8 +55,67 @@ function useTypingEffect(lines: string[], charDelay = 18, lineDelay = 400) {
   return displayed;
 }
 
+/* ── Ambient A.T. field layer ─────────────────────────────────────
+   The old hero was a static block: one fade-in per element and then
+   nothing moved. This adds three cheap, continuously-alive layers —
+   all transform/opacity only, so they stay on the compositor:
+
+   1. a hex/grid field that drifts and breathes
+   2. a vertical scan sweep on a long, irregular loop
+   3. a slow counter-rotating target reticle behind the headline
+
+   `pointer-events-none` throughout: this is scenery, never a hit
+   target, which is also why none of it can steal clicks from the CTAs. */
+function ATFieldBackdrop({ still }: { still: boolean }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {/* Drifting grid field */}
+      <motion.div
+        className="absolute -inset-[20%] opacity-[0.18]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--color-accent-primary) 1px, transparent 1px), linear-gradient(90deg, var(--color-accent-primary) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "radial-gradient(ellipse at 50% 45%, black 20%, transparent 72%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 50% 45%, black 20%, transparent 72%)",
+        }}
+        animate={still ? undefined : { backgroundPositionX: ["0px", "56px"], backgroundPositionY: ["0px", "56px"] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* Breathing accent bloom */}
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]"
+        style={{ background: "var(--color-accent-primary)", opacity: 0.14 }}
+        animate={still ? undefined : { scale: [1, 1.18, 1], opacity: [0.1, 0.2, 0.1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Counter-rotating reticle rings */}
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[62vmin] w-[62vmin] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-[var(--color-accent-warm)]/25"
+        animate={still ? undefined : { rotate: 360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[44vmin] w-[44vmin] -translate-x-1/2 -translate-y-1/2 border border-[var(--color-accent-primary)]/25"
+        animate={still ? undefined : { rotate: -360 }}
+        transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* Scan sweep */}
+      <motion.div
+        className="absolute inset-x-0 h-24 bg-gradient-to-b from-transparent via-[var(--color-accent-warm)]/12 to-transparent"
+        animate={still ? undefined : { y: ["-10vh", "110vh"] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", repeatDelay: 2.5 }}
+      />
+    </div>
+  );
+}
+
 export default function EvaHero() {
   const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -62,68 +123,113 @@ export default function EvaHero() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const typedLines = useTypingEffect(TYPING_LINES);
+  const { navigate } = useSectionNav();
+
+  /* Pointer parallax. Springs, not raw values, so the headline trails the
+     cursor with weight instead of snapping to it. Fine pointers only —
+     on touch there is no hover state to react to. */
+  const px = useSpring(0, { stiffness: 60, damping: 20, mass: 0.6 });
+  const py = useSpring(0, { stiffness: 60, damping: 20, mass: 0.6 });
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    function onMove(e: MouseEvent) {
+      const nx = e.clientX / window.innerWidth - 0.5;
+      const ny = e.clientY / window.innerHeight - 0.5;
+      px.set(nx * 22);
+      py.set(ny * 14);
+    }
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [px, py, reduceMotion]);
+
+  const still = Boolean(reduceMotion);
+  const headline = "PROJECT";
 
   return (
-    <section ref={ref} id="hero" className="min-h-svh flex flex-col justify-center relative py-32">
+    <section
+      ref={ref}
+      id="hero"
+      className="relative flex min-h-svh flex-col justify-center overflow-hidden py-24 sm:py-28 md:py-32"
+    >
+      <ATFieldBackdrop still={still} />
+
       <motion.div style={{ y, opacity }} className="container-narrow relative z-10">
-        <div className="border-l-4 border-[var(--color-accent-warm)] pl-8 md:pl-16">
+        <motion.div style={{ x: px, y: py }} className="border-l-4 border-[var(--color-accent-warm)] pl-5 sm:pl-8 md:pl-16">
           {/* Status badge */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0.6, 1] }}
             transition={{ duration: 0.6, times: [0, 0.2, 0.5, 1] }}
-            className="mb-8 font-mono text-xs tracking-[0.25em] text-[var(--color-accent-warm)] bg-[var(--color-accent-warm)]/10 inline-flex items-center gap-3 px-4 py-1.5 border border-[var(--color-accent-warm)]/40"
+            className="mb-6 sm:mb-8 inline-flex flex-wrap items-center gap-3 border border-[var(--color-accent-warm)]/40 bg-[var(--color-accent-warm)]/10 px-3 py-1.5 font-mono text-[10px] tracking-[0.25em] text-[var(--color-accent-warm)] sm:px-4 sm:text-xs"
           >
-            <span className="h-2 w-2 rounded-full bg-[var(--color-accent-warm)] animate-pulse shadow-[0_0_8px_var(--color-accent-warm)]" />
-            SYSTEM OVERRIDE // MAGI-01 SYNC: 400%
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[var(--color-accent-warm)] shadow-[0_0_8px_var(--color-accent-warm)] animate-pulse" />
+            SYSTEM OVERRIDE // DWN-01 SYNC: 100%
           </motion.div>
 
-          {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-            className="font-display text-5xl sm:text-7xl md:text-9xl font-black text-white uppercase leading-[0.88] tracking-tighter mb-8"
-          >
-            PROJECT
-            <br />
+          {/* Heading — per-character entry so it assembles rather than
+              sliding in as one slab, then holds a slow chromatic flicker. */}
+          <h1 className="mb-6 sm:mb-8 font-display text-[clamp(2.6rem,12vw,9rem)] font-black uppercase leading-[0.88] tracking-tighter text-[var(--color-starlight)]">
+            <span className="sr-only">Project 01 — Nrth.</span>
+            <span aria-hidden className="block">
+              {headline.split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  transition={{ duration: 0.5, delay: 0.15 + i * 0.045, ease: EASE.out }}
+                  className="inline-block"
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </span>
             <motion.span
-              animate={{ opacity: [1, 0.85, 1] }}
-              transition={{
-                duration: 0.15,
-                repeat: Infinity,
-                repeatType: "mirror",
-                repeatDelay: 3,
-              }}
-              className="text-[var(--color-accent-primary)] drop-shadow-[0_0_20px_var(--color-accent-primary)]"
+              aria-hidden
+              initial={{ opacity: 0, x: -24 }}
+              animate={
+                still
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: [0, 1, 0.82, 1], x: 0 }
+              }
+              transition={{ duration: 0.8, delay: 0.5, ease: EASE.out }}
+              className="block text-[var(--color-accent-primary)] drop-shadow-[0_0_20px_var(--color-accent-primary)]"
             >
-              01 // NRTH
+              <motion.span
+                animate={still ? undefined : { opacity: [1, 0.8, 1] }}
+                transition={{ duration: 0.16, repeat: Infinity, repeatType: "mirror", repeatDelay: 3.4 }}
+                className="inline-block"
+              >
+                09 // NRTH.
+              </motion.span>
             </motion.span>
-          </motion.h1>
+          </h1>
 
           {/* Terminal card with typing effect */}
           <motion.div
             initial={{ opacity: 0, scaleY: 0 }}
             animate={{ opacity: 1, scaleY: 1 }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="max-w-2xl bg-[var(--color-obsidian)] p-6 md:p-8 border border-[var(--color-accent-primary)]/50 relative origin-top shadow-[0_0_40px_rgba(0,0,0,0.5)]"
+            className="relative max-w-2xl origin-top border border-[var(--color-accent-primary)]/50 bg-[var(--color-obsidian)] p-4 shadow-[0_0_40px_rgba(0,0,0,0.5)] sm:p-6 md:p-8"
           >
             {/* Corner brackets */}
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[var(--color-accent-warm)]" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[var(--color-accent-warm)]" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[var(--color-accent-warm)]" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[var(--color-accent-warm)]" />
+            <div className="absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-[var(--color-accent-warm)]" />
+            <div className="absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-[var(--color-accent-warm)]" />
+            <div className="absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-[var(--color-accent-warm)]" />
+            <div className="absolute bottom-0 right-0 h-3 w-3 border-b-2 border-r-2 border-[var(--color-accent-warm)]" />
 
-            <p className="font-mono text-[10px] text-[var(--color-accent-warm)] font-bold tracking-[0.2em] mb-4">
+            <p className="mb-4 font-mono text-[10px] font-bold tracking-[0.2em] text-[var(--color-accent-warm)]">
               CLASSIFIED DATA. AUTHORIZED PERSONNEL ONLY.
             </p>
 
-            <div className="space-y-1.5 font-mono text-xs md:text-sm text-[var(--color-pearl)]">
+            <div className="space-y-1.5 font-mono text-[11px] break-words text-[var(--color-pearl)] sm:text-xs md:text-sm">
               {typedLines.map((line, i) => (
-                <p key={i} className={line.startsWith("> PILOT") ? "text-[var(--color-accent-warm)] font-bold" : ""}>
+                <p key={i} className={line.startsWith("> USER") ? "font-bold text-[var(--color-accent-warm)]" : ""}>
                   {line}
                   {i === typedLines.length - 1 && (
-                    <span className="inline-block w-2 h-3.5 bg-[var(--color-accent-primary)] ml-1 animate-pulse" />
+                    <span className="ml-1 inline-block h-3.5 w-2 bg-[var(--color-accent-primary)] animate-pulse" />
                   )}
                 </p>
               ))}
@@ -134,43 +240,37 @@ export default function EvaHero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.9 }}
-            className="mt-10 flex flex-wrap gap-4"
+            transition={{ duration: DUR.base, delay: 0.9, ease: EASE.out }}
+            className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4"
           >
+            {/* Both CTAs route through useSectionNav. A bare href="#projects"
+                triggers a NATIVE hash jump, which Lenis overwrites on the very
+                next frame — that was the "first click does nothing" bug. */}
             <a
               href="#projects"
-              className="bg-[var(--color-accent-primary)] text-white px-6 py-3.5 sm:px-8 sm:py-4 font-mono text-xs sm:text-sm font-bold tracking-widest flex items-center gap-3 border border-[var(--color-accent-warm)]/50 hover:bg-[var(--color-accent-warm)] hover:text-black transition-all duration-200 hover:shadow-[0_0_20px_var(--color-accent-warm)]"
+              onClick={(e) => navigate(e, "#projects")}
+              className="flex items-center gap-3 border border-[var(--color-accent-warm)]/50 bg-[var(--color-accent-primary)] px-5 py-3 font-mono text-xs font-bold tracking-widest text-white transition-all duration-200 hover:bg-[var(--color-accent-warm)] hover:text-black hover:shadow-[0_0_20px_var(--color-accent-warm)] sm:px-8 sm:py-4 sm:text-sm"
               data-cursor-hover
             >
-              INITIATE LINK
+              PROJECT LINK
               <ArrowRight size={18} />
             </a>
             <a
               href="#about"
-              className="text-[var(--color-pearl)] px-6 py-3.5 sm:px-8 sm:py-4 font-mono text-xs sm:text-sm tracking-widest flex items-center gap-3 border border-[var(--color-accent-primary)]/40 hover:border-[var(--color-accent-warm)] hover:text-[var(--color-accent-warm)] transition-all duration-200"
+              onClick={(e) => navigate(e, "#about")}
+              className="flex items-center gap-3 border border-[var(--color-accent-primary)]/40 px-5 py-3 font-mono text-xs tracking-widest text-[var(--color-pearl)] transition-all duration-200 hover:border-[var(--color-accent-warm)] hover:text-[var(--color-accent-warm)] sm:px-8 sm:py-4 sm:text-sm"
               data-cursor-hover
             >
-              VIEW PILOT DATA
+              VIEW USER DATA
             </a>
           </motion.div>
-        </div>
+        </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        style={{ opacity }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-[var(--color-ash)]"
-      >
-        <span>SCROLL TO PROCEED</span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-[1px] h-6 bg-gradient-to-b from-[var(--color-accent-primary)] to-transparent"
-        />
-      </motion.div>
+      {/* NOTE: the "SCROLL TO PROCEED" affordance was removed deliberately.
+          The hero already ends mid-viewport and the CTAs are the real entry
+          points — a permanent scroll hint on a page that obviously scrolls is
+          decoration competing with the actual actions. */}
     </section>
   );
 }

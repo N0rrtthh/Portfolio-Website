@@ -114,7 +114,7 @@ export default function BootSequence({ onComplete }: { onComplete?: () => void }
               </span>
             </div>
             <span className="font-mono text-[10px] text-[#39ff14]/40 tracking-widest">
-              MAGI OPERATING SYSTEM
+              Nrth. OS
             </span>
           </div>
 
@@ -128,7 +128,7 @@ export default function BootSequence({ onComplete }: { onComplete?: () => void }
               className="mb-8 text-center"
             >
               <div className="inline-flex items-center justify-center w-20 h-20 border-2 border-[#7a00ff] mb-6 relative">
-                <span className="font-mono text-2xl font-black text-[#39ff14] tracking-tighter">EQ</span>
+                <span className="font-mono text-2xl font-black text-[#39ff14] tracking-tighter">NRTH.</span>
                 {/* Corner accents */}
                 <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-[#39ff14]" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-[#39ff14]" />

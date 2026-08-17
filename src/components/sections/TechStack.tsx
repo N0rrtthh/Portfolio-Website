@@ -3,39 +3,38 @@
 import RevealText from "@/components/ui/RevealText";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import TechStackConveyor from "@/components/ui/TechStackConveyor";
-import AnimeStaggerGrid from "@/components/ui/AnimeStaggerGrid";
+import AnimeTraceLine from "@/components/ui/AnimeTraceLine";
 
+
+/* The Anime.js stagger matrix used to live here as a second, unrelated
+   panel under the conveyor. It now sits in the Contact section, where an
+   ambient interactive surface has a reason to exist. */
 export default function TechStack() {
   return (
-    <section id="techstack" className="section-padding relative overflow-hidden">
+    /* Deliberately not `section-padding`: this section is now description →
+       cards with nothing between them, so it needs a tighter vertical rhythm
+       than the narrative sections. Values are real padding, not negative
+       margins undoing the old layout. */
+    <section id="techstack" className="relative overflow-hidden py-12 md:py-16">
       <div id="tech-stack" className="scroll-mt-24" />
       <div className="container-narrow">
-        <ChapterLabel index={6} classic="Tech Stack" eva="EQUIPMENT MANIFEST" className="mb-8" />
+        <ChapterLabel index={4} classic="Tech Stack" eva="EQUIPMENT MANIFEST" className="mb-4" />
         <RevealText
           as="h2"
-          className="text-section-title mb-6 font-display text-[var(--color-starlight)]"
+          className="text-section-title mb-3 font-display text-[var(--color-starlight)]"
         >
           Tools & Tech Stack.
         </RevealText>
-        <p className="font-body text-base text-[var(--color-silver)] max-w-prose mb-8">
-          A continuous moving ecosystem of technologies I engineer with daily — across full-stack, mobile, game engines, and design systems.
+        <p className="font-body text-base text-[var(--color-silver)] max-w-prose mb-2">
+          What I build with daily — full-stack, mobile, game engines, and design systems.
         </p>
 
-        {/* Premium Continuous Moving Horizontal Conveyor System */}
+        {/* Frameless trace between the copy and the conveyor: it reads as the
+            signal feeding the belt below rather than as a widget in a box. */}
+        <AnimeTraceLine className="mb-4" height={22} duration={4} />
+
         <TechStackConveyor />
 
-        {/* Interactive Anime.js Motion Grid Matrix */}
-        <div className="mt-16 glass rounded-2xl p-8 border border-[var(--color-glass-border)] flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <span className="chapter-label block mb-2">Anime.js Motion Stagger Matrix</span>
-            <p className="font-body text-sm text-[var(--color-silver)] max-w-md">
-              Hover over matrix nodes to trigger coordinate ripple waves powered by Anime.js spring physics algorithms.
-            </p>
-          </div>
-          <div className="flex justify-center overflow-hidden p-2">
-            <AnimeStaggerGrid rows={6} columns={14} />
-          </div>
-        </div>
       </div>
     </section>
   );

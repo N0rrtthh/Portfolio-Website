@@ -42,9 +42,8 @@ const DossierModal = memo(function DossierModal({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClose}
-      onWheel={(e) => e.stopPropagation()}
-      onTouchMove={(e) => e.stopPropagation()}
       role="dialog"
+
       aria-modal="true"
       aria-label={`${item.role} at ${item.company}`}
       className="pointer-events-auto fixed inset-0 z-[99999] flex select-none items-center justify-center bg-black/80 p-4 font-sans backdrop-blur-2xl sm:p-6 md:p-8"
@@ -58,9 +57,13 @@ const DossierModal = memo(function DossierModal({
         exit={{ scale: 0.96, opacity: 0, y: 16 }}
         transition={{ type: "spring", stiffness: 360, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        onWheel={(e) => e.stopPropagation()}
-        onTouchMove={(e) => e.stopPropagation()}
-        className="scrollbar-none relative z-[100000] max-h-[86vh] w-full max-w-3xl overflow-y-auto rounded-[2.25rem] border border-white/15 bg-[#0a0a10]/95 p-6 text-slate-100 shadow-[0_30px_100px_rgba(0,0,0,0.85)] sm:p-8"
+        /* `.scroll-panel` (globals.css) carries overflow-y:auto +
+           overscroll-behavior:contain + -webkit-overflow-scrolling:touch and
+           hides the bar. That replaces the onWheel/onTouchMove
+           stopPropagation patches, which blocked chaining only for React's
+           synthetic events and did nothing for iOS momentum scrolling. */
+        className="scroll-panel relative z-[100000] max-h-[86vh] w-full max-w-3xl rounded-[2.25rem] border border-white/15 bg-[#0a0a10]/95 p-6 text-slate-100 shadow-[0_30px_100px_rgba(0,0,0,0.85)] sm:p-8"
+
       >
         {/* Top bar */}
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-5">

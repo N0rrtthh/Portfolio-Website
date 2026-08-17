@@ -16,8 +16,11 @@ export interface Project {
   color: string;
   github?: string;
   live?: string;
-  image?: string;
+  /* Screenshots deliberately live in src/data/projectImages.ts, keyed by `id`.
+     A path string here would be emitted verbatim and 404 under the Pages
+     basePath; a static import is resolved by the bundler instead. */
   featured: boolean;
+
 }
 
 export interface TechItem {
@@ -110,8 +113,8 @@ export const PROJECTS: Project[] = [
     color: "#f97316",
     github: "https://github.com/N0rrtthh/ResuMaker",
     live: "https://n0rrtthh.github.io/ResuMaker/",
-    image: "/projects/resumaker.png",
     featured: true,
+
   },
   {
     id: "jasfocus",
@@ -131,8 +134,8 @@ export const PROJECTS: Project[] = [
     color: "#3b82f6",
     github: "https://github.com/N0rrtthh/JasFocus",
     live: "https://n0rrtthh.github.io/JasFocus/",
-    image: "/projects/jasfocus.png",
     featured: true,
+
   },
   {
     id: "quick-attend",
@@ -299,24 +302,6 @@ export const EXPERIENCES: Experience[] = [
       "Explored 3D modeling in Blender",
     ],
     type: "project",
-  },
-];
-
-export const PHILOSOPHY = [
-  {
-    title: "Design is not decoration.",
-    description:
-      "Every project starts in Figma before a single line of code. The interface should feel inevitable — like it couldn't have been designed any other way.",
-  },
-  {
-    title: "Code should be invisible.",
-    description:
-      "The best engineering disappears behind seamless experience. Users shouldn't think about how it works — they should just feel that it does.",
-  },
-  {
-    title: "Every pixel earns its place.",
-    description:
-      "If an animation doesn't serve the story, it gets cut. If a gradient doesn't guide the eye, it goes. Restraint is what separates craft from noise.",
   },
 ];
 

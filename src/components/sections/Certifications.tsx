@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useMemo, type ReactNode } from "react";
+import { useEffect, useRef, useState, useMemo, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLenis } from "lenis/react";
+import { useScrollLock } from "@/lib/hooks/useScrollLock";
 import {
-  ShieldCheck,
   BadgeCheck,
   Search,
   BookOpen,
@@ -18,6 +19,72 @@ import RevealText from "@/components/ui/RevealText";
 
 const EASING = [0.22, 1, 0.36, 1] as const;
 const TAB_SPRING = { type: "spring", stiffness: 480, damping: 38, mass: 0.9 } as const;
+
+/* ══════════════════════════════════════════════════════════
+   Certificate viewer — why it's scaled the way it is
+   ──────────────────────────────────────────────────────────
+   The preview is a CROSS-ORIGIN iframe pointing at pdfhost.io's own
+   HTML viewer. We cannot read or set anything inside it: no zoom API,
+   no `#zoom=` fragment (that only works for the browser's built-in PDF
+   plugin, not for a third-party HTML viewer), and no postMessage
+   contract. So the zoom is not ours to set directly.
+
+   What IS ours is the viewport the viewer thinks it has. That's the
+   actual cause of the "opens at ~240% on mobile" report: given a
+   ~340px-wide frame, pdfhost takes its small-screen layout path and
+   fits the page to that width, so the certificate's text renders at
+   roughly 2.4x the density you'd see on a desktop.
+
+   Fix: give the iframe a fixed DESKTOP width (`FRAME_VIRTUAL_WIDTH`)
+   so the viewer always takes its desktop layout path, then scale the
+   whole frame down to whatever space we actually have. The apparent
+   zoom becomes containerWidth / 900 — a number we control exactly,
+   identical in behaviour on every device. This also replaces the old
+   `h-[185%] w-[185%] scale-[0.54]` magic numbers, which hard-coded one
+   ratio and therefore only ever looked right at one width.
+   ══════════════════════════════════════════════════════════ */
+const FRAME_VIRTUAL_WIDTH = 900;
+
+function ScaledFrame({ src, title }: { src: string; title: string }) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0);
+
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+    const measure = (w: number) => {
+      if (w > 0) setScale(w / FRAME_VIRTUAL_WIDTH);
+    };
+    measure(el.getBoundingClientRect().width);
+    const ro = new ResizeObserver((entries) => measure(entries[0].contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={hostRef} className="absolute inset-0 overflow-hidden">
+      {/* Rendered only once the real width is known — mounting at a
+          guessed scale would make the viewer lay out twice and flash. */}
+      {scale > 0 && (
+        <iframe
+          src={src}
+          title={title}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className="absolute left-0 top-0 border-0"
+          style={{
+            width: FRAME_VIRTUAL_WIDTH,
+            // Percentage of the host box, pre-scale, so that after the
+            // transform the frame covers exactly the host's height.
+            height: `${100 / scale}%`,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export interface CertVariant {
   id: string;
@@ -914,7 +981,7 @@ function CredentialCardBody({ cert, badge }: { cert: RealCertification; badge: R
               )}
             </div>
 
-            <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-wider text-white/70 group-hover:text-white transition-colors">
+            <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--color-silver)] group-hover:text-[var(--color-starlight)] transition-colors">
               View →
             </span>
           </div>
@@ -933,25 +1000,29 @@ export default function Certifications() {
   const [activeVariantId, setActiveVariantId] = useState<string>("");
   const [mounted, setMounted] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const lenis = useLenis();
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
+  /* Same root cause as the EVA modal: `overflow: hidden` on body/html does
+     nothing while Lenis is running, because Lenis translates the page from
+     its own rAF loop rather than using native scroll. The shared hook stops
+     the instance, pins the body (the only lock iOS honours), and restores
+     the exact scroll offset on close. */
+  useScrollLock(!!selectedCert, lenis);
+
+  /* Escape closes the inspector — expected of any modal, and the only way
+     out for keyboard users if the header scrolls out of reach. */
   useEffect(() => {
     if (!selectedCert) return;
-
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedCert(null);
     };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [selectedCert]);
 
   // Open Inspector Modal with default variant selected
@@ -991,9 +1062,9 @@ export default function Certifications() {
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[160px] bg-indigo-600/10 z-0" />
 
       <div className="container-narrow relative z-10">
-        <ChapterLabel index={7} classic="Credential Vault (28 Certs)" eva="CREDENTIAL VAULT" className="mb-8" />
+        <ChapterLabel index={5} classic="Credential Vault (28 Certs)" eva="CREDENTIAL VAULT" className="mb-8" />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="mb-8">
           <div>
             <RevealText
               as="h2"
@@ -1006,15 +1077,15 @@ export default function Certifications() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs text-[var(--color-silver)] bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] px-4 py-2.5 rounded-full backdrop-blur-md shrink-0">
-            <ShieldCheck size={16} className="text-emerald-400" />
-            <span>28 / 28 CREDENTIALS LOADED</span>
-          </div>
         </div>
 
-        {/* Toolbar: search + subject filter live in one cohesive surface */}
-        <div className="glass border border-[var(--color-glass-border)] rounded-2xl p-3 sm:p-3.5 mb-16 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <div className="relative flex-1 min-w-0">
+        {/* Toolbar: search + subject filter live in one cohesive surface.
+            The field keeps a floor width (`sm:basis-64`) instead of a bare
+            `flex-1`: next to a 7-button filter row, flex shrank it below the
+            width of its own placeholder, which is why the label was clipped
+            mid-word. */}
+        <div className="glass border border-[var(--color-glass-border)] rounded-2xl p-3 sm:p-3.5 mb-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="relative w-full sm:basis-64 sm:shrink-0 min-w-0">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-ash)]" />
             <input
               type="text"
@@ -1023,8 +1094,8 @@ export default function Certifications() {
                 setSearchQuery(e.target.value);
                 setExpanded(false);
               }}
-              placeholder="Search by title, issuer, or skill…"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-[var(--color-glass-border)] font-mono text-xs text-white placeholder-[var(--color-ash)] focus:outline-none focus:border-[var(--color-accent-primary)]/60 focus:bg-white/[0.05] transition-colors"
+              placeholder="Search title or issuer…"
+              className="w-full min-w-0 pl-10 pr-3 py-2.5 rounded-xl bg-[var(--color-glass-highlight)] border border-[var(--color-glass-border)] font-mono text-[11px] text-[var(--color-starlight)] text-ellipsis placeholder:text-[var(--color-ash)] focus:outline-none focus:border-[var(--color-accent-primary)]/60 transition-colors"
             />
           </div>
 
@@ -1043,7 +1114,7 @@ export default function Certifications() {
                   }}
                   className={`px-3 py-2 rounded-lg font-mono text-[10.5px] uppercase tracking-wider transition-[color,background-color,transform] duration-200 ease-out cursor-pointer active:scale-[0.97] ${isActive
                     ? "bg-[var(--color-accent-primary)] text-white font-bold"
-                    : "text-[var(--color-ash)] hover:text-white hover:bg-white/[0.05]"
+                    : "text-[var(--color-silver)] hover:text-[var(--color-starlight)] hover:bg-[var(--color-glass-highlight)]"
                     }`}
                   data-cursor-hover
                 >
@@ -1056,7 +1127,7 @@ export default function Certifications() {
 
         {/* Credential Grid */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 hover-focus-container">
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence initial={false}>
             {(expanded ? filteredCerts : filteredCerts.slice(0, INITIAL_VISIBLE)).map((cert) => {
               const defaultVariant = cert.variants.find((variant) => variant.credlyBadgeId) ?? cert.variants[0];
               const verifiedVariants = cert.variants.filter((variant) => variant.credlyPublicUrl);
@@ -1154,29 +1225,23 @@ export default function Certifications() {
                 );
               }
 
-              // Index within the currently visible list — used for stagger
-              const visibleList = expanded ? filteredCerts : filteredCerts.slice(0, INITIAL_VISIBLE);
-              const visibleIdx = visibleList.indexOf(cert);
-              // Cards beyond the initial 6 get a staggered pop-in delay
-              const isNewCard = visibleIdx >= INITIAL_VISIBLE;
-              const staggerDelay = isNewCard ? (visibleIdx - INITIAL_VISIBLE) * 0.055 : 0;
-
               return (
+                /* No entrance, exit or stagger on the tiles. Expanding used to
+                   pop each new card in with a scaled, delayed fade; the ask was
+                   for the list to simply grow, so the extra cards are present
+                   the frame they are added and the only movement is the page
+                   reflowing around them. Hover/tap feedback stays.
+
+                   Also no `layout` and no spring: closing the inspector
+                   restores the locked scroll offset, so every card's box
+                   changes in one frame, which Framer would read as a move and
+                   bounce the whole tile set. */
                 <motion.div
                   key={cert.id}
-                  layout="position"
-                  initial={{ opacity: 0, scale: 0.88, y: 24 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.88, y: 16 }}
-                  whileHover={{ scale: 1.035, y: -8 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 280,
-                    damping: 22,
-                    mass: 0.9,
-                    delay: staggerDelay,
-                  }}
+                  whileHover={{ scale: 1.02, y: -6 }}
+                  whileTap={{ scale: 0.99 }}
+                  transition={{ duration: 0.24, ease: EASING }}
+
                   onClick={() => handleOpenInspector(cert)}
                   data-hoverable
                   data-cursor-hover
@@ -1214,7 +1279,7 @@ export default function Certifications() {
                 data-cursor-hover
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-3 rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] backdrop-blur-md px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-silver)] hover:border-[var(--color-accent-primary)]/60 hover:text-white transition-colors duration-200"
+                className="inline-flex items-center gap-3 rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] backdrop-blur-md px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-silver)] hover:border-[var(--color-accent-primary)]/60 hover:text-[var(--color-starlight)] transition-colors duration-200"
               >
                 <motion.span
                   animate={{ rotate: expanded ? 180 : 0 }}
@@ -1281,34 +1346,73 @@ export default function Certifications() {
                   exit={{ scale: 0.92, opacity: 0, y: 16 }}
                   transition={{ type: "spring", stiffness: 360, damping: 30 }}
                   onClick={(e) => e.stopPropagation()}
-                  onWheelCapture={(e) => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={`${selectedCert.title} credential inspector`}
                   className="relative w-full max-w-6xl my-auto rounded-[1.75rem] p-4 sm:p-5 border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.55)] text-white flex flex-col max-h-[calc(100vh-3rem)] overflow-hidden bg-[#0a0a0a] z-[100000]"
                 >
-                  <div className="flex items-center justify-between gap-4 pb-5 mb-5 border-b border-white/10">
-                    <div className="pr-10">
+                  {/* ── Header: identity only ──────────────────────
+                      Priority order in this panel is deliberate:
+                        title/issuer → actions → preview → extra info.
+                      The two links used to sit UNDER a 42rem-tall preview,
+                      i.e. a full screen of scrolling away on a phone, which
+                      buried the one thing a recruiter opens this for. */}
+                  <div className="flex items-start justify-between gap-4 pb-4 mb-4 border-b border-white/10">
+                    <div className="min-w-0 pr-2">
                       <span className="font-mono text-[9px] uppercase tracking-widest text-amber-300 font-bold bg-amber-950/40 px-2.5 py-0.5 rounded-full border border-amber-500/25 inline-flex items-center gap-1 mb-2">
                         <CheckCircle2 size={10} />
                         AUTHENTICATED CREDENTIAL VAULT ({selectedCert.issueDate})
                       </span>
-                      <h3 className="font-display text-2xl sm:text-[2rem] font-bold text-slate-50 leading-tight max-w-3xl">
+                      <h3 className="font-display text-xl sm:text-[1.75rem] font-bold text-slate-50 leading-tight max-w-3xl">
                         {selectedCert.title}
                       </h3>
-                      <p className="font-body text-sm text-slate-300 mt-3 leading-relaxed max-w-3xl">
-                        {selectedCert.description}
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mt-1.5">
+                        {currentVariant.name}
                       </p>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setSelectedCert(null)}
-                      className="shrink-0 h-10 px-4 rounded-full bg-white/10 hover:bg-white/15 flex items-center gap-2 text-white/80 hover:text-white transition-[background-color,color,transform] duration-150 ease-out cursor-pointer active:scale-[0.97] border border-white/10 font-mono text-[10px] font-bold uppercase tracking-widest"
+                      aria-label="Close inspector"
+                      className="shrink-0 h-10 px-3 sm:px-4 rounded-full bg-white/10 hover:bg-white/15 flex items-center gap-2 text-white/80 hover:text-white transition-[background-color,color,transform] duration-150 ease-out cursor-pointer active:scale-[0.97] border border-white/10 font-mono text-[10px] font-bold uppercase tracking-widest"
                     >
                       <X size={16} />
-                      Close inspector
+                      <span className="hidden sm:inline">Close inspector</span>
                     </button>
                   </div>
 
-                  <div className="flex-1 min-h-0 overflow-y-auto scrollbar-none overscroll-contain pr-1 space-y-4 pb-2">
+                  {/* ── Actions: pinned above the scroll area ──────
+                      Outside the scroll container on purpose, so they stay
+                      reachable no matter how far down the preview is. */}
+                  <div className="shrink-0 flex flex-col sm:flex-row items-stretch gap-2.5 pb-4 mb-4 border-b border-white/10">
+                    <a
+                      href={currentVariant.viewWebUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-white transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-white/20 hover:border-white/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]"
+                    >
+                      <Globe size={17} className="text-cyan-400 shrink-0" />
+                      Visit certificate page
+                    </a>
+                    {currentVariant.credlyPublicUrl ? (
+                      <a
+                        href={currentVariant.credlyPublicUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-amber-400/40 bg-amber-400 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-black shadow-[0_8px_24px_rgba(251,191,36,0.25)] transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-amber-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(251,191,36,0.4)] active:translate-y-0 active:scale-[0.97]"
+                      >
+                        <BadgeCheck size={17} className="shrink-0" />
+                        Verify on Credly
+                      </a>
+                    ) : (
+                      <div className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 font-mono text-[11px] uppercase tracking-wide text-slate-500">
+                        No Credly badge for this issuer
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="scroll-panel flex-1 min-h-0 pr-1 space-y-4 pb-2">
                     {selectedCert.variants.length > 1 && (
                       <div className="px-1">
                         <div className="flex items-center justify-between gap-3 mb-3">
@@ -1360,59 +1464,36 @@ export default function Certifications() {
                         animate={{ opacity: 1, transform: "translateY(0px)" }}
                         exit={{ opacity: 0, transform: "translateY(-6px)" }}
                         transition={{ duration: 0.2, ease: EASING }}
-                        className="rounded-3xl border border-white/10 bg-slate-950/70 p-3 sm:p-4 overflow-hidden min-h-[42rem] flex flex-col gap-3"
+                        className="rounded-3xl border border-white/10 bg-slate-950/70 p-3 sm:p-4 flex flex-col gap-3"
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block mb-1">
-                              Certificate Preview
-                            </span>
-                            <h4 className="font-display text-lg font-bold text-white leading-tight truncate">
-                              {currentVariant.name}
-                            </h4>
-                          </div>
-                        </div>
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 block">
+                          Certificate Preview
+                        </span>
 
-                        {/* Certificate Document Viewer - Embedded Certificate Preview */}
-                        <div className="relative flex-[1.8] rounded-2xl border border-white/10 bg-black/20 overflow-hidden min-h-[42rem]">
-                          <iframe
+                        {/* Aspect-ratio box, not a 42rem min-height: a landscape
+                            certificate in a 672px-tall frame left most of the
+                            panel empty on phones and pushed everything else off
+                            screen. `ScaledFrame` fills this exactly. */}
+                        <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] rounded-2xl border border-white/10 bg-black/20 overflow-hidden">
+                          <ScaledFrame
                             src={currentVariant.viewWebUrl}
                             title={`${currentVariant.name} certificate preview`}
-                            className="absolute inset-0 h-[185%] w-[185%] scale-[0.54] origin-top-left border-0"
                           />
                         </div>
 
-                        <div className="rounded-2xl border border-white/10 bg-black/55 backdrop-blur-md p-3.5 sm:p-4">
-                          <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 block mb-3">
-                            Issued by <span className="text-slate-200 font-bold">{currentVariant.name}</span> — confirm this credential
-                          </span>
+                        <p className="font-body text-sm text-slate-300 leading-relaxed">
+                          {selectedCert.description}
+                        </p>
 
-                          <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
-                            <a
-                              href={currentVariant.viewWebUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group/btn flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-white transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-white/20 hover:border-white/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]"
+                        <div className="flex flex-wrap gap-1.5">
+                          {selectedCert.skills.map((skill) => (
+                            <span
+                              key={skill}
+                              className="font-mono text-[9px] text-slate-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10"
                             >
-                              <Globe size={17} className="text-cyan-400 shrink-0" />
-                              Visit certificate page
-                            </a>
-                            {currentVariant.credlyPublicUrl ? (
-                              <a
-                                href={currentVariant.credlyPublicUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group/btn flex-1 inline-flex items-center justify-center gap-2.5 rounded-xl border border-amber-400/40 bg-amber-400 px-5 py-3.5 font-mono text-[12px] sm:text-[13px] font-bold uppercase tracking-wide text-black shadow-[0_8px_24px_rgba(251,191,36,0.25)] transition-[background-color,border-color,transform,box-shadow] duration-200 ease-out hover:bg-amber-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(251,191,36,0.4)] active:translate-y-0 active:scale-[0.97]"
-                              >
-                                <BadgeCheck size={17} className="shrink-0" />
-                                Verify on Credly
-                              </a>
-                            ) : (
-                              <div className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 font-mono text-[11px] uppercase tracking-wide text-slate-500">
-                                No Credly badge for this issuer
-                              </div>
-                            )}
-                          </div>
+                              {skill}
+                            </span>
+                          ))}
                         </div>
                       </motion.div>
                     </AnimatePresence>

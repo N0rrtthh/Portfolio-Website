@@ -48,14 +48,26 @@ export default function EvaLayout() {
 
         <EvaNavbar />
 
+        {/* Same running order as Classic, so switching design themes never
+            reshuffles the story. The commit archive follows IDENTITY in both
+            modes: it reads as evidence for the profile that precedes it. */}
         <main className="relative z-10">
+          {/* ACT I — INTRO */}
           <EvaHero />
           <EvaAbout />
-          <EvaProjects />
-          <EvaTechStack />
           <GithubContributions />
-          <EvaExperience />
+          <EvaTechStack />
+
+          {/* ACT II — CERTIFICATIONS */}
           <Certifications />
+
+          {/* ACT III — PROJECTS */}
+          <EvaProjects />
+
+          {/* ACT IV — EXPERIENCE */}
+          <EvaExperience />
+
+          {/* ACT V — CONTACT */}
           <EvaContact />
         </main>
       </div>

@@ -9,8 +9,14 @@ import { GitHubIcon } from "@/components/ui/BrandIcons";
 import RevealText from "@/components/ui/RevealText";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import { PROJECTS, type Project } from "@/lib/data";
+import { getProjectImage } from "@/data/projectImages";
+import { useScrollLock } from "@/lib/hooks/useScrollLock";
+import { useLenis } from "@/components/providers/SmoothScrollProvider";
+import { DUR, EASE, SPRING } from "@/lib/motion";
+
 
 const featured = PROJECTS.filter((p) => p.featured);
+
 
 // Mobile card carousel — shown below md breakpoint
 function MobileProjectCarousel({ onSelect }: { onSelect: (p: Project) => void }) {
@@ -18,13 +24,15 @@ function MobileProjectCarousel({ onSelect }: { onSelect: (p: Project) => void })
   const dragStart = useRef(0);
   const all = PROJECTS;
   const project = all[idx];
+  const projectImg = getProjectImage(project.id);
+
   const prev = () => setIdx((i) => (i - 1 + all.length) % all.length);
   const next = () => setIdx((i) => (i + 1) % all.length);
 
   return (
     <div className="md:hidden section-padding" id="projects">
       <div className="container-narrow">
-        <ChapterLabel index={7} classic="Selected Work" eva="OPERATION LOG" className="mb-3" />
+        <ChapterLabel index={6} classic="Selected Work" eva="OPERATION LOG" className="mb-3" />
         <RevealText as="h2" className="text-section-title font-display text-[var(--color-starlight)] mb-8">
           Projects, built with craft.
         </RevealText>
@@ -48,13 +56,15 @@ function MobileProjectCarousel({ onSelect }: { onSelect: (p: Project) => void })
             className="group relative flex flex-col justify-end overflow-hidden rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] cursor-pointer"
             style={{ minHeight: "60vw", maxHeight: 420 }}
           >
-            {project.image && (
-              <div className="absolute inset-0 opacity-30">
-                <Image src={project.image} alt={project.title} fill sizes="100vw" className="object-cover" />
+            {projectImg && (
+              <div className="absolute inset-0 opacity-60">
+                <Image src={projectImg} alt={project.title} fill sizes="100vw" className="object-cover" />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-obsidian)] via-[var(--color-obsidian)]/60 to-transparent" />
               </div>
             )}
-            {!project.image && (
+            {!projectImg && (
+
               <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 40% 60%, ${project.color}20, transparent 70%)` }} />
             )}
             <div className="relative z-10 p-6">
@@ -101,11 +111,27 @@ export default function Projects() {
   const [viewportH, setViewportH] = useState(900);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [mounted, setMounted] = useState(false);
+  const lenis = useLenis();
+  const modalImg = selectedProject ? getProjectImage(selectedProject.id) : undefined;
+
+  // Page must not scroll behind the dossier — Lenis included.
+  useScrollLock(!!selectedProject, lenis);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+  // Escape closes the dossier. Expected on every modal; its absence is a bug.
+  useEffect(() => {
+    if (!selectedProject) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedProject(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedProject]);
+
 
   // Measure track overflow for horizontal scroll
   useEffect(() => {
@@ -145,7 +171,7 @@ export default function Projects() {
       <div className="sticky top-0 h-svh overflow-hidden">
         {/* Header — always visible, positioned safely below sticky navbar */}
         <div className="container-narrow relative z-20 pt-24 sm:pt-28 md:pt-32">
-          <ChapterLabel index={7} classic="Selected Work" eva="OPERATION LOG" className="mb-3" />
+          <ChapterLabel index={6} classic="Selected Work" eva="OPERATION LOG" className="mb-3" />
           <RevealText
             as="h2"
             className="text-section-title font-display text-[var(--color-starlight)]"
@@ -163,12 +189,15 @@ export default function Projects() {
           {/* Original spacer for the header area */}
           <div className="w-[40vw] shrink-0" />
 
-          {featured.map((project) => (
+          {featured.map((project) => {
+            const cardImg = getProjectImage(project.id);
+            return (
             <motion.article
               key={project.id}
               whileHover={{ scale: 1.02, y: -6 }}
               whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              transition={SPRING.soft}
+
               onClick={() => setSelectedProject(project)}
               className="group relative flex h-[70vh] w-[75vw] max-w-[900px] shrink-0 flex-col justify-end overflow-hidden rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] p-10 md:p-14 transition-[border-color,box-shadow] duration-300 ease-out shadow-[0_20px_50px_rgba(0,0,0,0.55)] cursor-pointer hover:border-indigo-500/50 hover:shadow-[0_25px_60px_rgba(99,102,241,0.2)]"
               data-hoverable
@@ -184,15 +213,22 @@ export default function Projects() {
               />
 
               {/* Project image */}
-              {project.image && (
-                <div className="absolute inset-0 opacity-20 group-hover:opacity-35 transition-opacity duration-700">
+              {/* Artwork legibility: at 20% the screenshots read as noise behind
+                  the copy. 55% (85% on hover) is contrast-safe because the
+                  gradient below only clears in the top third, where no text
+                  sits. */}
+              {cardImg && (
+                <div className="absolute inset-0 opacity-55 group-hover:opacity-85 transition-opacity duration-700">
+
+
                   <Image
-                    src={project.image}
+                    src={cardImg}
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 900px"
                     className="object-cover"
                   />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-obsidian)] via-[var(--color-obsidian)]/80 to-transparent" />
                 </div>
               )}
@@ -241,9 +277,11 @@ export default function Projects() {
                 </div>
               </div>
             </motion.article>
-          ))}
+            );
+          })}
 
           {/* Experiments / non-featured — final scene */}
+
           <div className="flex h-[70vh] w-[60vw] max-w-[700px] shrink-0 flex-col justify-center">
             <span className="chapter-label mb-6">Experiments & Prototypes</span>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -311,18 +349,19 @@ export default function Projects() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
+                transition={{ duration: DUR.fast, ease: EASE.out }}
                 onClick={() => setSelectedProject(null)}
                 className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md select-none pointer-events-auto overflow-hidden"
               >
                 <motion.div
                   initial={{ scale: 0.94, opacity: 0, y: 16 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
-                  exit={{ scale: 0.94, opacity: 0, y: 16 }}
-                  transition={{ type: "spring", stiffness: 360, damping: 30 }}
+                  exit={{ scale: 0.96, opacity: 0, y: 8, transition: { duration: DUR.fast, ease: EASE.in } }}
+                  transition={SPRING.panel}
                   onClick={(e) => e.stopPropagation()}
-                  className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-none rounded-[2rem] border border-white/10 bg-[#0a0a12]/98 p-6 sm:p-8 text-white shadow-[0_32px_100px_rgba(0,0,0,0.9)] flex flex-col z-[100000]"
+                  className="scroll-panel relative w-full max-w-4xl max-h-[90vh] rounded-[2rem] border border-white/10 bg-[#0a0a12]/98 p-6 sm:p-8 text-white shadow-[0_32px_100px_rgba(0,0,0,0.9)] flex flex-col z-[100000]"
                 >
+
                   {/* Header row */}
                   <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10 mb-5">
                     <div>
@@ -381,10 +420,11 @@ export default function Projects() {
 
                     {/* Image Viewport Container */}
                     <div className="relative w-full aspect-[16/9] min-h-[260px] sm:min-h-[340px] md:min-h-[400px] bg-slate-950 overflow-hidden group/browser flex items-center justify-center">
-                      {selectedProject.image ? (
+                      {modalImg ? (
                         <Image
-                          src={selectedProject.image}
+                          src={modalImg}
                           alt={`${selectedProject.title} screenshot`}
+
                           fill
                           sizes="(max-width: 768px) 100vw, 900px"
                           className="object-cover object-top group-hover/browser:scale-105 transition-all duration-700"
