@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Canvas } from "@react-three/fiber";
 import { AnimatePresence } from "framer-motion";
-import { CornerDownRight } from "lucide-react";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import {
   NODE_THRESHOLDS,

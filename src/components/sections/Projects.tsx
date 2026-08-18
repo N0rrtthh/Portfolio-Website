@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { ArrowUpRight, X, Image as ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { GitHubIcon } from "@/components/ui/BrandIcons";
 import RevealText from "@/components/ui/RevealText";
+import TiltPanel from "@/components/ui/TiltPanel";
 import ChapterLabel from "@/components/ui/ChapterLabel";
 import { PROJECTS, type Project } from "@/lib/data";
 import { getProjectImage } from "@/data/projectImages";
@@ -192,14 +193,23 @@ export default function Projects() {
           {featured.map((project) => {
             const cardImg = getProjectImage(project.id);
             return (
-            <motion.article
+            /* The card is a 3D panel: TiltPanel owns the perspective and the
+               rotation, the article keeps its own hover scale. The track's
+               layout classes (height, width, shrink-0) live on the wrapper
+               because the wrapper is now the flex item — the article fills
+               it. Splitting them this way is also what keeps framer-motion
+               and the tilt loop from writing the same `transform`. */
+            <TiltPanel
               key={project.id}
+              className="h-[70vh] w-[75vw] max-w-[900px] shrink-0"
+            >
+            <motion.article
               whileHover={{ scale: 1.02, y: -6 }}
               whileTap={{ scale: 0.98 }}
               transition={SPRING.soft}
 
               onClick={() => setSelectedProject(project)}
-              className="group relative flex h-[70vh] w-[75vw] max-w-[900px] shrink-0 flex-col justify-end overflow-hidden rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] p-10 md:p-14 transition-[border-color,box-shadow] duration-300 ease-out shadow-[0_20px_50px_rgba(0,0,0,0.55)] cursor-pointer hover:border-indigo-500/50 hover:shadow-[0_25px_60px_rgba(99,102,241,0.2)]"
+              className="group relative flex h-full w-full flex-col justify-end overflow-hidden rounded-3xl border border-[var(--color-glass-border)] bg-[var(--color-obsidian)] p-10 md:p-14 transition-[border-color,box-shadow] duration-300 ease-out shadow-[0_20px_50px_rgba(0,0,0,0.55)] cursor-pointer hover:border-indigo-500/50 hover:shadow-[0_25px_60px_rgba(99,102,241,0.2)]"
               data-hoverable
               data-cursor-hover
             >
@@ -277,6 +287,7 @@ export default function Projects() {
                 </div>
               </div>
             </motion.article>
+            </TiltPanel>
             );
           })}
 

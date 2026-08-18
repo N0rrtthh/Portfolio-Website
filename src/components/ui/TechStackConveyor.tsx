@@ -36,6 +36,8 @@ function TechMark({ tech }: { tech: TechItem }) {
 
   return (
     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-[0_2px_10px_rgba(0,0,0,0.25)]">
+      {/* Icon URLs come from multiple remote vendors; native img keeps this path simple. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={url}
         alt={`${tech.name} logo`}

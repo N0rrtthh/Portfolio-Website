@@ -1148,6 +1148,8 @@ export default function Certifications() {
                           key={variant.id}
                           className="h-full flex items-center justify-center drop-shadow-[0_20px_26px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105"
                         >
+                          {/* Remote badge URLs vary by issuer/CDN; keep native img here. */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={variant.credlyBadgeImageUrl}
                             alt={`${variant.name} badge artwork`}
@@ -1163,6 +1165,8 @@ export default function Certifications() {
                 } else if (badgeImageUrl) {
                   badgeNode = (
                     <div className="w-36 h-36 flex items-center justify-center drop-shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3.5 group-hover:scale-105">
+                      {/* Remote badge URLs vary by issuer/CDN; keep native img here. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={badgeImageUrl}
                         alt={`${defaultVariant?.name ?? cert.title} badge artwork`}
@@ -1194,6 +1198,8 @@ export default function Certifications() {
                           key={url}
                           className="h-full flex items-center justify-center drop-shadow-[0_20px_26px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105"
                         >
+                          {/* Certificate artwork can be remote; preserve native img + no-referrer. */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={url}
                             alt={`${cert.title} certificate artwork`}
@@ -1207,6 +1213,8 @@ export default function Certifications() {
                     </div>
                   ) : (
                     <div className="w-full max-w-[17.5rem] h-28 flex items-center justify-center drop-shadow-[0_22px_28px_rgba(0,0,0,0.6)] transition-all will-change-transform transform-gpu duration-500 ease-out group-hover:-translate-y-3.5 group-hover:scale-105">
+                      {/* Certificate artwork can be remote; preserve native img + no-referrer. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={artworkList[0]}
                         alt={`${cert.title} certificate artwork`}

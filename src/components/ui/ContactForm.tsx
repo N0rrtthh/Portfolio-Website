@@ -15,6 +15,19 @@ import { Send, CheckCircle2, Mail, User, MessageSquare } from "lucide-react";
 
 type Variant = "classic" | "eva";
 
+type FormData = {
+  name: string;
+  email: string;
+  message: string;
+  company: string;
+};
+
+type FormErrors = Partial<Record<"name" | "email" | "message", string>>;
+
+const NAME_MAX = 80;
+const EMAIL_MAX = 254;
+const MESSAGE_MAX = 2000;
+
 const SKIN: Record<
   Variant,
   { label: string; icon: string; field: string; submit: string; note: string }
@@ -58,12 +71,92 @@ const SKIN: Record<
 export default function ContactForm({ variant = "classic" }: { variant?: Variant }) {
   const skin = SKIN[variant];
 
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    message: "",
+    company: "",
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submitMessage, setSubmitMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  function sanitizeText(value: string) {
+    return value.replace(/[\u0000-\u001F\u007F]/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  function sanitizeMultiline(value: string) {
+    return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
+  }
+
+  function validate(data: FormData): { clean: FormData; errors: FormErrors } {
+    const cleanName = sanitizeText(data.name);
+    const cleanEmail = sanitizeText(data.email).toLowerCase();
+    const cleanMessage = sanitizeMultiline(data.message);
+
+    const nextErrors: FormErrors = {};
+
+    if (!cleanName) {
+      nextErrors.name = "Please enter your name.";
+    } else if (cleanName.length > NAME_MAX) {
+      nextErrors.name = `Please keep your name under ${NAME_MAX} characters.`;
+    }
+
+    if (!cleanEmail) {
+      nextErrors.email = "Please enter your email address.";
+    } else if (cleanEmail.length > EMAIL_MAX) {
+      nextErrors.email = "Email address is too long.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      nextErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!cleanMessage) {
+      nextErrors.message = "Please include a short message.";
+    } else if (cleanMessage.length > MESSAGE_MAX) {
+      nextErrors.message = `Please keep your message under ${MESSAGE_MAX} characters.`;
+    }
+
+    return {
+      clean: {
+        ...data,
+        name: cleanName,
+        email: cleanEmail,
+        message: cleanMessage,
+      },
+      errors: nextErrors,
+    };
+  }
+
+  function updateField<K extends keyof FormData>(field: K, value: FormData[K]) {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field in errors) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+    if (submitMessage) {
+      setSubmitMessage("");
+    }
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Honeypot trap: bots often fill hidden fields. Treat as a no-op success.
+    if (formData.company.trim()) {
+      setSubmitted(true);
+      return;
+    }
+
+    const { clean, errors: nextErrors } = validate(formData);
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      setSubmitMessage("Please fix the highlighted fields and try again.");
+      return;
+    }
+
+    setFormData(clean);
+    setSubmitMessage("");
     setIsSubmitting(true);
     // Stand-in for the real endpoint. The delay exists to show the pending
     // state, not to paper over a race — swap this block for the fetch when
@@ -114,7 +207,9 @@ export default function ContactForm({ variant = "classic" }: { variant?: Variant
           type="button"
           onClick={() => {
             setSubmitted(false);
-            setFormData({ name: "", email: "", message: "" });
+            setFormData({ name: "", email: "", message: "", company: "" });
+            setErrors({});
+            setSubmitMessage("");
           }}
           className={`mt-4 font-mono text-xs uppercase tracking-widest hover:underline ${skin.note}`}
         >
@@ -125,7 +220,33 @@ export default function ContactForm({ variant = "classic" }: { variant?: Variant
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+      <div className="sr-only" aria-hidden="true">
+        <label htmlFor={`cf-company-${variant}`}>Company</label>
+        <input
+          id={`cf-company-${variant}`}
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          value={formData.company}
+          onChange={(e) => updateField("company", e.target.value)}
+        />
+      </div>
+
+      {submitMessage ? (
+        <p
+          role="alert"
+          className={
+            variant === "eva"
+              ? "rounded-none border border-black/50 bg-white/70 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-black"
+              : "rounded-lg border border-red-400/40 bg-red-500/10 px-3 py-2 font-mono text-xs text-red-300"
+          }
+        >
+          {submitMessage}
+        </p>
+      ) : null}
+
       <div>
         <label htmlFor={`cf-name-${variant}`} className={`${skin.label} mb-2 flex items-center gap-2`}>
           <User size={14} className={skin.icon} /> Your Name
@@ -136,11 +257,19 @@ export default function ContactForm({ variant = "classic" }: { variant?: Variant
           name="name"
           autoComplete="name"
           required
+          maxLength={NAME_MAX}
           value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          onChange={(e) => updateField("name", e.target.value)}
           placeholder="e.g. Alex Vance"
+          aria-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? `cf-name-error-${variant}` : undefined}
           className={skin.field}
         />
+        {errors.name ? (
+          <p id={`cf-name-error-${variant}`} className="mt-1.5 font-mono text-[11px] text-red-400" role="alert">
+            {errors.name}
+          </p>
+        ) : null}
       </div>
 
       <div>
@@ -153,11 +282,20 @@ export default function ContactForm({ variant = "classic" }: { variant?: Variant
           name="email"
           autoComplete="email"
           required
+          maxLength={EMAIL_MAX}
           value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          onChange={(e) => updateField("email", e.target.value)}
           placeholder="e.g. alex@company.com"
+          inputMode="email"
+          aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? `cf-email-error-${variant}` : undefined}
           className={skin.field}
         />
+        {errors.email ? (
+          <p id={`cf-email-error-${variant}`} className="mt-1.5 font-mono text-[11px] text-red-400" role="alert">
+            {errors.email}
+          </p>
+        ) : null}
       </div>
 
       <div>
@@ -169,11 +307,23 @@ export default function ContactForm({ variant = "classic" }: { variant?: Variant
           name="message"
           required
           rows={4}
+          maxLength={MESSAGE_MAX}
           value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          onChange={(e) => updateField("message", e.target.value)}
           placeholder="Tell me about your project, timeline, or opportunity..."
+          aria-invalid={Boolean(errors.message)}
+          aria-describedby={errors.message ? `cf-message-error-${variant}` : `cf-message-help-${variant}`}
           className={`${skin.field} resize-none`}
         />
+        {errors.message ? (
+          <p id={`cf-message-error-${variant}`} className="mt-1.5 font-mono text-[11px] text-red-400" role="alert">
+            {errors.message}
+          </p>
+        ) : (
+          <p id={`cf-message-help-${variant}`} className="mt-1.5 font-mono text-[10px] text-[var(--color-ash)]">
+            {formData.message.length}/{MESSAGE_MAX}
+          </p>
+        )}
       </div>
 
       <button type="submit" disabled={isSubmitting} className={skin.submit} data-cursor-hover>

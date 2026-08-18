@@ -226,11 +226,6 @@ export default function EvaProjects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const lenis = useLenis();
 
-  /* `document` does not exist during SSR, so the portal target only becomes
-     available after mount. */
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
   /* Tier detection touches navigator/matchMedia, so it cannot be read during
      render without SSR and hydration disagreeing. The hook uses
      `useSyncExternalStore`, which gives the client its real value on the FIRST
@@ -256,6 +251,19 @@ export default function EvaProjects() {
   }, []);
 
   const closeModal = useCallback(() => setSelectedProject(null), []);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedProject, closeModal]);
 
   const modalImg = selectedProject
     ? getProjectImage(selectedProject.id)
@@ -334,7 +342,7 @@ export default function EvaProjects() {
           ancestors that create stacking/containing blocks, so `fixed` was
           resolved against the section rather than the viewport; that is what
           made the panel shift as the page behind it settled. */}
-      {mounted &&
+      {typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
           {selectedProject && (
@@ -344,6 +352,9 @@ export default function EvaProjects() {
               exit={{ opacity: 0 }}
               transition={{ duration: DUR.fast }}
               onClick={closeModal}
+              role="dialog"
+              aria-modal="true"
+              aria-label={selectedProject ? `${selectedProject.title} project details` : "Project details"}
               className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4 backdrop-blur-xl sm:p-6"
             >
               <motion.div

@@ -5,9 +5,7 @@ import { Mail } from "lucide-react";
 
 import ContactForm from "@/components/ui/ContactForm";
 import ChapterLabel from "@/components/ui/ChapterLabel";
-import AnimeRippleField from "@/components/ui/AnimeRippleField";
-import AnimeWaveBars from "@/components/ui/AnimeWaveBars";
-import AnimeDriftParticles from "@/components/ui/AnimeDriftParticles";
+import ContactField from "@/components/ui/ContactField";
 import AnimeTraceLine from "@/components/ui/AnimeTraceLine";
 import {
   Magnetic,
@@ -80,9 +78,6 @@ export default function Contact() {
               "radial-gradient(ellipse at center, rgba(67,97,238,0.12), transparent 70%)",
           }}
         />
-        {/* Drifting motes over the gradient — decoration on the section
-            itself, deliberately not inside any panel. */}
-        <AnimeDriftParticles count={16} />
       </div>
 
 
@@ -162,18 +157,6 @@ export default function Contact() {
               })}
             </div>
 
-            {/* Live signal readout — frameless, sitting directly on the
-                section surface next to its label. Boxing it would make it a
-                fourth card competing with the facts and the form. */}
-            <div className="mt-7 flex items-end gap-4">
-              <span className="shrink-0 font-mono text-[10px] uppercase tracking-widest text-[var(--color-ash)]">
-                Uplink
-                <br />
-                active
-              </span>
-              <AnimeWaveBars bars={30} className="min-w-0 flex-1" />
-            </div>
-
             {/* Social Connection Links */}
             <div className="mt-7 flex items-center gap-4">
 
@@ -240,11 +223,15 @@ export default function Contact() {
         </div>
 
         {/* ── Signal field ───────────────────────────────────
-            A 9×64 point matrix in a hairline surface with real padding, so
-            the cursor has room to travel through it and the ripple has
-            somewhere to spread. It went through a too-small phase (4×36 in a
-            28rem cap) that left it a one-line strip with no interaction
-            room; this is the corrected size. */}
+            A dot lattice drawn in one canvas, unboxed and full-bleed. Two
+            earlier versions are worth knowing about before touching this: a
+            9×64 grid of tweened divs (correct, but 576 animated elements)
+            and a WebGL shader (one draw call, and invisible on screen —
+            additive premultiplied output over this near-black section came
+            out at a few percent luminance). Canvas 2D was the third answer
+            because the colour you write is the colour you get.
+            Also: an early 4×36 version was a one-line strip with no room
+            for the cursor to travel, which is why the band is tall. */}
 
         <div className="mt-10 md:mt-12">
           <div className="mb-3 flex items-baseline justify-between gap-4">
@@ -262,9 +249,11 @@ export default function Contact() {
               so the radius is what actually contains it. */}
 
           <GlowTrail size={150}>
-            <div className="rounded-2xl border border-[var(--color-glass-border)] px-5 py-7 sm:px-7 sm:py-9">
-              <AnimeRippleField rows={9} columns={64} />
-            </div>
+            {/* No card around this any more. The ripple field IS the surface
+                the section rests on, and a border turned it into a widget
+                sitting on the page instead. Full-bleed and interactive:
+                move over it to pull the lattice, click to drop a wave. */}
+            <ContactField />
           </GlowTrail>
 
         </div>

@@ -5,7 +5,6 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { ArrowUpRight, ChevronsUp } from "lucide-react";
 import ContactForm from "@/components/ui/ContactForm";
-import AnimeWaveBars from "@/components/ui/AnimeWaveBars";
 import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/data";
 
 
@@ -44,8 +43,6 @@ function Heading() {
       <h2 className="font-display text-3xl font-bold uppercase tracking-wider text-[var(--color-accent-primary)]">
         Comms // Uplink Terminal
       </h2>
-      {/* Frameless carrier readout — reads as terminal chrome, not a widget */}
-      <AnimeWaveBars bars={22} className="hidden sm:flex" />
     </div>
 
   );

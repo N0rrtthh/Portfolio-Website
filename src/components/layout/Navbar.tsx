@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useMemo, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useSectionNav } from "@/lib/hooks/useSectionNav";
+import { useActiveSection, useMenuDismiss } from "@/lib/hooks/useActiveSection";
 
 /* Mirrors the running order in ClassicLayout — a nav that lists sections in
    a different order than the page scrolls them is its own usability bug.
@@ -25,66 +27,26 @@ const ALL_SECTIONS = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("#hero");
   const [open, setOpen] = useState(false);
   const { scrollToId } = useSectionNav();
 
-  /* While a click-driven scroll is in flight the page passes THROUGH every
-     section between here and the target, and the observer fires for each one.
-     The last spurious hit usually lands after the animation ends, so the
-     highlight settled on a section the user never clicked. Ignore observer
-     updates until the programmatic scroll has had time to finish. */
-  const navLockUntilRef = useRef(0);
+  /* Active section, the scrolled flag and the click lock all come from one
+     shared hook — see lib/hooks/useActiveSection for why per-section
+     observers were replaced by a single reading line. EVA's navbar uses the
+     same hook, so the two can't drift apart again. */
+  const hrefs = useMemo(() => ALL_SECTIONS.map((s) => s.href), []);
+  const { active: activeSection, scrolled, lockTo } = useActiveSection(hrefs);
 
-  // Handle sticky scroll state
-  useEffect(() => {
-    let ticking = false;
-    let last = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const next = window.scrollY > 40;
-        if (next !== last) {
-          last = next;
-          setScrolled(next);
-        }
-        ticking = false;
-      });
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Section awareness — same precise IntersectionObserver logic as EvaNavbar
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    ALL_SECTIONS.forEach(({ href }) => {
-      const el = document.querySelector(href);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        (entries) => {
-          if (Date.now() < navLockUntilRef.current) return;
-          entries.forEach((e) => {
-            if (e.isIntersecting) setActiveSection(href);
-          });
-        },
-        { rootMargin: "-20% 0px -55% 0px" }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  const closeMenu = useCallback(() => setOpen(false), []);
+  useMenuDismiss(open, closeMenu);
 
   /* Single nav code path — see lib/hooks/useSectionNav. */
   function handleNavClick(e: React.MouseEvent, href: string) {
     e.preventDefault();
     setOpen(false);
-    setActiveSection(href);
-    navLockUntilRef.current = Date.now() + 1400;
+    // Takes the highlight now and holds it until the scroll lands, so the
+    // pill doesn't flicker through every section on the way.
+    lockTo(href);
     scrollToId(href);
   }
 
@@ -120,10 +82,13 @@ export default function Navbar() {
                there is no box edge left behind once the border is gone. */
             className="flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-2xl overflow-hidden p-1.5"
           >
-            <img
+            <Image
               src={`${process.env.NODE_ENV === "production" ? "/Portfolio-Website" : ""}/Favicon.png`}
               alt=""
+              width={44}
+              height={44}
               aria-hidden
+              priority
               className="h-full w-full object-contain filter drop-shadow-[0_0_10px_rgba(67,97,238,0.75)] transition-[filter] duration-200 group-hover:drop-shadow-[0_0_18px_rgba(67,97,238,0.95)]"
             />
           </motion.div>
@@ -180,6 +145,7 @@ export default function Navbar() {
             onClick={() => setOpen((prev) => !prev)}
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={open}
+            aria-controls="classic-mobile-nav"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] text-[var(--color-starlight)] backdrop-blur-md transition-transform duration-200 active:scale-95 md:hidden"
             data-cursor-hover
           >
@@ -198,7 +164,10 @@ export default function Navbar() {
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="mt-2 px-3 sm:px-5 md:hidden"
           >
-            <div className="rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-void)]/95 p-4 backdrop-blur-2xl shadow-2xl space-y-1">
+            <div
+              id="classic-mobile-nav"
+              className="rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-void)]/95 p-4 backdrop-blur-2xl shadow-2xl space-y-1"
+            >
               {NAV_ITEMS.map((item) => (
                 <a
                   key={item.href}

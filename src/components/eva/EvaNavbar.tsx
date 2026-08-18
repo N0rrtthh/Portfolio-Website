@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useMemo, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useSectionNav } from "@/lib/hooks/useSectionNav";
+import { useActiveSection, useMenuDismiss } from "@/lib/hooks/useActiveSection";
 
 /* Codes are positional, so they have to follow EvaLayout's running order.
    COMMITS now sits at 03, right after IDENTITY, matching the moved archive. */
@@ -20,56 +22,19 @@ const SECTIONS = [
 ];
 
 export default function EvaNavbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState("#hero");
   const [open, setOpen] = useState(false);
   const { scrollToId } = useSectionNav();
 
-  /* Same fix as the Classic navbar: a click-driven scroll passes through
-     every section on the way to the target and the observer fires for each,
-     so the highlight used to settle on a section nobody clicked. */
-  const navLockUntilRef = useRef(0);
+  /* Shared with the Classic navbar — see lib/hooks/useActiveSection. The
+     per-section observers this replaced could each claim the highlight while
+     a tall band was satisfied, so the winner came down to callback order
+     rather than to what was on screen. */
+  const hrefs = useMemo(() => SECTIONS.map((s) => s.href), []);
+  const { active, scrolled, lockTo } = useActiveSection(hrefs);
 
-  useEffect(() => {
-    let ticking = false;
-    let last = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const next = window.scrollY > 40;
-        if (next !== last) {
-          last = next;
-          setScrolled(next);
-        }
-        ticking = false;
-      });
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Section awareness
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    SECTIONS.forEach(({ href }) => {
-      const el = document.querySelector(href);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        (entries) => {
-          if (Date.now() < navLockUntilRef.current) return;
-          entries.forEach((e) => {
-            if (e.isIntersecting) setActive(href);
-          });
-        },
-        { rootMargin: "-40% 0px -55% 0px" }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  const closeMenu = useCallback(() => setOpen(false), []);
+  // EVA hides its panel at `lg`, not `md`.
+  useMenuDismiss(open, closeMenu, 1024);
 
   /* Single nav code path — see lib/hooks/useSectionNav. The old inline
      version resolved the destination once at click time, so any reflow
@@ -78,8 +43,8 @@ export default function EvaNavbar() {
   function handleNav(e: React.MouseEvent, href: string) {
     e.preventDefault();
     setOpen(false);
-    setActive(href);
-    navLockUntilRef.current = Date.now() + 1400;
+    // Holds the clicked code lit until the scroll actually lands.
+    lockTo(href);
     scrollToId(href);
   }
 
@@ -110,10 +75,13 @@ export default function EvaNavbar() {
                the Classic mark, so the two modes share an identity. */
             className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl p-1.5 sm:h-13 sm:w-13"
           >
-            <img
+            <Image
               src={`${process.env.NODE_ENV === "production" ? "/Portfolio-Website" : ""}/Favicon.png`}
               alt=""
+              width={44}
+              height={44}
               aria-hidden
+              priority
               className="h-full w-full object-contain filter drop-shadow-[0_0_12px_rgba(67,97,238,0.85)] transition-[filter] duration-200 group-hover:drop-shadow-[0_0_20px_rgba(252,191,73,0.9)]"
             />
           </motion.div>
